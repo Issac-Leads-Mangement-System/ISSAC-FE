@@ -1,11 +1,11 @@
 import { Link, Route, Routes, createBrowserRouter } from "react-router-dom";
 
-import { Login } from "./pages/Login";
 import "./App.css";
 import { useState } from "react";
 import { ProtectedRoute } from "./routes/ProtectRoute";
 import { Users } from "./pages/Users";
 import { AdminPage } from "./pages/AdminPage";
+import Login from "./pages/Login";
 
 function App() {
   const [user, setUser] = useState<any>(null);
@@ -21,20 +21,18 @@ function App() {
 
   return (
     <>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          margin: "12px 24px",
-        }}
-      >
-        {user && <Navigation />}
-        {user ? (
+      {user && (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            margin: "12px 24px",
+          }}
+        >
+          <Navigation />
           <button onClick={handleLogout}>Sign Out</button>
-        ) : (
-          <button onClick={handleLogin}>Sign In</button>
-        )}
-      </div>
+        </div>
+      )}
 
       <Routes>
         <Route index element={<Login />} />
