@@ -1,4 +1,7 @@
+import { heIL } from "@mui/material/locale";
+
 const Color = {
+  MainColor: "#ff2f5b",
   AppBackground: "#f7f7f7",
   LightBlue: "#99BCD9",
   DodgerBlue: "#0499FF",
@@ -47,4 +50,5 @@ const Size = {
 export const Theme = {
   Color,
   Size,
+  heIL,
 };

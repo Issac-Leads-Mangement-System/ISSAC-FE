@@ -1,5 +1,5 @@
 import { css } from "styled-components";
-import { Theme } from "../../styled-components/Theme";
+import { Theme } from "../../theme/Theme";
 
 const ButtonTypes = {
   primary: {

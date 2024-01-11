@@ -1,13 +1,13 @@
 import { css } from "styled-components";
 
 export const LoginStyle = () => css`
-  &.c-auth {
+  &.issac-auth {
     width: 100%;
     height: 100%;
     min-height: 100vh;
     display: flex;
 
-    .left-side {
+    .right-side {
       width: 100%;
       height: 100%;
       min-height: 100vh;
@@ -17,7 +17,7 @@ export const LoginStyle = () => css`
       align-items: center;
       justify-content: space-between;
 
-      .c-auth-container {
+      .issac-auth-container {
         width: 80%;
         max-width: 345px;
         display: flex;
@@ -25,7 +25,7 @@ export const LoginStyle = () => css`
         flex-direction: column;
         min-height: 90vh;
 
-        .c-auth-text-container {
+        .issac-auth-text-container {
           h1 {
             font-size: 36px;
             line-height: 44px;
@@ -38,34 +38,11 @@ export const LoginStyle = () => css`
             line-height: 17px;
           }
         }
-        .c-auth-image-container {
+        .issac-auth-image-container {
           height: 90px;
           display: block;
           margin: auto;
           margin-bottom: 15px;
-        }
-
-        .remember-forgot {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 10px;
-
-          .remember {
-            color: #73879c;
-            .MuiFormControlLabel-label {
-              font-size: 15px;
-            }
-          }
-
-          .forgot {
-            font-size: 15px;
-            cursor: pointer;
-            color: #ff2f5b;
-            &:hover {
-              text-decoration: underline;
-            }
-          }
         }
 
         .submit-form {
@@ -80,41 +57,9 @@ export const LoginStyle = () => css`
           background: #ff2f5ba3;
         }
       }
-
-      .c-auth-details {
-        width: 80%;
-        text-align: center;
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 50px;
-        font-size: 13px;
-
-        .c-auth-rights {
-          color: #ff2f5b;
-        }
-
-        .c-auth-links {
-          a {
-            color: #ff2f5b;
-            text-decoration: none;
-
-            &:hover {
-              text-decoration: underline;
-            }
-          }
-
-          a:not(:last-child) {
-            margin-right: 5px;
-            &:after {
-              margin-left: 5px;
-              content: "|";
-            }
-          }
-        }
-      }
     }
 
-    .right-side {
+    .left-side {
       width: 100%;
       height: auto;
       min-height: 100vh;

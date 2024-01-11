@@ -1,42 +1,65 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import styled, { ThemeProvider } from "styled-components";
-import { Theme } from "../styled-components/Theme";
+import { Theme } from "../../theme/Theme";
 
-import LogoApp from "../images/images/loginImage.jpg";
-import { GenericAddEditForm } from "../common/forms-generic-ad-edit/GenericAdEditForm";
-import { generateFormikInputFieldProps } from "../forms/formikHelper";
-import { INPUTS } from "../common/constants";
-import Input from "../common/Input/Input";
-import { ButtonType, ButtonTypes } from "../common/Button/models";
+import LogoApp from "../../assets/images/loginImage.jpg";
+import { GenericAddEditForm } from "../../common/forms-generic-ad-edit/GenericAdEditForm";
+import { generateFormikInputFieldProps } from "../../forms/formikHelper";
+import { INPUTS } from "../../common/constants";
+import Input from "../../common/Input/Input";
+import { ButtonType, ButtonTypes } from "../../common/Button/models";
 import {
   LoginSchema,
   initialValues,
   validationSchema,
-} from "../forms/loginSchema";
-import Button from "../common/Button/Button";
-import { InputType } from "../common/Input/models";
-import { LoginStyle } from "../styled-components/LoginStyle";
-import Logo from "../images/images/logo2.jpg";
+} from "../../forms/loginSchema";
+import Button from "../../common/Button/Button";
+import { InputType } from "../../common/Input/models";
+import { LoginStyle } from "./LoginStyle";
+import Logo from "../../assets/images/logo2.jpg";
+import { useNavigate } from "react-router-dom";
 
-const Login = ({ className }: any) => {
+const Login = ({ className, setUser }: any) => {
+  const navigate = useNavigate();
   const [initialFormValues, setInitialFormValues] = useState<LoginSchema>({
     ...initialValues,
   });
 
-  const handleSubmitModal = () => {
-    console.log("here");
+  useEffect(() => {
+    let statusLog = localStorage.getItem("issac_signIn");
+    if (statusLog === "signIn") {
+      navigate("/users");
+    }
+  }, []);
+
+  const handleSubmitModal = (values: any) => {
+    const { email, password } = values;
+    if (email && password) {
+      localStorage.setItem("issac_email", email);
+      localStorage.setItem("issac_signIn", "signIn");
+      setUser({
+        name: email,
+        permissions: ["analyze"],
+        roles: ["user"],
+      });
+      navigate("/users");
+    }
   };
 
   return (
     <ThemeProvider theme={Theme}>
-      <div className={` ${className} c-auth`}>
-        <div className="right-side">
+      <div className={` ${className} issac-auth`}>
+        <div className="left-side">
           <img className="login-image" src={LogoApp} alt="logo" />
         </div>
-        <div className="left-side">
-          <div className="c-auth-container">
-            <div className="c-auth-text-container">
-              <img className="c-auth-image-container" src={Logo} alt="logo" />
+        <div className="right-side">
+          <div className="issac-auth-container">
+            <div className="issac-auth-text-container">
+              <img
+                className="issac-auth-image-container"
+                src={Logo}
+                alt="logo"
+              />
             </div>
             <GenericAddEditForm
               initialValues={initialFormValues}
