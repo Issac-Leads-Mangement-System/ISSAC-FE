@@ -5,15 +5,18 @@ interface ProtectedRouteInterface {
   isAllowed: boolean;
   redirectPath?: string;
   children?: any;
+  user?: any;
 }
 
 export const ProtectedRoute: FC<ProtectedRouteInterface> = ({
   isAllowed,
-  redirectPath = "/login",
+  redirectPath = "/",
   children,
+  user,
 }) => {
-  console.log("isAllowed", isAllowed);
-  if (!isAllowed) {
+  let statusLogin = localStorage.getItem("issac_signIn");
+  // console.log("isAllowed", isAllowed, user, statusLogin);
+  if (!isAllowed && statusLogin !== "signIn") {
     return <Navigate to={redirectPath} replace />;
   }
 
