@@ -4,18 +4,18 @@ import { Box } from "@mui/material";
 import Login from "./pages/Login/Login";
 import "./App.css";
 import { Drawer } from "./common/utils";
-import { RouteC } from "./route";
+import { PrivateRoute } from "./route";
 import ToolbarComponent from "./components/Toolbar/Toolbar";
 
 import LeftMenu from "./components/LeftNavigation/LeftMenu";
+import useAuthStore from "./store/authStore/authStore";
 
 function App() {
-  const [user, setUser] = useState<any>(null);
   const [open, setOpen] = useState(true);
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    setUser(null);
+    useAuthStore.getState().logout();
     localStorage.clear();
     navigate("/");
   };
@@ -25,7 +25,7 @@ function App() {
 
   return (
     <>
-      {localStorage.getItem("issac_signIn") === "signIn" && (
+      {localStorage.getItem("authToken") && (
         <div>
           <Box sx={{ display: "flex" }}>
             <Drawer variant="permanent" open={open}>
@@ -37,14 +37,14 @@ function App() {
                 open={open}
                 handleLogout={handleLogout}
               />
-              <RouteC user={user} />
+              <PrivateRoute />
             </Box>
           </Box>
         </div>
       )}
 
       <Routes>
-        <Route index element={<Login setUser={setUser} />} />
+        <Route index element={<Login />} />
       </Routes>
     </>
   );

@@ -2,14 +2,17 @@ import { Route, Routes } from "react-router-dom";
 import { ProtectedRoute } from "./routes/ProtectRoute";
 import Users from "./pages/Users/Users";
 import { AdminPage } from "./pages/AdminPage";
+import useAuthStore from "./store/authStore/authStore";
 
-export const RouteC = ({ user }: any) => {
+export const PrivateRoute = () => {
+  const { role } = useAuthStore((state) => state);
+
   return (
     <Routes>
       <Route
         path="/users"
         element={
-          <ProtectedRoute isAllowed={!!user} user={user}>
+          <ProtectedRoute isAllowed={!!role} user={role}>
             <Users />
           </ProtectedRoute>
         }
@@ -17,9 +20,7 @@ export const RouteC = ({ user }: any) => {
       <Route
         path="/admin"
         element={
-          <ProtectedRoute
-            isAllowed={!!user && user.permissions.includes("analyze")}
-          >
+          <ProtectedRoute isAllowed={!!role && role === "admin"}>
             <AdminPage />
           </ProtectedRoute>
         }
