@@ -10,11 +10,12 @@ import {
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
-import BasicModal from "../../common/Modal/modal";
+import UserModal from "../../common/Modal/User/UserModal";
 import Paper from "@mui/material/Paper";
 import { UsersStyle } from "./UsersStyle";
 import styled from "styled-components";
 import { StyledTableCell, StyledTableRow } from "../../common/utils";
+import AddIcon from "@mui/icons-material/Add";
 
 const Users = ({ className }: any) => {
   const [open, setOpen] = useState(false);
@@ -24,8 +25,6 @@ const Users = ({ className }: any) => {
   const handleEditClick = (id: number): any => {
     console.log("edit id", id);
     setOpen(true);
-    // return <BasicModal open={true} />;
-    // return;
   };
 
   const handleDeleteClick = (id: number): any => {
@@ -35,21 +34,24 @@ const Users = ({ className }: any) => {
   };
 
   function createData(
-    name: string,
-    calories: number,
-    fat: number,
-    carbs: number,
-    protein: number
+    first_name: string,
+    last_name: string,
+    email: string,
+    role: string,
+    lead: string
   ) {
-    return { name, calories, fat, carbs, protein };
+    return { first_name, last_name, email, role, lead };
   }
 
-  const rows = [
-    createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-    createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-    createData("Eclair", 262, 16.0, 24, 6.0),
-    createData("Cupcake", 305, 3.7, 67, 4.3),
-    createData("Gingerbread", 356, 16.0, 49, 3.9),
+  const rows: any = [
+    createData("Barak", "Maoz", "barakm@gmail.com", "Admin", "-"),
+    createData(
+      "Marcel",
+      "Poroch",
+      "porochmarcel@gmail.com",
+      "Employee",
+      "Barak Maoz"
+    ),
   ];
 
   const handleChangePage = (event: unknown, newPage: number) => {
@@ -73,8 +75,16 @@ const Users = ({ className }: any) => {
         <Button
           className="issac-user-button"
           variant="outlined"
-          sx={{ float: "right", marginBottom: "5px" }}
+          sx={{
+            float: "right",
+            marginBottom: "5px",
+            "&:hover": {
+              backgroundColor: "#000000d4",
+            },
+          }}
           onClick={() => addNewUser()}
+          startIcon={<AddIcon />}
+          size="small"
         >
           Add user
         </Button>
@@ -83,30 +93,37 @@ const Users = ({ className }: any) => {
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
           <TableHead>
             <TableRow>
-              <StyledTableCell>Dessert (100g serving)</StyledTableCell>
-              <StyledTableCell align="right">Calories</StyledTableCell>
-              <StyledTableCell align="right">Fat&nbsp;(g)</StyledTableCell>
-              <StyledTableCell align="right">Carbs&nbsp;(g)</StyledTableCell>
-              <StyledTableCell align="right">Protein&nbsp;(g)</StyledTableCell>
+              <StyledTableCell>First name</StyledTableCell>
+              <StyledTableCell>Last name</StyledTableCell>
+              <StyledTableCell>Email</StyledTableCell>
+              <StyledTableCell>Role</StyledTableCell>
+              <StyledTableCell>Lead</StyledTableCell>
               <StyledTableCell align="right">Actions</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => (
-              <StyledTableRow key={row.name}>
-                <StyledTableCell component="th" scope="row">
-                  {row.name}
-                </StyledTableCell>
-                <StyledTableCell align="right">{row.calories}</StyledTableCell>
-                <StyledTableCell align="right">{row.fat}</StyledTableCell>
-                <StyledTableCell align="right">{row.carbs}</StyledTableCell>
-                <StyledTableCell align="right">{row.protein}</StyledTableCell>
-                <StyledTableCell align="right">
-                  <EditIcon onClick={() => handleEditClick} />
-                  <DeleteIcon />
-                </StyledTableCell>
-              </StyledTableRow>
-            ))}
+            {rows && rows.length > 0 ? (
+              rows.map((row: any) => (
+                <StyledTableRow key={row.name}>
+                  <StyledTableCell component="th" scope="row">
+                    {row.first_name}
+                  </StyledTableCell>
+                  <StyledTableCell>{row.last_name}</StyledTableCell>
+                  <StyledTableCell>{row.email}</StyledTableCell>
+                  <StyledTableCell>{row.role}</StyledTableCell>
+                  <StyledTableCell>{row.lead}</StyledTableCell>
+                  <StyledTableCell align="right">
+                    <EditIcon
+                      color="disabled"
+                      onClick={() => handleEditClick}
+                    />
+                    <DeleteIcon color="disabled" />
+                  </StyledTableCell>
+                </StyledTableRow>
+              ))
+            ) : (
+              <StyledTableCell>No data to display</StyledTableCell>
+            )}
           </TableBody>
         </Table>
       </TableContainer>
@@ -119,7 +136,7 @@ const Users = ({ className }: any) => {
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
-      {open && <BasicModal open={open} />}
+      {open && <UserModal open={open} setOpen={setOpen} />}
     </div>
   );
 };

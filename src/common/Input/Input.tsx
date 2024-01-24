@@ -37,6 +37,7 @@ function Input({
   hasInputTooltip,
   allowZero,
   versionClassName,
+  size,
 }: IInputProps) {
   const getValue = () => {
     if (inputType === InputType.Number && !allowZero) {
@@ -126,74 +127,40 @@ function Input({
   };
 
   return (
-    <div
-      className={`${className} ${versionClassName} inputWrapper`}
+    // <div
+    //   className={`${className} ${versionClassName} inputWrapper`}
+    //   style={style}
+    // >
+
+    <TextField
+      autoComplete="true"
+      label={label}
+      className={`${className}`}
+      disabled={disabled}
+      value={getValue()}
+      onChange={handleChangeInput}
       style={style}
-    >
-      {label && (
-        <InputLabel className={`${className}`}>
-          {label}
-          {tooltip && (
-            <Tooltip title={tooltip} className="info-toltip">
-              <InfoOutlined />
-            </Tooltip>
-          )}
-        </InputLabel>
-      )}
-      {/* {hasInputTooltip && value ? (
-        <Tooltip title={value || ""} className="info-toltip">
-          <TextField
-            autoComplete="true"
-            className={`${className}`}
-            disabled={disabled}
-            value={value || ""}
-            onChange={handleChangeInput}
-            onBlur={(e) => {
-              e.target.value = trim(e.target.value);
-              handleChangeInput(e);
-            }}
-            helperText={error && error}
-            type={
-              _isNumberType(inputType) ? InputType.Number : inputType || "text"
-            }
-            onWheel={(e) => e.target instanceof HTMLElement && e.target.blur()}
-            onKeyPress={onKeyPress}
-            placeholder={placeholder || ""}
-            InputProps={{
-              endAdornment: icon ? renderIcon(icon) : null,
-              name: (name as string) || "",
-              startAdornment: getStartAdornment(hasEmailIcon, hasPasswordIcon),
-            }}
-          />
-        </Tooltip>
-      ) : ( */}
-      <TextField
-        autoComplete="true"
-        className={`${className}`}
-        disabled={disabled}
-        value={getValue()}
-        onChange={handleChangeInput}
-        onBlur={(e) => {
-          e.target.value = trim(e.target.value);
-          handleChangeInput(e);
-        }}
-        helperText={error && error}
-        type={
-          inputType && inputType === InputType.Float
-            ? InputType.Number
-            : inputType || "text"
-        }
-        onWheel={(e) => e.target instanceof HTMLElement && e.target.blur()}
-        onKeyPress={onKeyPress}
-        placeholder={placeholder || ""}
-        InputProps={{
-          endAdornment: icon ? renderIcon(icon) : null,
-          name: (name as string) || "",
-          startAdornment: getStartAdornment(hasEmailIcon, hasPasswordIcon),
-        }}
-      />
-      {/* )} */}
-    </div>
+      onBlur={(e) => {
+        e.target.value = trim(e.target.value);
+        handleChangeInput(e);
+      }}
+      size={size || "small"}
+      helperText={error && error}
+      type={
+        inputType && inputType === InputType.Float
+          ? InputType.Number
+          : inputType || "text"
+      }
+      onWheel={(e) => e.target instanceof HTMLElement && e.target.blur()}
+      onKeyPress={onKeyPress}
+      placeholder={placeholder || ""}
+      InputProps={{
+        endAdornment: icon ? renderIcon(icon) : null,
+        name: (name as string) || "",
+        startAdornment: getStartAdornment(hasEmailIcon, hasPasswordIcon),
+      }}
+    />
+    // </div>
   );
 }
 

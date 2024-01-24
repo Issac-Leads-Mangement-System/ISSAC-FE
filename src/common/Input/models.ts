@@ -34,6 +34,7 @@ export interface IInputProps {
   hasInputTooltip?: boolean;
   allowZero?: boolean;
   versionClassName?: string;
+  size?: any;
 }
 
 export enum ButtonTypes {
