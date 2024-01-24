@@ -5,16 +5,16 @@ export const InputStyle = (props: any) => css`
   &.inputWrapper {
     margin: 0 0em 7px;
   }
-  &.MuiFormControl-root {
+  /* &.MuiFormControl-root {
     min-width: ${props.minWidth ? props.minWidth.toString() : "240px"};
     margin-bottom: ${props?.style?.marginBottom
-      ? props.style.marginBottom.toString()
-      : "inherit"};
+    ? props.style.marginBottom.toString()
+    : "inherit"};
 
     .MuiOutlinedInput-root {
       background: ${props?.style?.backgroundColor
-        ? props.style.backgroundColor
-        : "transparent"};
+    ? props.style.backgroundColor
+    : "transparent"};
       .MuiOutlinedInput-notchedOutline {
         border: 1px solid ${props.theme?.Color?.Mercury};
         border-radius: 2px;
@@ -23,12 +23,12 @@ export const InputStyle = (props: any) => css`
         padding: 8px 20px 8px 8px;
         line-height: 17px;
         font-size: ${props.inputFontSize
-          ? props.inputFontSize.toString()
-          : "14px"};
+    ? props.inputFontSize.toString()
+    : "14px"};
         color: ${props.theme?.Color?.Lynch};
         background: ${props?.style?.backgroundColor
-          ? props.style.backgroundColor
-          : "transparent"};
+    ? props.style.backgroundColor
+    : "transparent"};
         &::-webkit-outer-spin-button,
         &::-webkit-inner-spin-button {
           -webkit-appearance: none;
@@ -41,8 +41,8 @@ export const InputStyle = (props: any) => css`
       .MuiSvgIcon-root {
         color: ${props.theme?.Color?.Lynch};
         background: ${props?.style?.backgroundColor
-          ? props.style.backgroundColor
-          : "transparent"};
+    ? props.style.backgroundColor
+    : "transparent"};
       }
     }
     .MuiFormHelperText-root {
@@ -59,5 +59,5 @@ export const InputStyle = (props: any) => css`
     color: ${props.theme?.Color?.Blumine};
     width: 100%;
     margin-bottom: 6px;
-  }
+  } */
 `;
