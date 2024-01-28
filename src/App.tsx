@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
-import { Box } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 
@@ -18,6 +18,7 @@ function App() {
   const [open, setOpen] = useState(true);
   const navigate = useNavigate();
   const { role } = useAuthStore((state) => state);
+  const [loading, setLoading] = useState(false);
 
   const handleLogout = () => {
     useAuthStore.getState().logout();
@@ -34,6 +35,7 @@ function App() {
       const { id }: any = jwtDecode(token);
 
       try {
+        setLoading(true);
         const response = await axios.get(
           `https://issac-service-app-now-7jji5at5aa-ue.a.run.app/users/${id}`,
           {
@@ -42,11 +44,14 @@ function App() {
             },
           }
         );
-
-        useAuthStore
-          .getState()
-          .setUser(response?.data?.id, response?.data?.user_role);
+        if (response.status === 200) {
+          setLoading(false);
+          useAuthStore
+            .getState()
+            .setUser(response?.data?.id, response?.data?.user_role);
+        }
       } catch (error) {
+        setLoading(false);
         console.log("get uset error", error);
         //if token is expired redirect the user to the login page
       }
@@ -72,8 +77,22 @@ function App() {
                 open={open}
                 handleLogout={handleLogout}
               />
+              {loading && (
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    margin: 0,
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                  }}
+                >
+                  <CircularProgress sx={{ color: "#000000d4" }} />
+                </Box>
+              )}
               {role && <PrivateRoute />}
-              {/* loader for get user request */}
             </Box>
           </Box>
         </div>
