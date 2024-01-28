@@ -1,5 +1,6 @@
 import {
   CSSObject,
+  ListItem,
   TableCell,
   TableRow,
   Theme,
@@ -83,7 +84,7 @@ export const Drawer = styled(MuiDrawer, {
 export const StyledTableCell = styled(TableCell)(({ theme }): any => ({
   [`&.${tableCellClasses.head}`]: {
     // backgroundColor: "#ff2f5b",
-    backgroundColor: "#01CED1",
+    backgroundColor: "#000000d4",
     paddingTop: "8px",
     paddingBottom: "8px",
     color: theme.palette.common.white,
@@ -97,7 +98,7 @@ export const StyledTableCell = styled(TableCell)(({ theme }): any => ({
 }));
 
 export const StyledTableRow = styled(TableRow)(({ theme }): any => ({
-  "&:nth-of-type(odd)": {
+  "&:nth-of-type(even)": {
     backgroundColor: theme.palette.action.hover,
   },
   // hide last border
@@ -105,3 +106,20 @@ export const StyledTableRow = styled(TableRow)(({ theme }): any => ({
     border: 0,
   },
 }));
+
+export const List = styled(ListItem)({
+  // selected and (selected + hover) states
+  "&& .MuiListItemButton-root, && .MuiListItemButton-root:hover": {
+    backgroundColor: "red",
+    "&, & .MuiListItemIcon-root": {
+      color: "pink",
+    },
+  },
+  // hover states
+  "& .MuiListItemButton-root:hover": {
+    backgroundColor: "orange",
+    "&, & .MuiListItemIcon-root": {
+      color: "yellow",
+    },
+  },
+});

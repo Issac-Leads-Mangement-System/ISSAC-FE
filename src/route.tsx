@@ -1,7 +1,9 @@
 import { Route, Routes } from "react-router-dom";
+
 import { ProtectedRoute } from "./routes/ProtectRoute";
 import Users from "./pages/Users/Users";
 import { AdminPage } from "./pages/AdminPage";
+
 import useAuthStore from "./store/authStore/authStore";
 
 export const PrivateRoute = () => {

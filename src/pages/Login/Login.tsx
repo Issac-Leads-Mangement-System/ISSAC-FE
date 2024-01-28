@@ -54,20 +54,8 @@ const Login = ({ className, setUser }: any) => {
           "https://issac-service-app-now-7jji5at5aa-ue.a.run.app/auth/token",
           formData
         );
-
-        const parsedPayload: JwtPayload = jwtDecode(
-          response?.data?.access_token
-        );
         navigate("/users");
         localStorage.setItem("authToken", response?.data?.access_token);
-        useAuthStore
-          .getState()
-          .login(
-            response?.data?.access_token,
-            parsedPayload.id,
-            parsedPayload.sub,
-            parsedPayload.user_role
-          );
       } catch (error) {
         console.error("Login failed", error);
       }

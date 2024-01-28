@@ -16,7 +16,13 @@ const menus: any = [
   {
     name: "Leads",
     icon: <DescriptionIcon />,
-    route: "/admin",
+    children: [
+      {
+        name: "submenu 1",
+        icon: <EditNoteIcon />,
+        route: "/admin",
+      },
+    ],
   },
 ];
 
