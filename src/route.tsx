@@ -5,6 +5,7 @@ import Users from "./pages/Users/Users";
 import { AdminPage } from "./pages/AdminPage";
 
 import useAuthStore from "./store/authStore/authStore";
+import Team from "./pages/Team/Team";
 
 export const PrivateRoute = () => {
   const { role } = useAuthStore((state) => state);
@@ -16,6 +17,14 @@ export const PrivateRoute = () => {
         element={
           <ProtectedRoute isAllowed={!!role} user={role}>
             <Users />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/team"
+        element={
+          <ProtectedRoute isAllowed={!!role} user={role}>
+            <Team />
           </ProtectedRoute>
         }
       />

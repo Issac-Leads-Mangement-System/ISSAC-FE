@@ -15,7 +15,6 @@ export const ProtectedRoute: FC<ProtectedRouteInterface> = ({
   user,
 }) => {
   let statusLogin = localStorage.getItem("issac_signIn");
-  // console.log("isAllowed", isAllowed, user, statusLogin);
   if (!isAllowed && statusLogin !== "signIn") {
     return <Navigate to={redirectPath} replace />;
   }

@@ -90,7 +90,6 @@ function BlurInput({
       onChange(e);
     }
   };
-
   return (
     <div
       className={`${className} ${versionClassName} inputWrapper`}

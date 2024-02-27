@@ -8,10 +8,10 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import {
   UserModalSchema,
-  validationUserSchema,
   initialValues,
+  validationTeamSchema,
 } from "../../../forms/userModalSchema";
-import { TeamModalStyle } from "./UserModalStyle";
+import { TeamModalStyle } from "./TeamModalStyle";
 import {
   Button,
   FormControl,
@@ -29,8 +29,8 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 800,
-  height: 600,
+  width: 600,
+  height: 200,
   bgcolor: "background.paper",
   border: "2px solid #000",
   boxShadow: 24,
@@ -62,7 +62,7 @@ const TeamModal = ({ className, open, setOpen, type, id }: any) => {
 
   const getUserById = async () => {
     const result = await axios.get(
-      `https://issac-service-app-now-7jji5at5aa-ue.a.run.app/users/${id}`,
+      `https://issac-service-app-now-7jji5at5aa-ue.a.run.app/users/teams/${id}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -79,9 +79,11 @@ const TeamModal = ({ className, open, setOpen, type, id }: any) => {
   }, []);
 
   const handleSubmitModal = (values: any) => {
+    console.log("zzzz here", id);
+
     if (id) {
       axios.put(
-        `https://issac-service-app-now-7jji5at5aa-ue.a.run.app/users/edit_user/${id}`,
+        `https://issac-service-app-now-7jji5at5aa-ue.a.run.app/users/edit_team/${id}`,
         values,
         {
           headers: {
@@ -91,7 +93,7 @@ const TeamModal = ({ className, open, setOpen, type, id }: any) => {
       );
     } else {
       axios.post(
-        `https://issac-service-app-now-7jji5at5aa-ue.a.run.app/users/add_user`,
+        `https://issac-service-app-now-7jji5at5aa-ue.a.run.app/users/add_team`,
         values,
         {
           headers: {
@@ -118,9 +120,9 @@ const TeamModal = ({ className, open, setOpen, type, id }: any) => {
               id="modal-modal-title"
               variant="h6"
               component="h2"
-              sx={{ width: "97%" }}
+              sx={{ width: "95%" }}
             >
-              {type} new user
+              {type} team
             </Typography>
             <CloseIcon
               sx={{ cursor: "pointer", float: "right" }}
@@ -130,7 +132,7 @@ const TeamModal = ({ className, open, setOpen, type, id }: any) => {
           <hr />
           <GenericAddEditForm
             initialValues={initialFormValues}
-            validationSchema={validationUserSchema}
+            validationSchema={validationTeamSchema}
             apiRequest={handleSubmitModal}
             hasSubmitButton={true}
             submitBtnName={"Save"}
@@ -141,96 +143,12 @@ const TeamModal = ({ className, open, setOpen, type, id }: any) => {
                     <Input
                       {...generateFormikInputFieldProps(
                         formProps,
-                        INPUTS.FIRST_NAME.NAME
+                        INPUTS.TEAM.NAME
                       )}
-                      label="First name"
+                      label="Team name"
                       style={{ display: "flex" }}
                       size="small"
                     />
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Input
-                      {...generateFormikInputFieldProps(
-                        formProps,
-                        INPUTS.LAST_NAME.NAME
-                      )}
-                      label="Last name"
-                      style={{ display: "flex" }}
-                      size="small"
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Input
-                      {...generateFormikInputFieldProps(
-                        formProps,
-                        INPUTS.EMAIL.NAME
-                      )}
-                      label="Email"
-                      style={{ display: "flex" }}
-                      size="small"
-                    />
-                  </Grid>
-                  <Grid item xs={6}>
-                    <FormControl sx={{ minWidth: "100%" }} size="small">
-                      <InputLabel id="role">Team</InputLabel>
-                      <Select
-                        labelId="role"
-                        id="role-select"
-                        label="Role"
-                        {...generateFormikInputFieldProps(
-                          formProps,
-                          INPUTS.TEAM.NAME
-                        )}
-                      >
-                        {userTeamList &&
-                          userTeamList.map((team: any) => (
-                            <MenuItem value={team.team_name}>
-                              {team.team_name}
-                            </MenuItem>
-                          ))}
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Input
-                      {...generateFormikInputFieldProps(
-                        formProps,
-                        INPUTS.PASSWORD_UER.NAME
-                      )}
-                      label="Password"
-                      style={{ display: "flex" }}
-                      size="small"
-                    />
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Input
-                      {...generateFormikInputFieldProps(
-                        formProps,
-                        INPUTS.PHONE.NAME
-                      )}
-                      label="Phone number"
-                      style={{ display: "flex" }}
-                      size="small"
-                    />
-                  </Grid>
-                  <Grid item xs={6}>
-                    <FormControl sx={{ minWidth: 120 }} size="small">
-                      <InputLabel id="role">Role</InputLabel>
-                      <Select
-                        labelId="role"
-                        id="role-select"
-                        label="Role"
-                        {...generateFormikInputFieldProps(
-                          formProps,
-                          INPUTS.ROLE.NAME
-                        )}
-                      >
-                        {ROLE &&
-                          ROLE.map((role: any) => (
-                            <MenuItem value={role}>{role}</MenuItem>
-                          ))}
-                      </Select>
-                    </FormControl>
                   </Grid>
                 </Grid>
                 <Button
