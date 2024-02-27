@@ -23,6 +23,7 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import axios from "axios";
+import TeamApi from "../../../api/team";
 
 const style = {
   position: "absolute" as "absolute",
@@ -42,67 +43,27 @@ const TeamModal = ({ className, open, setOpen, type, id }: any) => {
     ...initialValues,
   });
   const [userTeamList, setUserTeamList] = useState([]);
-  const token: any = localStorage.getItem("authToken");
-
   const handleClose = () => {
     setOpen(false);
   };
 
-  const getUserTeam = async () => {
-    const result = await axios.get(
-      `https://issac-service-app-now-7jji5at5aa-ue.a.run.app/users/teams/`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    setUserTeamList(result.data.teams_response);
-  };
-
-  const getUserById = async () => {
-    const result = await axios.get(
-      `https://issac-service-app-now-7jji5at5aa-ue.a.run.app/users/teams/${id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+  const getTeamById = async () => {
+    const result: any = await TeamApi.getTeamById(id);
+    console.log(result);
     setInitialFormValues(result.data);
   };
   useEffect(() => {
-    getUserTeam();
     if (id) {
-      getUserById();
+      getTeamById();
     }
   }, []);
 
   const handleSubmitModal = (values: any) => {
-    console.log("zzzz here", id);
-
     if (id) {
-      axios.put(
-        `https://issac-service-app-now-7jji5at5aa-ue.a.run.app/users/edit_team/${id}`,
-        values,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      TeamApi.updateTeam(values, id);
     } else {
-      axios.post(
-        `https://issac-service-app-now-7jji5at5aa-ue.a.run.app/users/add_team`,
-        values,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      TeamApi.createTeam(values);
     }
-
     setOpen(false);
   };
 

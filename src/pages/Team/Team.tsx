@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import {
+  Alert,
+  Box,
   Button,
+  IconButton,
+  Snackbar,
   Table,
   TableBody,
   TableContainer,
@@ -14,10 +18,10 @@ import Paper from "@mui/material/Paper";
 import styled from "styled-components";
 import { StyledTableCell, StyledTableRow } from "../../common/utils";
 import AddIcon from "@mui/icons-material/Add";
-import axios from "axios";
 import { TeamStyle } from "./TeamStyle";
 import TeamApi from "../../api/team";
 import TeamModal from "../../common/Modal/Teams/TeamModal";
+import CloseIcon from "@mui/icons-material/Close";
 
 const Team = ({ className }: any) => {
   const [open, setOpen] = useState(false);
@@ -36,11 +40,11 @@ const Team = ({ className }: any) => {
 
   const handleDeleteClick = async (id: number) => {
     TeamApi.deleteUser(id);
-    setUserList(userList.filter((user: any) => user.id !== id));
+    // setUserList(userList.filter((user: any) => user.id !== id));
     setCountUsers(countUsers - 1);
+    getTeams();
   };
 
-  const token: any = localStorage.getItem("authToken");
   const getTeams = async () => {
     try {
       const response = await TeamApi.getTeams(page);
@@ -62,16 +66,7 @@ const Team = ({ className }: any) => {
   const handleChangePage = async (event: unknown, newPage: number) => {
     setPage(newPage);
     try {
-      const response = await axios.get(
-        `https://issac-service-app-now-7jji5at5aa-ue.a.run.app/users/teams/?page=${
-          newPage + 1
-        }&limit=${rowsPerPage}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response: any = await TeamApi.changePage(newPage, rowsPerPage);
       if (response?.data?.teams_response?.length > 0) {
         setUserList(response.data.teams_response);
       } else if (response?.data?.length > 0) {
@@ -93,15 +88,9 @@ const Team = ({ className }: any) => {
   ) => {
     try {
       setRowsPerPage(parseInt(event.target.value, 10));
-      const response = await axios.get(
-        `https://issac-service-app-now-7jji5at5aa-ue.a.run.app/users/teams/?page=${
-          page === 0 ? page + 1 : page
-        }&limit=${parseInt(event.target.value, 10)}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+      const response = await TeamApi.changeRowsPerPage(
+        event.target.value,
+        page
       );
       if (response?.data?.teams_response?.length > 0) {
         setUserList(response.data.teams_response);
@@ -170,6 +159,32 @@ const Team = ({ className }: any) => {
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
       {open && <TeamModal open={open} setOpen={setOpen} type={type} id={id} />}
+      <Box sx={{ width: 500 }}>
+        <Snackbar
+          open={true}
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+          autoHideDuration={5000}
+          message="Test"
+        >
+          <Alert
+            action={
+              <IconButton
+                aria-label="close"
+                color="inherit"
+                size="small"
+                onClick={() => {
+                  setOpen(false);
+                }}
+              >
+                <CloseIcon fontSize="inherit" />
+              </IconButton>
+            }
+            sx={{ mb: 2 }}
+          >
+            Click the close icon to see the Collapse transition in action!
+          </Alert>
+        </Snackbar>
+      </Box>
     </div>
   );
 };
