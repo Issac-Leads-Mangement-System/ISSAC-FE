@@ -34,6 +34,7 @@ const Login = ({ className, setUser }: any) => {
   const [initialFormValues, setInitialFormValues] = useState<LoginSchema>({
     ...initialValues,
   });
+  const [apiError, setApiError] = useState("");
 
   useEffect(() => {
     let statusLog = localStorage.getItem("authToken");
@@ -56,8 +57,13 @@ const Login = ({ className, setUser }: any) => {
         );
         navigate("/users");
         localStorage.setItem("authToken", response?.data?.access_token);
-      } catch (error) {
+      } catch (error: any) {
         console.error("Login failed", error);
+        setApiError(
+          error.response && error.response.data
+            ? error.response.data.detail
+            : "Email or password is incorrect!"
+        );
       }
     }
   };
@@ -91,7 +97,7 @@ const Login = ({ className, setUser }: any) => {
                     placeholder={INPUTS.EMAIL.PLACEHOLDER}
                     minWidth="100%"
                     hasEmailIcon={true as boolean}
-                    // disabled={isLoading}
+                    disabled={false}
                   />
 
                   <Input
@@ -114,7 +120,7 @@ const Login = ({ className, setUser }: any) => {
                     className="submit-form"
                   />
 
-                  {/* <p className="error">{apiError}</p> */}
+                  <p className="error">{apiError}</p>
                 </>
               )}
             />

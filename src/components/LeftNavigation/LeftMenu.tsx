@@ -35,7 +35,6 @@ const LeftMenu = ({ className, open }: any) => {
               if (menu.children) {
                 openMenu(openChildren);
               } else {
-                openMenu(openChildren);
                 navigate(menu.route);
                 setActiveItem(menu.name);
               }

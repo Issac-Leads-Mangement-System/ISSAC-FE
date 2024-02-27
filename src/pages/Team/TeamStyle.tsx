@@ -1,6 +1,6 @@
 import { css } from "styled-components";
 
-export const UsersStyle = () => css`
+export const TeamStyle = () => css`
   &.test {
     margin-right: 15px;
     margin-left: 15px;
