@@ -42,7 +42,7 @@ const LeftMenu = ({ className, open }: any) => {
             key={menu.name}
             disablePadding
             sx={{ display: "block" }}
-            selected={activeItem === menu.name}
+            // selected={activeItem === menu.name}
           >
             <ListItemButton
               sx={{
@@ -83,7 +83,7 @@ const LeftMenu = ({ className, open }: any) => {
                   key={menu.name}
                   disablePadding
                   sx={{ display: "block", paddingLeft: "20px" }}
-                  selected={activeItem === menu.name}
+                  // selected={activeItem === menu.name}
                 >
                   <ListItemButton
                     sx={{
