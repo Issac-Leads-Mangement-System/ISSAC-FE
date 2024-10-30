@@ -37,7 +37,7 @@ function App() {
       try {
         setLoading(true);
         const response = await axios.get(
-          `https://issac-service-app-now-7jji5at5aa-ue.a.run.app/users/${id}`,
+          `${process.env.REACT_APP_BASE_URL}/users/${id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

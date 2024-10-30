@@ -50,7 +50,7 @@ const TeamModal = ({ className, open, setOpen, type, id }: any) => {
 
   const getUserTeam = async () => {
     const result = await axios.get(
-      `https://issac-service-app-now-7jji5at5aa-ue.a.run.app/users/teams/`,
+      `${process.env.REACT_APP_BASE_URL}/users/teams/`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -62,7 +62,7 @@ const TeamModal = ({ className, open, setOpen, type, id }: any) => {
 
   const getUserById = async () => {
     const result = await axios.get(
-      `https://issac-service-app-now-7jji5at5aa-ue.a.run.app/users/teams/${id}`,
+      `${process.env.REACT_APP_BASE_URL}/users/teams/${id}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -83,7 +83,7 @@ const TeamModal = ({ className, open, setOpen, type, id }: any) => {
 
     if (id) {
       axios.put(
-        `https://issac-service-app-now-7jji5at5aa-ue.a.run.app/users/edit_team/${id}`,
+        `${process.env.REACT_APP_BASE_URL}/users/edit_team/${id}`,
         values,
         {
           headers: {
@@ -93,7 +93,7 @@ const TeamModal = ({ className, open, setOpen, type, id }: any) => {
       );
     } else {
       axios.post(
-        `https://issac-service-app-now-7jji5at5aa-ue.a.run.app/users/add_team`,
+        `${process.env.REACT_APP_BASE_URL}/users/add_team`,
         values,
         {
           headers: {

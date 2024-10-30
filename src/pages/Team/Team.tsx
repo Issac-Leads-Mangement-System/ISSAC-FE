@@ -63,7 +63,7 @@ const Team = ({ className }: any) => {
     setPage(newPage);
     try {
       const response = await axios.get(
-        `https://issac-service-app-now-7jji5at5aa-ue.a.run.app/users/teams/?page=${
+        `${process.env.REACT_APP_BASE_URL}/users/teams/?page=${
           newPage + 1
         }&limit=${rowsPerPage}`,
         {
@@ -94,7 +94,7 @@ const Team = ({ className }: any) => {
     try {
       setRowsPerPage(parseInt(event.target.value, 10));
       const response = await axios.get(
-        `https://issac-service-app-now-7jji5at5aa-ue.a.run.app/users/teams/?page=${
+        `${process.env.REACT_APP_BASE_URL}/users/teams/?page=${
           page === 0 ? page + 1 : page
         }&limit=${parseInt(event.target.value, 10)}`,
         {

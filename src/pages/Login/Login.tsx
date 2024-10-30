@@ -52,7 +52,7 @@ const Login = ({ className, setUser }: any) => {
 
       try {
         const response = await axios.post(
-          "https://issac-service-app-now-7jji5at5aa-ue.a.run.app/auth/token",
+          `${process.env.REACT_APP_BASE_URL}/auth/token`,
           formData
         );
         navigate("/users");

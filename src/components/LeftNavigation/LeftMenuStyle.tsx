@@ -2,7 +2,7 @@ import { css } from "styled-components";
 
 export const LeftMenuStyle = () => css`
   &.issac-container {
-    background-color: #000000d4;
+    background-color: #38454a;
     width: 220px;
     height: 100vh;
   }
@@ -10,7 +10,6 @@ export const LeftMenuStyle = () => css`
     width: 150px;
     margin: auto;
     margin-top: 10px;
-    margin: 15px;
   }
 
   .issac-container-child {

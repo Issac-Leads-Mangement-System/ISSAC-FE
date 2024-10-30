@@ -4,10 +4,20 @@ export const UsersStyle = () => css`
   &.test {
     margin-right: 15px;
     margin-left: 15px;
+    margin-top: 15px;
+    background-color: white;
+    border-radius: 0.25rem;
   }
+
   .issac-user-button {
     color: white;
-    background: #000000d4;
+    background: #38454a;
+    margin-bottom: 5px;
+  }
+  .issac-user-button:hover {
+    color: white;
+    background: #38454a;
+    margin-bottom: 5px;
   }
 
   .title {

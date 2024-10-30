@@ -35,7 +35,7 @@ const closedMixin = (theme: Theme): CSSObject => ({
 
 export const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
-  alignItems: "center",
+  // alignItems: "center",
   justifyContent: "flex-end",
   padding: theme.spacing(0, 1),
   // necessary for content to be below app bar
@@ -84,7 +84,7 @@ export const Drawer = styled(MuiDrawer, {
 export const StyledTableCell = styled(TableCell)(({ theme }): any => ({
   [`&.${tableCellClasses.head}`]: {
     // backgroundColor: "#ff2f5b",
-    backgroundColor: "#000000d4",
+    backgroundColor: "#38454a",
     paddingTop: "8px",
     paddingBottom: "8px",
     color: theme.palette.common.white,
@@ -99,7 +99,7 @@ export const StyledTableCell = styled(TableCell)(({ theme }): any => ({
 
 export const StyledTableRow = styled(TableRow)(({ theme }): any => ({
   "&:nth-of-type(even)": {
-    backgroundColor: theme.palette.action.hover,
+    // backgroundColor: theme.palette.action.hover,
   },
   // hide last border
   "&:last-child td, &:last-child th": {

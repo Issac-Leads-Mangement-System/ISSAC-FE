@@ -15,7 +15,7 @@ class TeamApi {
 
   static deleteUser = async (id: number) => {
     await axios.delete(
-      `https://issac-service-app-now-7jji5at5aa-ue.a.run.app/users/delete_team/${id}`,
+      `${process.env.REACT_APP_BASE_URL}/users/delete_team/${id}`,
       {
         headers: {
           Authorization: `Bearer ${TeamApi.token}`,
