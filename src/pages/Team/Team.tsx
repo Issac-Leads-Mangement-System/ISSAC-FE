@@ -18,6 +18,10 @@ import axios from "axios";
 import { TeamStyle } from "./TeamStyle";
 import TeamApi from "../../api/team";
 import TeamModal from "../../common/Modal/Teams/TeamModal";
+import CustomModal from "../../common/Modal/CustomModal/CustomModal";
+import { GenericAddEditForm } from "../../common/forms-generic-ad-edit/GenericAdEditForm";
+import { TeamForm } from "../../common/Modal/Teams/TeamForm";
+import { validationTeamSchema } from "../../forms/userModalSchema";
 
 const Team = ({ className }: any) => {
   const [open, setOpen] = useState(false);
@@ -111,6 +115,30 @@ const Team = ({ className }: any) => {
     }
   };
 
+  const handleSubmitModal = (values: any) => {
+    console.log("zzzz here", id);
+
+    if (id) {
+      axios.put(
+        `${process.env.REACT_APP_BASE_URL}/users/edit_team/${id}`,
+        values,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+    } else {
+      axios.post(`${process.env.REACT_APP_BASE_URL}/users/add_team`, values, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    }
+
+    setOpen(false);
+  };
+
   return (
     <div className={`${className} test`}>
       <h2 className="title">Team</h2>
@@ -169,7 +197,26 @@ const Team = ({ className }: any) => {
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
-      {open && <TeamModal open={open} setOpen={setOpen} type={type} id={id} />}
+      {/* {open && (
+        // <TeamModal open={open} setOpen={setOpen} type={type} id={id} />
+        <CustomModal
+          isOpen={open}
+          onClose={() => {
+            setOpen(false);
+          }}
+          children={ <GenericAddEditForm
+            initialValues={initialFormValues}
+            validationSchema={validationTeamSchema}
+            apiRequest={handleSubmitModal}
+            hasSubmitButton={true}
+            submitBtnName={"Save"}
+            form={(formProps: any) => (
+              <TeamForm formProps={formProps}/>
+            )}
+          }
+          title="Add New Team"
+        />
+      )} */}
     </div>
   );
 };

@@ -23,6 +23,7 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import axios from "axios";
+import { UserForm } from "./UserForm";
 
 const style = {
   position: "absolute" as "absolute",
@@ -90,15 +91,11 @@ const TeamModal = ({ className, open, setOpen, type, id }: any) => {
         }
       );
     } else {
-      axios.post(
-        `${process.env.REACT_APP_BASE_URL}/users/add_user`,
-        values,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      axios.post(`${process.env.REACT_APP_BASE_URL}/users/add_user`, values, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
     }
 
     setOpen(false);
@@ -135,125 +132,126 @@ const TeamModal = ({ className, open, setOpen, type, id }: any) => {
             hasSubmitButton={true}
             submitBtnName={"Save"}
             form={(formProps: any) => (
-              <div>
-                <Grid container spacing={2}>
-                  <Grid item xs={6}>
-                    <Input
-                      {...generateFormikInputFieldProps(
-                        formProps,
-                        INPUTS.FIRST_NAME.NAME
-                      )}
-                      label="First name"
-                      style={{ display: "flex" }}
-                      size="small"
-                    />
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Input
-                      {...generateFormikInputFieldProps(
-                        formProps,
-                        INPUTS.LAST_NAME.NAME
-                      )}
-                      label="Last name"
-                      style={{ display: "flex" }}
-                      size="small"
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Input
-                      {...generateFormikInputFieldProps(
-                        formProps,
-                        INPUTS.EMAIL.NAME
-                      )}
-                      label="Email"
-                      style={{ display: "flex" }}
-                      size="small"
-                    />
-                  </Grid>
-                  <Grid item xs={6}>
-                    <FormControl sx={{ minWidth: "100%" }} size="small">
-                      <InputLabel id="role">Team</InputLabel>
-                      <Select
-                        labelId="role"
-                        id="role-select"
-                        label="Role"
-                        {...generateFormikInputFieldProps(
-                          formProps,
-                          INPUTS.TEAM.NAME
-                        )}
-                      >
-                        {userTeamList &&
-                          userTeamList.map((team: any) => (
-                            <MenuItem value={team.team_name}>
-                              {team.team_name}
-                            </MenuItem>
-                          ))}
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Input
-                      {...generateFormikInputFieldProps(
-                        formProps,
-                        INPUTS.PASSWORD_UER.NAME
-                      )}
-                      label="Password"
-                      style={{ display: "flex" }}
-                      size="small"
-                    />
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Input
-                      {...generateFormikInputFieldProps(
-                        formProps,
-                        INPUTS.PHONE.NAME
-                      )}
-                      label="Phone number"
-                      style={{ display: "flex" }}
-                      size="small"
-                    />
-                  </Grid>
-                  <Grid item xs={6}>
-                    <FormControl sx={{ minWidth: 120 }} size="small">
-                      <InputLabel id="role">Role</InputLabel>
-                      <Select
-                        labelId="role"
-                        id="role-select"
-                        label="Role"
-                        {...generateFormikInputFieldProps(
-                          formProps,
-                          INPUTS.ROLE.NAME
-                        )}
-                      >
-                        {ROLE &&
-                          ROLE.map((role: any) => (
-                            <MenuItem value={role}>{role}</MenuItem>
-                          ))}
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                </Grid>
-                <Button
-                  className="issac-user-button"
-                  variant="outlined"
-                  onClick={() => handleClose()}
-                  sx={{
-                    float: "left",
-                    color: "white",
-                    border: 0,
-                    marginBottom: "5px",
-                    backgroundColor: "#000000d4",
-                    marginTop: "10px",
-                    "&:hover": {
-                      backgroundColor: "#000000d4",
-                    },
-                  }}
-                  size="small"
-                  type="button"
-                >
-                  Close
-                </Button>
-              </div>
+              <UserForm formProps={formProps} userTeamList={userTeamList} />
+              // <div>
+              //   <Grid container spacing={2}>
+              //     <Grid item xs={6}>
+              //       <Input
+              //         {...generateFormikInputFieldProps(
+              //           formProps,
+              //           INPUTS.FIRST_NAME.NAME
+              //         )}
+              //         label="First name"
+              //         style={{ display: "flex" }}
+              //         size="small"
+              //       />
+              //     </Grid>
+              //     <Grid item xs={6}>
+              //       <Input
+              //         {...generateFormikInputFieldProps(
+              //           formProps,
+              //           INPUTS.LAST_NAME.NAME
+              //         )}
+              //         label="Last name"
+              //         style={{ display: "flex" }}
+              //         size="small"
+              //       />
+              //     </Grid>
+              //     <Grid item xs={12}>
+              //       <Input
+              //         {...generateFormikInputFieldProps(
+              //           formProps,
+              //           INPUTS.EMAIL.NAME
+              //         )}
+              //         label="Email"
+              //         style={{ display: "flex" }}
+              //         size="small"
+              //       />
+              //     </Grid>
+              //     <Grid item xs={6}>
+              //       <FormControl sx={{ minWidth: "100%" }} size="small">
+              //         <InputLabel id="role">Team</InputLabel>
+              //         <Select
+              //           labelId="role"
+              //           id="role-select"
+              //           label="Role"
+              //           {...generateFormikInputFieldProps(
+              //             formProps,
+              //             INPUTS.TEAM.NAME
+              //           )}
+              //         >
+              //           {userTeamList &&
+              //             userTeamList.map((team: any) => (
+              //               <MenuItem value={team.team_name}>
+              //                 {team.team_name}
+              //               </MenuItem>
+              //             ))}
+              //         </Select>
+              //       </FormControl>
+              //     </Grid>
+              //     <Grid item xs={6}>
+              //       <Input
+              //         {...generateFormikInputFieldProps(
+              //           formProps,
+              //           INPUTS.PASSWORD_UER.NAME
+              //         )}
+              //         label="Password"
+              //         style={{ display: "flex" }}
+              //         size="small"
+              //       />
+              //     </Grid>
+              //     <Grid item xs={6}>
+              //       <Input
+              //         {...generateFormikInputFieldProps(
+              //           formProps,
+              //           INPUTS.PHONE.NAME
+              //         )}
+              //         label="Phone number"
+              //         style={{ display: "flex" }}
+              //         size="small"
+              //       />
+              //     </Grid>
+              //     <Grid item xs={6}>
+              //       <FormControl sx={{ minWidth: 120 }} size="small">
+              //         <InputLabel id="role">Role</InputLabel>
+              //         <Select
+              //           labelId="role"
+              //           id="role-select"
+              //           label="Role"
+              //           {...generateFormikInputFieldProps(
+              //             formProps,
+              //             INPUTS.ROLE.NAME
+              //           )}
+              //         >
+              //           {ROLE &&
+              //             ROLE.map((role: any) => (
+              //               <MenuItem value={role}>{role}</MenuItem>
+              //             ))}
+              //         </Select>
+              //       </FormControl>
+              //     </Grid>
+              //   </Grid>
+              //   <Button
+              //     className="issac-user-button"
+              //     variant="outlined"
+              //     onClick={() => handleClose()}
+              //     sx={{
+              //       float: "left",
+              //       color: "white",
+              //       border: 0,
+              //       marginBottom: "5px",
+              //       backgroundColor: "#000000d4",
+              //       marginTop: "10px",
+              //       "&:hover": {
+              //         backgroundColor: "#000000d4",
+              //       },
+              //     }}
+              //     size="small"
+              //     type="button"
+              //   >
+              //     Close
+              //   </Button>
+              // </div>
             )}
           />
         </Box>
