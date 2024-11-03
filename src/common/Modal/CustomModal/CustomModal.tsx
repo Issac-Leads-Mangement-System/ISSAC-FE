@@ -24,12 +24,13 @@ const CustomModal = ({
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: 400,
+    width: "40%",
     bgcolor: "background.paper",
     border: "1px solid #000",
     boxShadow: 24,
     borderRadius: "3px",
     padding: "32px 32px 16px 32px",
+    maxWidth: "500px",
   };
 
   return (
@@ -40,7 +41,12 @@ const CustomModal = ({
       aria-describedby="modal-description"
     >
       <Box sx={style}>
-        <Box display="flex" justifyContent="space-between" alignItems="center">
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          mb={1}
+        >
           <Typography id="modal-title" variant="h6" component="h2">
             {title}
           </Typography>
@@ -53,10 +59,10 @@ const CustomModal = ({
         </Box>
         <Divider />
 
-        <Box mt={2}>{children}</Box>
+        <Box mt={4}>{children}</Box>
 
         <Box mt={2} display="flex" gap={1} justifyContent="flex-end">
-          <Button
+          {/* <Button
             sx={{
               background: "black",
               color: "white",
@@ -68,8 +74,8 @@ const CustomModal = ({
             }}
           >
             Cancel
-          </Button>
-          <Button
+          </Button> */}
+          {/* <Button
             sx={{
               ml: 1,
               border: "1px solid black",
@@ -82,7 +88,7 @@ const CustomModal = ({
             }}
           >
             Save
-          </Button>
+          </Button> */}
         </Box>
       </Box>
     </Modal>

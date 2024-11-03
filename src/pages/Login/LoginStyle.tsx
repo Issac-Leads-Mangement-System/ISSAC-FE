@@ -51,10 +51,11 @@ export const LoginStyle = () => css`
           width: 100%;
           height: 46px;
           margin-top: 10px;
-          background: #ff2f5b;
+          background: black;
+          border: 1px solid black;
         }
         .submit-form:hover {
-          background: #ff2f5ba3;
+          background: black;
         }
       }
     }

@@ -4,7 +4,7 @@ export type UserModalSchema = {
   first_name: String;
   last_name: String;
   email: String;
-  team_name: String;
+  team_id: Number | null;
   user_password?: String;
   user_role: String;
 };
@@ -13,7 +13,7 @@ export const initialValues: UserModalSchema = {
   first_name: "",
   last_name: "",
   email: "",
-  team_name: "",
+  team_id: null,
   user_password: "",
   user_role: "",
 };
@@ -28,5 +28,6 @@ export const validationUserSchema = Yup.object().shape({
 });
 
 export const validationTeamSchema = Yup.object().shape({
-  team_name: Yup.string().required("Team name is a required filed"),
+  team_id: Yup.number(),
+  // .required("Team name is a required filed"),
 });

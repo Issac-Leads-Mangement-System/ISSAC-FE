@@ -1,27 +1,29 @@
-import React, { useEffect, useState } from "react";
-import {
-  Button,
-  Table,
-  TableBody,
-  TableContainer,
-  TableHead,
-  TablePagination,
-  TableRow,
-} from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/DeleteOutlined";
-import Paper from "@mui/material/Paper";
-import styled from "styled-components";
-import { StyledTableCell, StyledTableRow } from "../../common/utils";
-import AddIcon from "@mui/icons-material/Add";
+import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
+import { Button, Card, CardContent } from "@mui/material";
+import {
+  DataGrid,
+  GridActionsCellItem,
+  GridColDef,
+  GridDeleteForeverIcon,
+} from "@mui/x-data-grid";
+import EditIcon from "@mui/icons-material/Edit";
+import AddIcon from "@mui/icons-material/Add";
+import styled from "styled-components";
+
 import { TeamStyle } from "./TeamStyle";
-import TeamApi from "../../api/team";
-import TeamModal from "../../common/Modal/Teams/TeamModal";
 import CustomModal from "../../common/Modal/CustomModal/CustomModal";
 import { GenericAddEditForm } from "../../common/forms-generic-ad-edit/GenericAdEditForm";
 import { TeamForm } from "../../common/Modal/Teams/TeamForm";
-import { validationTeamSchema } from "../../forms/userModalSchema";
+import { addBtnStyle, submitBtnStyle } from "../../common/constants";
+import {
+  TeamModalSchema,
+  initialValues,
+  validationTeamSchema,
+} from "../../forms/teamModalSchema";
+
+import teamsStore from "../../store/Teams/teams-store";
+import TeamApi from "../../api/team";
 
 const Team = ({ className }: any) => {
   const [open, setOpen] = useState(false);
@@ -29,39 +31,46 @@ const Team = ({ className }: any) => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [userList, setUserList] = useState([]);
   const [countUsers, setCountUsers] = useState(0);
-  const [type, setType] = useState("");
   const [id, setId] = useState<null | number>(null);
+  const [initialFormValues, setInitialFormValues] = useState<TeamModalSchema>({
+    ...initialValues,
+  });
+  const token: any = localStorage.getItem("authToken");
+  const { getTeams, teams, getTeam, team }: any = teamsStore();
+  const modalTitle = id ? "Edit team" : "Add New Team";
+  const submitBtnName = id ? "Update" : "Add Team";
 
-  const handleEditClick = (id: number): any => {
-    setId(id);
-    setType("Edit");
-    setOpen(true);
-  };
+  const handleEditClick = useCallback(
+    async (id: number) => {
+      try {
+        await getTeam(id);
+
+        // Wait for the team data to be updated in the store
+        await new Promise((resolve) => setTimeout(resolve, 0));
+
+        // Now safely access the updated team data
+        const updatedTeam = teamsStore.getState().team;
+        setId(id);
+        setOpen(true);
+        setInitialFormValues(updatedTeam);
+      } catch (error) {
+        console.error("Error fetching team:", error);
+        // Handle error appropriately (e.g., show error message)
+      }
+    },
+    [team]
+  );
 
   const handleDeleteClick = async (id: number) => {
     TeamApi.deleteUser(id);
     setUserList(userList.filter((user: any) => user.id !== id));
     setCountUsers(countUsers - 1);
+    await getTeams(page, 5);
   };
 
-  const token: any = localStorage.getItem("authToken");
-  const getTeams = async () => {
-    try {
-      const response = await TeamApi.getTeams(page);
-      if (response?.data?.teams_response?.length > 0) {
-        setUserList(response.data.teams_response);
-        setCountUsers(response.data.counter_teams);
-      }
-      if (response?.data?.length > 0) {
-        setUserList(response.data);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
   useEffect(() => {
-    getTeams();
-  }, [open]);
+    getTeams(page, 5);
+  }, []);
 
   const handleChangePage = async (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -82,14 +91,13 @@ const Team = ({ className }: any) => {
         setUserList(response.data);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
-  const addNewUser = () => {
+  const addNewTeam = () => {
     setOpen(true);
     setId(null);
-    setType("Add");
   };
 
   const handleChangeRowsPerPage = async (
@@ -111,15 +119,13 @@ const Team = ({ className }: any) => {
         setUserList(response.data.teams_response);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
-  const handleSubmitModal = (values: any) => {
-    console.log("zzzz here", id);
-
+  const handleSubmitModal = async (values: any) => {
     if (id) {
-      axios.put(
+      await axios.put(
         `${process.env.REACT_APP_BASE_URL}/users/edit_team/${id}`,
         values,
         {
@@ -129,94 +135,114 @@ const Team = ({ className }: any) => {
         }
       );
     } else {
-      axios.post(`${process.env.REACT_APP_BASE_URL}/users/add_team`, values, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await axios.post(
+        `${process.env.REACT_APP_BASE_URL}/users/add_team`,
+        values,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
     }
+    await getTeams(page, 5);
 
     setOpen(false);
+    setInitialFormValues(initialValues);
   };
+
+  const columns: GridColDef<(typeof teams)[number]>[] = [
+    { field: "team_name", headerName: "Team name", width: 200 },
+    { field: "created_date", headerName: "Created date", width: 200 },
+    {
+      field: "actions",
+      type: "actions",
+      width: 150,
+      editable: false,
+      renderHeader: (params: any) => <strong>{"Actions"}</strong>,
+      filterable: false,
+      getActions: (params: any) => {
+        const { id, row } = params;
+        if (id) {
+          return [
+            <GridActionsCellItem
+              icon={<EditIcon />}
+              label="Previw"
+              key={id}
+              sx={{
+                color: "black",
+              }}
+              className="textPrimary"
+              onClick={() => handleEditClick(id)}
+            />,
+            <GridActionsCellItem
+              icon={<GridDeleteForeverIcon />}
+              label="Previw"
+              key={id}
+              sx={{
+                color: "red",
+              }}
+              className="textPrimary"
+              onClick={() => handleDeleteClick(id)}
+            />,
+          ];
+        }
+        return [];
+      },
+    },
+  ];
 
   return (
     <div className={`${className} test`}>
-      <h2 className="title">Team</h2>
+      <Card sx={{ marginTop: "15px" }}>
+        <CardContent>
+          <Button
+            className="issac-user-button"
+            variant="outlined"
+            onClick={() => addNewTeam()}
+            startIcon={<AddIcon />}
+            size="small"
+            sx={addBtnStyle}
+          >
+            Add team
+          </Button>
 
-      <div>
-        <Button
-          className="issac-user-button"
-          variant="outlined"
-          sx={{
-            float: "right",
-            marginBottom: "5px",
-            "&:hover": {
-              backgroundColor: "#000000d4",
-            },
-          }}
-          onClick={() => addNewUser()}
-          startIcon={<AddIcon />}
-          size="small"
-        >
-          Add team
-        </Button>
-      </div>
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 700 }} aria-label="customized table">
-          <TableHead>
-            <TableRow>
-              <StyledTableCell>Team name</StyledTableCell>
-              <StyledTableCell align="right">Actions</StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {userList && userList.length > 0 ? (
-              userList.map((row: any) => (
-                <StyledTableRow key={row.name}>
-                  <StyledTableCell component="th" scope="row">
-                    {row.team_name}
-                  </StyledTableCell>
-                  <StyledTableCell align="right">
-                    <EditIcon onClick={() => handleEditClick(row.id)} />
-                    <DeleteIcon onClick={() => handleDeleteClick(row.id)} />
-                  </StyledTableCell>
-                </StyledTableRow>
-              ))
-            ) : (
-              <StyledTableCell>No data to display</StyledTableCell>
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[5, 10, 25]}
-        component="div"
-        count={countUsers}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
-      {/* {open && (
-        // <TeamModal open={open} setOpen={setOpen} type={type} id={id} />
+          <DataGrid
+            rows={teams}
+            columns={columns}
+            initialState={{
+              pagination: {
+                paginationModel: {
+                  pageSize: 5,
+                },
+              },
+            }}
+            pageSizeOptions={[5]}
+            disableRowSelectionOnClick
+          />
+        </CardContent>
+      </Card>
+
+      {open && (
         <CustomModal
           isOpen={open}
           onClose={() => {
             setOpen(false);
+            setInitialFormValues(initialValues);
           }}
-          children={ <GenericAddEditForm
+          title={modalTitle}
+        >
+          <GenericAddEditForm
             initialValues={initialFormValues}
             validationSchema={validationTeamSchema}
             apiRequest={handleSubmitModal}
             hasSubmitButton={true}
-            submitBtnName={"Save"}
-            form={(formProps: any) => (
-              <TeamForm formProps={formProps}/>
-            )}
-          }
-          title="Add New Team"
-        />
-      )} */}
+            submitBtnName={submitBtnName}
+            form={(formProps: any) => <TeamForm formProps={formProps} />}
+            btnStyle={submitBtnStyle}
+          />
+        </CustomModal>
+      )}
     </div>
   );
 };

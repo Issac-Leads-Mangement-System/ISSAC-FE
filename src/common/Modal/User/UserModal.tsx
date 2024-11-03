@@ -16,6 +16,7 @@ import {
   Button,
   FormControl,
   Grid,
+  Grid2,
   InputLabel,
   MenuItem,
   Select,
@@ -110,7 +111,7 @@ const TeamModal = ({ className, open, setOpen, type, id }: any) => {
         className={`${className} modal`}
       >
         <Box sx={style}>
-          <Grid container={true}>
+          <Grid2 container={true}>
             <Typography
               id="modal-modal-title"
               variant="h6"
@@ -123,7 +124,7 @@ const TeamModal = ({ className, open, setOpen, type, id }: any) => {
               sx={{ cursor: "pointer", float: "right" }}
               onClick={() => handleClose()}
             />
-          </Grid>
+          </Grid2>
           <hr />
           <GenericAddEditForm
             initialValues={initialFormValues}
