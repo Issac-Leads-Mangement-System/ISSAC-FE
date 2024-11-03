@@ -71,7 +71,7 @@ function App() {
             <Drawer variant="permanent" open={open}>
               <LeftMenu open={open} />
             </Drawer>
-            <Box component="main" sx={{ flexGrow: 1, p: 1 }}>
+            <Box component="main" sx={{ flexGrow: 1, p: 1, width:'80%' }}>
               <ToolbarComponent
                 handleDrawerOpen={handleDrawerOpen}
                 open={open}

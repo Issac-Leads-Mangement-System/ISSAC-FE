@@ -1,41 +1,24 @@
-import PersonIcon from "@mui/icons-material/Person";
-import DescriptionIcon from "@mui/icons-material/Description";
-import EditNoteIcon from "@mui/icons-material/EditNote";
-import GroupsIcon from "@mui/icons-material/Groups";
+import Groups3Icon from '@mui/icons-material/Groups3';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import GroupWorkIcon from '@mui/icons-material/GroupWork';
 
 const menus: any = [
   {
     name: "Users",
-    icon: <PersonIcon />,
+    icon: <Groups3Icon />,
     children: [
       {
-        name: "Users list",
-        icon: <PersonIcon />,
+        name: "List",
+        icon: <ManageAccountsIcon />,
         route: "/users",
       },
       {
-        name: "Team list",
-        icon: <GroupsIcon />,
+        name: "Teams",
+        icon: <GroupWorkIcon />,
         route: "/team",
       },
     ],
   },
-  // {
-  //   name: "Jobs",
-  //   icon: <EditNoteIcon />,
-  //   route: "/admin",
-  // },
-  // {
-  //   name: "Leads",
-  //   icon: <DescriptionIcon />,
-  //   children: [
-  //     {
-  //       name: "submenu 1",
-  //       icon: <EditNoteIcon />,
-  //       route: "/admin",
-  //     },
-  //   ],
-  // },
 ];
 
 export default menus;

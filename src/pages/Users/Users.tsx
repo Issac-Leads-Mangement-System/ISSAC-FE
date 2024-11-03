@@ -228,7 +228,6 @@ const Users = ({ className }: any) => {
               },
             }}
             pageSizeOptions={[5]}
-            checkboxSelection
             disableRowSelectionOnClick
           />
         </CardContent>
