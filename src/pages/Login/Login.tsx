@@ -18,8 +18,9 @@ import {
 import Button from "../../common/Button/Button";
 import { InputType } from "../../common/Input/models";
 import { LoginStyle } from "./LoginStyle";
-import Logo from "../../assets/images/logo2.jpg";
+import Logo from "../../assets/images/transparent-logo.png";
 import { useNavigate } from "react-router-dom";
+import LoadingButton from "@mui/lab/LoadingButton";
 
 import useAuthStore from "../../store/authStore/authStore";
 
@@ -35,6 +36,7 @@ const Login = ({ className, setUser }: any) => {
     ...initialValues,
   });
   const [apiError, setApiError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     let statusLog = localStorage.getItem("authToken");
@@ -49,12 +51,14 @@ const Login = ({ className, setUser }: any) => {
       const formData = new FormData();
       formData.append("username", email);
       formData.append("password", password);
+      setIsLoading(true);
 
       try {
         const response = await axios.post(
           `${process.env.REACT_APP_BASE_URL}/auth/token`,
           formData
         );
+        setIsLoading(false);
         navigate("/users");
         localStorage.setItem("authToken", response?.data?.access_token);
       } catch (error: any) {
@@ -64,10 +68,10 @@ const Login = ({ className, setUser }: any) => {
             ? error.response.data.detail
             : "Email or password is incorrect!"
         );
+        setIsLoading(false);
       }
     }
   };
-
   return (
     <ThemeProvider theme={Theme}>
       <div className={` ${className} issac-auth`}>
@@ -119,6 +123,17 @@ const Login = ({ className, setUser }: any) => {
                     // disabled={isLoading}
                     className="submit-form"
                   />
+
+                  {/* <LoadingButton
+                    size="small"
+                    color="secondary"
+                    // onClick={handleClick}
+                    loading={isLoading}
+                    loadingPosition="end"
+                    variant="contained"
+                  >
+                    Log In
+                  </LoadingButton> */}
 
                   <p className="error">{apiError}</p>
                 </>

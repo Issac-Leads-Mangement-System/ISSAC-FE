@@ -52,7 +52,7 @@ function App() {
         }
       } catch (error) {
         setLoading(false);
-        console.log("get uset error", error);
+        console.error("get uset error", error);
         //if token is expired redirect the user to the login page
       }
     }
@@ -71,7 +71,7 @@ function App() {
             <Drawer variant="permanent" open={open}>
               <LeftMenu open={open} />
             </Drawer>
-            <Box component="main" sx={{ flexGrow: 1, p: 1, width:'80%' }}>
+            <Box component="main" sx={{ flexGrow: 1, p: 1, width: "80%" }}>
               <ToolbarComponent
                 handleDrawerOpen={handleDrawerOpen}
                 open={open}

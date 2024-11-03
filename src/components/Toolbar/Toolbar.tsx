@@ -13,9 +13,9 @@ import styled from "styled-components";
 import { ToolbarStyle } from "./ToolbarStyle";
 import { useState } from "react";
 import AdbIcon from "@mui/icons-material/Adb";
-import LogoutIcon from '@mui/icons-material/Logout';
-import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
-import MenuOpenIcon from '@mui/icons-material/MenuOpen';
+import LogoutIcon from "@mui/icons-material/Logout";
+import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
+import MenuOpenIcon from "@mui/icons-material/MenuOpen";
 
 const settings = ["Logout"];
 
@@ -35,7 +35,6 @@ const ToolbarComponent = ({
     setAnchorElUser(null);
   };
 
-  console.log('zzz open', open)
   return (
     <Toolbar
       disableGutters
@@ -55,7 +54,7 @@ const ToolbarComponent = ({
             marginRight: 5,
           }}
         >
-          {open ? <MenuOpenIcon /> : <ArrowRightAltIcon/>}
+          {open ? <MenuOpenIcon /> : <ArrowRightAltIcon />}
         </IconButton>
       </Box>
 
@@ -70,19 +69,19 @@ const ToolbarComponent = ({
             marginRight: 5,
           }}
         >
-          {open ? <MenuOpenIcon /> : <ArrowRightAltIcon/>}
+          {open ? <MenuOpenIcon /> : <ArrowRightAltIcon />}
         </IconButton>
-      </Box>      
+      </Box>
       <Box sx={{ flexGrow: 0 }}>
         {/* <Tooltip title=""> */}
-          <MenuItem>
-            <IconButton
-              onClick={handleOpenUserMenu}
-              sx={{ p: 0, width: "30px", height: "30px" }}
-            >
-              <Avatar alt="Memy Sharp" />
-            </IconButton>
-          </MenuItem>
+        <MenuItem>
+          <IconButton
+            onClick={handleOpenUserMenu}
+            sx={{ p: 0, width: "30px", height: "30px" }}
+          >
+            <Avatar alt="Memy Sharp" />
+          </IconButton>
+        </MenuItem>
         {/* </Tooltip> */}
         <Menu
           sx={{ mt: "35px" }}
@@ -101,10 +100,12 @@ const ToolbarComponent = ({
           onClose={handleCloseUserMenu}
         >
           <MenuItem key={1} onClick={handleLogout}>
-          <Stack direction="row" alignItems="center" gap={1}>
-            <LogoutIcon sx={{fontSize: '15px'}}/>
-            <Typography sx={{ textAlign: "center", fontSize: '13px' }}>Log out</Typography>
-          </Stack>
+            <Stack direction="row" alignItems="center" gap={1}>
+              <LogoutIcon sx={{ fontSize: "15px" }} />
+              <Typography sx={{ textAlign: "center", fontSize: "13px" }}>
+                Log out
+              </Typography>
+            </Stack>
           </MenuItem>
         </Menu>
       </Box>

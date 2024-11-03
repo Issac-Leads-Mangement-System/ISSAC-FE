@@ -79,8 +79,6 @@ const TeamModal = ({ className, open, setOpen, type, id }: any) => {
   }, []);
 
   const handleSubmitModal = (values: any) => {
-    console.log("zzzz here", id);
-
     if (id) {
       axios.put(
         `${process.env.REACT_APP_BASE_URL}/users/edit_team/${id}`,
@@ -92,15 +90,11 @@ const TeamModal = ({ className, open, setOpen, type, id }: any) => {
         }
       );
     } else {
-      axios.post(
-        `${process.env.REACT_APP_BASE_URL}/users/add_team`,
-        values,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      axios.post(`${process.env.REACT_APP_BASE_URL}/users/add_team`, values, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
     }
 
     setOpen(false);

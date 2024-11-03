@@ -1,8 +1,8 @@
-import React, { PropsWithChildren } from "react";
+import { PropsWithChildren } from "react";
 import { Form, Formik, FormikProps } from "formik";
-// import { AnySchema } from "yup/lib/schema";
-// import { ButtonType, ButtonTypes } from "../../components/common/button/models";
+
 import Button from "../Button/Button";
+import { Box } from "@mui/material";
 
 export interface IEditFormsProps<EntityType> {
   initialValues: EntityType;
@@ -13,6 +13,7 @@ export interface IEditFormsProps<EntityType> {
   form: (formikProps: FormikProps<EntityType>) => any;
   formikRef?: any;
   submitBtnName?: string;
+  btnStyle?: object;
 }
 
 export function GenericAddEditForm<EntityType>(
@@ -34,16 +35,21 @@ export function GenericAddEditForm<EntityType>(
     >
       {(formikProps) => (
         <Form>
-          {props.form(formikProps)}
-          {props.hasSubmitButton && (
-            <Button
-              type={"primary"}
-              name={props.submitBtnName || "Submit form"}
-              buttonType={"submit"}
-              disabled={formikProps.isSubmitting}
-              className="submit-form"
-            />
-          )}
+          <Box>
+            {/* add style to the entire form */}
+            {props.form(formikProps)}
+            {props.hasSubmitButton && (
+              <Box mt={4} display="flex" gap={1} justifyContent="flex-end">
+                <Button
+                  type={"primary"}
+                  name={props.submitBtnName || "Submit form"}
+                  buttonType={"submit"}
+                  disabled={formikProps.isSubmitting}
+                  style={props.btnStyle}
+                />
+              </Box>
+            )}
+          </Box>
         </Form>
       )}
     </Formik>

@@ -28,6 +28,29 @@ export const INPUTS = {
   TEAM: {
     NAME: "team_name",
   },
+  TEAM_ID: {
+    NAME: "team_id",
+  },
 };
 
 export const ROLE = ["admin", "manager", "employee"];
+
+export const DUMMY_TEAMS = ["team_barak", "team_issac"];
+
+export const addBtnStyle = {
+  color: "white",
+  background: "#38454a",
+  marginBottom: "5px",
+};
+
+export const submitBtnStyle = {
+  background: "black",
+  color: "white",
+  fontSize: "12px",
+  fontWeight: 700,
+  padding: "6px 15px",
+  minHeight: "32px",
+  minWidth: "130px",
+  border: "none",
+  textTransform: "uppercase",
+};
