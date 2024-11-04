@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import styled, { ThemeProvider } from "styled-components";
 import { Theme } from "../../theme/Theme";
-import { jwtDecode, JwtPayload as WtJwtPayload } from "jwt-decode";
+import { JwtPayload as WtJwtPayload } from "jwt-decode";
 
 import LogoApp from "../../assets/images/loginImage.jpg";
 import { GenericAddEditForm } from "../../common/forms-generic-ad-edit/GenericAdEditForm";

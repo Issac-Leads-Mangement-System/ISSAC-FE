@@ -1,49 +1,43 @@
 import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
-import {
-  Badge,
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Chip,
-  Table,
-  TableBody,
-  TableContainer,
-  TableHead,
-  TablePagination,
-  TableRow,
-} from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/DeleteOutlined";
-import Paper from "@mui/material/Paper";
+import { Box, Button, Card, CardContent, Chip } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import { DataGrid, GridActionsCellItem, GridColDef } from "@mui/x-data-grid";
+
 import { UsersStyle } from "./UsersStyle";
 import styled from "styled-components";
-import AddIcon from "@mui/icons-material/Add";
-import UserApi from "../../api/users";
-import UserModal from "../../common/Modal/User/UserModal";
 import usersStore from "../../store/Users/users-store";
-import { DataGrid, GridActionsCellItem, GridColDef } from "@mui/x-data-grid";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import CustomModal from "../../common/Modal/CustomModal/CustomModal";
 import { GenericAddEditForm } from "../../common/forms-generic-ad-edit/GenericAdEditForm";
 import {
   UserModalSchema,
-  validationTeamSchema,
   initialValues,
+  validationUserSchema,
 } from "../../forms/userModalSchema";
 import { UserForm } from "../../common/Modal/User/UserForm";
 import { addBtnStyle, submitBtnStyle } from "../../common/constants";
 import teamsStore from "../../store/Teams/teams-store";
+import { Loader } from "../../common/Loader/Loader";
+import { DeleteConfirmationModal } from "../../common/Modal/ConfirmationDialog/ConfirmationDialog";
+import { SearchInput } from "../../common/Input/SearchInput";
 
 const Users = ({ className }: any) => {
   const [open, setOpen] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [id, setId] = useState<null | number>(null);
-  const { getUsers, setCount, users, count, getUserById, user }: any =
-    usersStore();
+  const {
+    getUsers,
+    setCount,
+    users,
+    count,
+    getUserById,
+    user,
+    deleteUser,
+    isLoading,
+  }: any = usersStore();
   const { getAllTeams, teamsOptions }: any = teamsStore();
   const [initialFormValues, setInitialFormValues] = useState<UserModalSchema>({
     ...initialValues,
@@ -53,24 +47,25 @@ const Users = ({ className }: any) => {
   const submitBtnName = id ? "Update" : "Add User";
 
   const token: any = localStorage.getItem("authToken");
-  // const userTeamList = [
-  //   {
-  //     id: 1,
-  //     team_name: "team_issac",
-  //     created_date: "2024-10-02",
-  //   },
-  //   {
-  //     id: 2,
-  //     team_name: "team_barak",
-  //     created_date: "2024-10-02",
-  //   },
-  // ];
 
-  // const handleEditClick = (id: number): any => {
-  //   setId(id);
-  //   setOpen(true);
-  //   // setInitialFormValues({});
-  // };
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleDeleteClick = (id: number) => {
+    setId(id);
+    setIsModalOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    await deleteUser(id);
+    setCount(count - 1);
+    await getUsers(page, 5);
+    setIsModalOpen(false);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
   const handleEditClick = useCallback(
     async (id: number) => {
       try {
@@ -97,17 +92,8 @@ const Users = ({ className }: any) => {
     [user]
   );
 
-  const handleDeleteClick = async (id: number) => {
-    await UserApi.deleteUser(id);
-    setCount(count - 1);
-    await getUsers(page, 5);
-  };
-
   useEffect(() => {
     getAllTeams();
-  }, []);
-
-  useEffect(() => {
     getUsers(page, 5);
   }, []);
 
@@ -195,7 +181,7 @@ const Users = ({ className }: any) => {
       renderHeader: (params: any) => <strong>{"Actions "}</strong>,
       filterable: false,
       getActions: (params: any) => {
-        const { id, row } = params;
+        const { id } = params;
         if (id) {
           return [
             <GridActionsCellItem
@@ -228,6 +214,8 @@ const Users = ({ className }: any) => {
   return (
     <Box className={`${className} test`}>
       <Card sx={{ marginTop: "15px" }}>
+        {isLoading && <Loader />}
+
         <CardContent>
           <Button
             variant="outlined"
@@ -238,6 +226,8 @@ const Users = ({ className }: any) => {
           >
             Add user
           </Button>
+
+          <SearchInput />
 
           <DataGrid
             rows={users}
@@ -266,7 +256,7 @@ const Users = ({ className }: any) => {
         >
           <GenericAddEditForm
             initialValues={initialFormValues}
-            validationSchema={validationTeamSchema}
+            validationSchema={validationUserSchema}
             apiRequest={handleSubmitModal}
             hasSubmitButton={true}
             submitBtnName={submitBtnName}
@@ -276,6 +266,15 @@ const Users = ({ className }: any) => {
             btnStyle={submitBtnStyle}
           />
         </CustomModal>
+      )}
+
+      {isModalOpen && (
+        <DeleteConfirmationModal
+          open={isModalOpen}
+          onClose={handleCloseModal}
+          onConfirm={handleConfirmDelete}
+          itemName="this user"
+        />
       )}
     </Box>
   );

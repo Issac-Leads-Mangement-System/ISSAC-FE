@@ -1,7 +1,7 @@
 import * as Yup from "yup";
 
 export type TeamModalSchema = {
-  team_name: String;
+  team_name: string;
 };
 
 export const initialValues: TeamModalSchema = {
@@ -9,5 +9,5 @@ export const initialValues: TeamModalSchema = {
 };
 
 export const validationTeamSchema = Yup.object().shape({
-  team_name: Yup.string().required("Team name is a required filed"),
+  team_name: Yup.string().required("Team name is a required filed!"),
 });

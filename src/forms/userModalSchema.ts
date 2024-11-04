@@ -1,12 +1,12 @@
 import * as Yup from "yup";
 
 export type UserModalSchema = {
-  first_name: String;
-  last_name: String;
-  email: String;
-  team_id: Number | null;
-  user_password?: String;
-  user_role: String;
+  first_name: string;
+  last_name: string;
+  email: string;
+  team_id: number | null;
+  user_password?: string;
+  user_role: string;
 };
 
 export const initialValues: UserModalSchema = {
@@ -19,15 +19,10 @@ export const initialValues: UserModalSchema = {
 };
 
 export const validationUserSchema = Yup.object().shape({
-  first_name: Yup.string().required("First name is a required filed"),
-  last_name: Yup.string().required("Last name is a required filed"),
-  email: Yup.string().email().required("Email is a required field"),
-  // team: Yup.string().required("Please select a team"),
-  user_password: Yup.string().required("Password is a required field"),
-  // role: Yup.string().required("Role is a required field"),
-});
-
-export const validationTeamSchema = Yup.object().shape({
-  team_id: Yup.number(),
-  // .required("Team name is a required filed"),
+  first_name: Yup.string().required("First name is a required filed!"),
+  last_name: Yup.string().required("Last name is a required filed!"),
+  email: Yup.string().email().required("Email is a required field!"),
+  user_password: Yup.string().required("Password is a required field!"),
+  user_role: Yup.string().required("Role is a required field!"),
+  team_id: Yup.number().required("Team is a required field!"),
 });

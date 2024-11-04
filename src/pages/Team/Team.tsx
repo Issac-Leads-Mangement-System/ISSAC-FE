@@ -23,7 +23,9 @@ import {
 } from "../../forms/teamModalSchema";
 
 import teamsStore from "../../store/Teams/teams-store";
-import TeamApi from "../../api/team";
+import { Loader } from "../../common/Loader/Loader";
+import { DeleteConfirmationModal } from "../../common/Modal/ConfirmationDialog/ConfirmationDialog";
+import { SearchInput } from "../../common/Input/SearchInput";
 
 const Team = ({ className }: any) => {
   const [open, setOpen] = useState(false);
@@ -36,9 +38,29 @@ const Team = ({ className }: any) => {
     ...initialValues,
   });
   const token: any = localStorage.getItem("authToken");
-  const { getTeams, teams, getTeam, team }: any = teamsStore();
+  const { getTeams, teams, getTeam, team, deleteTeam, isLoading }: any =
+    teamsStore();
   const modalTitle = id ? "Edit team" : "Add New Team";
   const submitBtnName = id ? "Update" : "Add Team";
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleDeleteClick = (id: number) => {
+    setId(id);
+    setIsModalOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    await deleteTeam(id);
+    setUserList(userList.filter((user: any) => user.id !== id));
+    setCountUsers(countUsers - 1);
+    await getTeams(page, 5);
+    setIsModalOpen(false);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
 
   const handleEditClick = useCallback(
     async (id: number) => {
@@ -60,13 +82,6 @@ const Team = ({ className }: any) => {
     },
     [team]
   );
-
-  const handleDeleteClick = async (id: number) => {
-    TeamApi.deleteUser(id);
-    setUserList(userList.filter((user: any) => user.id !== id));
-    setCountUsers(countUsers - 1);
-    await getTeams(page, 5);
-  };
 
   useEffect(() => {
     getTeams(page, 5);
@@ -195,6 +210,7 @@ const Team = ({ className }: any) => {
   return (
     <div className={`${className} test`}>
       <Card sx={{ marginTop: "15px" }}>
+        {isLoading && <Loader />}
         <CardContent>
           <Button
             className="issac-user-button"
@@ -206,6 +222,8 @@ const Team = ({ className }: any) => {
           >
             Add team
           </Button>
+
+          <SearchInput />
 
           <DataGrid
             rows={teams}
@@ -242,6 +260,15 @@ const Team = ({ className }: any) => {
             btnStyle={submitBtnStyle}
           />
         </CustomModal>
+      )}
+
+      {isModalOpen && (
+        <DeleteConfirmationModal
+          open={isModalOpen}
+          onClose={handleCloseModal}
+          onConfirm={handleConfirmDelete}
+          itemName="this user"
+        />
       )}
     </div>
   );
