@@ -1,46 +1,59 @@
 import { create } from "zustand";
 import api from "../../api";
 
-interface AuthState {
+interface TeamsState {
   teams: any[];
   id: string | null;
   role: string | null;
-  // setTeam: (id: string, name: string) => void;
   count: number;
   teamsOptions: any[];
   team: any;
+  isLoading: boolean;
 }
 
-const teamsStore = create<AuthState>((set) => ({
+const teamsStore = create<TeamsState>((set) => ({
   teams: [],
   id: null,
   role: null,
   count: 0,
   teamsOptions: [],
   team: {},
-  // setTeam: (id, name) => set({ id, name }),
+  isLoading: false,
   getTeams: async (page: number, limit: number) => {
+    set({ isLoading: true });
     const response = await api.get(
       `${process.env.REACT_APP_BASE_URL}/users/teams/?page=${
         page + 1
       }&limit=${limit}`
     );
+    set({ isLoading: false });
     set({ teams: response.data.teams_response });
     set({ count: response.data.counter_teams });
   },
   getAllTeams: async () => {
+    set({ isLoading: true });
     const response = await api.get(
       `${process.env.REACT_APP_BASE_URL}/users/teams/?page=1`
     );
+    set({ isLoading: false });
     set({ teamsOptions: response.data.teams_response });
   },
   getTeam: async (id: number) => {
+    set({ isLoading: true });
     const response = await api.get(
       `${process.env.REACT_APP_BASE_URL}/users/teams/${id}`
     );
+    set({ isLoading: false });
     set({ team: response.data });
   },
   setCount: (count: number) => set({ count: count }),
+  deleteTeam: async (id: number) => {
+    set({ isLoading: true });
+    await api.delete(
+      `${process.env.REACT_APP_BASE_URL}/users/delete_team/${id}`
+    );
+    set({ isLoading: false });
+  },
 }));
 
 export default teamsStore;
