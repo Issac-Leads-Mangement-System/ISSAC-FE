@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   IconButton,
   Modal,
   Typography,
@@ -24,13 +23,12 @@ const CustomModal = ({
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: "40%",
+    width: "auto",
     bgcolor: "background.paper",
     border: "1px solid #000",
     boxShadow: 24,
     borderRadius: "3px",
     padding: "32px 32px 16px 32px",
-    maxWidth: "500px",
   };
 
   return (
@@ -60,36 +58,6 @@ const CustomModal = ({
         <Divider />
 
         <Box mt={4}>{children}</Box>
-
-        <Box mt={2} display="flex" gap={1} justifyContent="flex-end">
-          {/* <Button
-            sx={{
-              background: "black",
-              color: "white",
-              fontSize: "12px",
-              fontWeight: 700,
-              padding: "6px 15px",
-              minHeight: "32px",
-              minWidth: "130px",
-            }}
-          >
-            Cancel
-          </Button> */}
-          {/* <Button
-            sx={{
-              ml: 1,
-              border: "1px solid black",
-              color: "black",
-              fontSize: "12px",
-              fontWeight: 700,
-              padding: "6px 12px",
-              minHeight: "32px",
-              minWidth: "130px",
-            }}
-          >
-            Save
-          </Button> */}
-        </Box>
       </Box>
     </Modal>
   );
