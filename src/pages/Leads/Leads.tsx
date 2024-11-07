@@ -279,7 +279,7 @@ const Leads = ({ className }: any) => {
             Add user
           </Button>
 
-          <SearchInput />
+          {/* <SearchInput /> */}
 
           <CustomDataGrid
             rows={users}

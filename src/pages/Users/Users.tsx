@@ -20,10 +20,10 @@ import {
 import { UserForm } from "../../common/Modal/User/UserForm";
 import { addBtnStyle, submitBtnStyle } from "../../common/constants";
 import teamsStore from "../../store/Teams/teams-store";
-import { Loader } from "../../common/Loader/Loader";
 import { DeleteConfirmationModal } from "../../common/Modal/ConfirmationDialog/ConfirmationDialog";
 import { SearchInput } from "../../common/Input/SearchInput";
 import secondToolbarStore from "../../store/SecondToolbar/second-tollbar-store";
+import { Loader } from "../../common/Loader/Loader";
 
 
 const CustomDataGrid: any = styledMaterial(DataGrid)(
@@ -80,6 +80,7 @@ const Users = ({ className }: any) => {
     user,
     deleteUser,
     isLoading,
+    setSearchValue,
   }: any = usersStore();
   const { getAllTeams, teamsOptions }: any = teamsStore();
   const { setSecontToolbarMessage, setSecontToolbarPath, resetSecondToolbar }: any = secondToolbarStore();
@@ -171,6 +172,14 @@ const Users = ({ className }: any) => {
       console.error(error);
     }
   };
+
+  const handleSearchInputChange = (event: any) => {
+    setSearchValue(event?.target.value);
+    if (!event?.target.value) {
+      getUsers(0, 10);
+    }
+  };
+
   const handleSubmitModal = async (values: any) => {
     if (id) {
       await axios.put(
@@ -263,9 +272,11 @@ const Users = ({ className }: any) => {
     },
   ];
 
+  console.log("users?.length", users?.length);
+
   return (
     <Box className={`${className} test`}>
-      <Card >
+      <Card sx={{ marginTop: "15px" }}>
         {isLoading && <Loader />}
 
         <CardContent>
@@ -279,7 +290,15 @@ const Users = ({ className }: any) => {
             Add user
           </Button>
 
-          <SearchInput />
+          <SearchInput
+            onChange={(event: any) => handleSearchInputChange(event)}
+            onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
+              if (event.key === "Enter") {
+                event.preventDefault(); // Prevent form submission if inside a form
+                getUsers(0, 10);
+              }
+            }}
+          />
 
           <CustomDataGrid
             rows={users}
@@ -294,6 +313,7 @@ const Users = ({ className }: any) => {
             pageSizeOptions={[5]}
             disableRowSelectionOnClick
             disableVirtualization
+            loading={isLoading}
           />
         </CardContent>
       </Card>

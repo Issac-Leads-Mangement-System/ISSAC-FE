@@ -3,7 +3,6 @@ import {
   Typography,
   Toolbar,
   Box,
-  Tooltip,
   Avatar,
   Menu,
   MenuItem,
@@ -16,8 +15,6 @@ import AdbIcon from "@mui/icons-material/Adb";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
 import MenuOpenIcon from "@mui/icons-material/MenuOpen";
-
-const settings = ["Logout"];
 
 const ToolbarComponent = ({
   className,
@@ -61,7 +58,6 @@ const ToolbarComponent = ({
 
       
       <Box sx={{ flexGrow: 0 }}>
-        {/* <Tooltip title=""> */}
         <MenuItem>
           <IconButton
             onClick={handleOpenUserMenu}
@@ -70,7 +66,6 @@ const ToolbarComponent = ({
             <Avatar alt="Memy Sharp" />
           </IconButton>
         </MenuItem>
-        {/* </Tooltip> */}
         <Menu
           sx={{ mt: "35px" }}
           id="menu-appbar"

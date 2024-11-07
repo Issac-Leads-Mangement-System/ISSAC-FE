@@ -10,7 +10,8 @@ interface AuthState {
   logout: () => void;
   count: number;
   user: any;
-  isLoading: Boolean;
+  isLoading: boolean;
+  searchValue: string;
 }
 
 const usersStore = create<AuthState>((set) => ({
@@ -20,12 +21,16 @@ const usersStore = create<AuthState>((set) => ({
   count: 0,
   user: {},
   isLoading: false,
+  searchValue: "",
   setUser: (id, role) => set({ id, role }),
   logout: () => set({ id: null, role: null }),
   getUsers: async (page: number, limit: number) => {
+    const { searchValue } = usersStore.getState();
     set({ isLoading: true });
     const response = await api.post(
-      `${process.env.REACT_APP_BASE_URL}/users/?page=${page + 1}&limit=${limit}`
+      `${process.env.REACT_APP_BASE_URL}/users/?page=${
+        page + 1
+      }&limit=${limit}&search=${searchValue}`
     );
     set({ isLoading: false });
     set({ users: response.data.users_response });
@@ -47,6 +52,7 @@ const usersStore = create<AuthState>((set) => ({
     );
     set({ isLoading: false });
   },
+  setSearchValue: (value: string) => set({ searchValue: value }),
 }));
 
 export default usersStore;

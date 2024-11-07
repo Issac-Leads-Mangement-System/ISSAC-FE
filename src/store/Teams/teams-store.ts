@@ -9,6 +9,7 @@ interface TeamsState {
   teamsOptions: any[];
   team: any;
   isLoading: boolean;
+  searchValue: string;
 }
 
 const teamsStore = create<TeamsState>((set) => ({
@@ -19,12 +20,14 @@ const teamsStore = create<TeamsState>((set) => ({
   teamsOptions: [],
   team: {},
   isLoading: false,
+  searchValue: "",
   getTeams: async (page: number, limit: number) => {
+    const { searchValue } = teamsStore.getState();
     set({ isLoading: true });
     const response = await api.get(
       `${process.env.REACT_APP_BASE_URL}/users/teams/?page=${
         page + 1
-      }&limit=${limit}`
+      }&limit=${limit}&search=${searchValue}`
     );
     set({ isLoading: false });
     set({ teams: response.data.teams_response });
@@ -54,6 +57,7 @@ const teamsStore = create<TeamsState>((set) => ({
     );
     set({ isLoading: false });
   },
+  setSearchValue: (value: string) => set({ searchValue: value }),
 }));
 
 export default teamsStore;
