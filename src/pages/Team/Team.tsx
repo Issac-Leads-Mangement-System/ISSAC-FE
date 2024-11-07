@@ -21,9 +21,7 @@ import {
   initialValues,
   validationTeamSchema,
 } from "../../forms/teamModalSchema";
-
 import teamsStore from "../../store/Teams/teams-store";
-import { Loader } from "../../common/Loader/Loader";
 import { DeleteConfirmationModal } from "../../common/Modal/ConfirmationDialog/ConfirmationDialog";
 import { SearchInput } from "../../common/Input/SearchInput";
 
@@ -38,8 +36,15 @@ const Team = ({ className }: any) => {
     ...initialValues,
   });
   const token: any = localStorage.getItem("authToken");
-  const { getTeams, teams, getTeam, team, deleteTeam, isLoading }: any =
-    teamsStore();
+  const {
+    getTeams,
+    teams,
+    getTeam,
+    team,
+    deleteTeam,
+    isLoading,
+    setSearchValue,
+  }: any = teamsStore();
   const modalTitle = id ? "Edit team" : "Add New Team";
   const submitBtnName = id ? "Update" : "Add Team";
 
@@ -80,6 +85,7 @@ const Team = ({ className }: any) => {
         // Handle error appropriately (e.g., show error message)
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [team]
   );
 
@@ -135,6 +141,13 @@ const Team = ({ className }: any) => {
       }
     } catch (error) {
       console.error(error);
+    }
+  };
+
+  const handleSearchInputChange = (event: any) => {
+    setSearchValue(event?.target.value);
+    if (!event?.target.value) {
+      getTeams(0, 10);
     }
   };
 
@@ -210,7 +223,6 @@ const Team = ({ className }: any) => {
   return (
     <div className={`${className} test`}>
       <Card sx={{ marginTop: "15px" }}>
-        {isLoading && <Loader />}
         <CardContent>
           <Button
             className="issac-user-button"
@@ -223,7 +235,17 @@ const Team = ({ className }: any) => {
             Add team
           </Button>
 
-          <SearchInput />
+          <SearchInput
+            onChange={(event: any) => {
+              handleSearchInputChange(event);
+            }}
+            onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
+              if (event.key === "Enter") {
+                event.preventDefault(); // Prevent form submission if inside a form
+                getTeams(0, 10);
+              }
+            }}
+          />
 
           <DataGrid
             rows={teams}
@@ -237,6 +259,7 @@ const Team = ({ className }: any) => {
             }}
             pageSizeOptions={[5]}
             disableRowSelectionOnClick
+            loading={isLoading}
           />
         </CardContent>
       </Card>
