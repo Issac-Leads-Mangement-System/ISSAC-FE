@@ -29,7 +29,7 @@ export const SearchInput = ({ sx }: Props) => {
         width: "250px",
         ...sx,
         position: "absolute",
-        top: "54px",
+        top: "85px",
         right: "32px",
         "&.Mui-focused": {
           color: "black",

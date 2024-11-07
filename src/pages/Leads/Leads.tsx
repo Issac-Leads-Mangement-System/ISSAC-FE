@@ -4,7 +4,6 @@ import { Box, Button, Card, CardContent, Chip } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { DataGrid, GridActionsCellItem, GridColDef } from "@mui/x-data-grid";
 
-import { UsersStyle } from "./UsersStyle";
 import styled from "styled-components";
 import { styled as styledMaterial  } from "@mui/material";
 import usersStore from "../../store/Users/users-store";
@@ -24,6 +23,7 @@ import { Loader } from "../../common/Loader/Loader";
 import { DeleteConfirmationModal } from "../../common/Modal/ConfirmationDialog/ConfirmationDialog";
 import { SearchInput } from "../../common/Input/SearchInput";
 import secondToolbarStore from "../../store/SecondToolbar/second-tollbar-store";
+import { LeadsStyle } from "./LeadsStyle";
 
 
 const CustomDataGrid: any = styledMaterial(DataGrid)(
@@ -66,7 +66,7 @@ const CustomDataGrid: any = styledMaterial(DataGrid)(
   })
 );
 
-const Users = ({ className }: any) => {
+const Leads = ({ className }: any) => {
   const [open, setOpen] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -137,7 +137,7 @@ const Users = ({ className }: any) => {
   );
 
   useEffect(() => {
-    setSecontToolbarMessage('USERS');
+    setSecontToolbarMessage('Leads');
     setSecontToolbarPath('List')
     getAllTeams();
     getUsers(page, 5);
@@ -266,7 +266,7 @@ const Users = ({ className }: any) => {
   return (
     <Box className={`${className} test`}>
       <Card >
-        {isLoading && <Loader />}
+        {/* {isLoading && <Loader />} */}
 
         <CardContent>
           <Button
@@ -333,6 +333,6 @@ const Users = ({ className }: any) => {
   );
 };
 
-export default styled(Users)`
-  ${UsersStyle}
+export default styled(Leads)`
+  ${LeadsStyle}
 `;

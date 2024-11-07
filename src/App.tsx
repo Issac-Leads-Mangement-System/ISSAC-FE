@@ -13,6 +13,7 @@ import LeftMenu from "./components/LeftNavigation/LeftMenu";
 import "./App.css";
 
 import useAuthStore from "./store/authStore/authStore";
+import SecondToolbar from "./components/SecondToolbar/SecondToolbar";
 
 function App() {
   const [open, setOpen] = useState(true);
@@ -71,14 +72,18 @@ function App() {
             <Drawer variant="permanent" open={open}>
               <LeftMenu open={open} />
             </Drawer>
-            <Box component="main" sx={{ flexGrow: 1, p: 1, width: "80%" }}>
+            <Box component="main" sx={{ flexGrow: 1, width: "80%" }}>
+              <Box>
               <ToolbarComponent
                 handleDrawerOpen={handleDrawerOpen}
                 open={open}
                 handleLogout={handleLogout}
               />
-
+              <SecondToolbar/>
+              </Box>
+              <Box>
               {role && <PrivateRoute />}
+              </Box>
             </Box>
           </Box>
         </div>

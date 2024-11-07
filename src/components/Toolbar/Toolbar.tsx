@@ -42,36 +42,24 @@ const ToolbarComponent = ({
       style={{
         borderBottom: "1px solid #908f8f40",
         minHeight: "39px",
+        background: "white"
       }}
     >
-      <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+      <Box sx={{ flexGrow: 1, display: { xs: "flex", marginLeft: "0px" } }}>
         <IconButton
           color="inherit"
           aria-label="open drawer"
           onClick={handleDrawerOpen}
           edge="start"
           sx={{
-            marginRight: 5,
+            marginLeft: '5px',
           }}
         >
           {open ? <MenuOpenIcon /> : <ArrowRightAltIcon />}
         </IconButton>
       </Box>
 
-      <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
-      <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-        <IconButton
-          color="inherit"
-          aria-label="open drawer"
-          onClick={handleDrawerOpen}
-          edge="start"
-          sx={{
-            marginRight: 5,
-          }}
-        >
-          {open ? <MenuOpenIcon /> : <ArrowRightAltIcon />}
-        </IconButton>
-      </Box>
+      
       <Box sx={{ flexGrow: 0 }}>
         {/* <Tooltip title=""> */}
         <MenuItem>
