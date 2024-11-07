@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 import {
   FormControl,
   IconButton,
@@ -12,16 +10,11 @@ import SearchIcon from "@mui/icons-material/Search";
 
 type Props = {
   sx?: SxProps;
+  onChange: any;
+  onKeyDown: any;
 };
 
-export const SearchInput = ({ sx }: Props) => {
-  const [searchValue, setSearchValue] = useState("");
-
-  const handleClickSearch = () => {
-    // add functionality for search
-    console.log(searchValue);
-  };
-
+export const SearchInput = ({ sx, onChange, onKeyDown }: Props) => {
   return (
     <FormControl
       sx={{
@@ -52,10 +45,11 @@ export const SearchInput = ({ sx }: Props) => {
       <Input
         id="standard-adornment-search"
         type="text"
-        onChange={(event) => setSearchValue(event.target.value)}
+        onChange={onChange}
+        onKeyDown={onKeyDown}
         endAdornment={
           <InputAdornment position="end">
-            <IconButton onClick={handleClickSearch}>
+            <IconButton>
               <SearchIcon />
             </IconButton>
           </InputAdornment>
