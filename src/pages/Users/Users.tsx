@@ -6,7 +6,7 @@ import { DataGrid, GridActionsCellItem, GridColDef } from "@mui/x-data-grid";
 
 import { UsersStyle } from "./UsersStyle";
 import styled from "styled-components";
-import { styled as styledMaterial  } from "@mui/material";
+import { styled as styledMaterial } from "@mui/material";
 import usersStore from "../../store/Users/users-store";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
@@ -24,7 +24,6 @@ import { DeleteConfirmationModal } from "../../common/Modal/ConfirmationDialog/C
 import { SearchInput } from "../../common/Input/SearchInput";
 import secondToolbarStore from "../../store/SecondToolbar/second-tollbar-store";
 import { Loader } from "../../common/Loader/Loader";
-
 
 const CustomDataGrid: any = styledMaterial(DataGrid)(
   ({ theme, styleColumns }: any) => ({
@@ -68,25 +67,36 @@ const CustomDataGrid: any = styledMaterial(DataGrid)(
 
 const Users = ({ className }: any) => {
   const [open, setOpen] = useState(false);
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  // const [page, setPage] = useState(0);
+  // const [rowsPerPage, setRowsPerPage] = useState(10);
   const [id, setId] = useState<null | number>(null);
   const {
     getUsers,
     setCount,
     users,
-    count,
+    counter_users,
     getUserById,
     user,
     deleteUser,
     isLoading,
     setSearchValue,
+    modelPage,
+    setPage,
+    setSizePerPage,
   }: any = usersStore();
   const { getAllTeams, teamsOptions }: any = teamsStore();
-  const { setSecontToolbarMessage, setSecontToolbarPath, resetSecondToolbar }: any = secondToolbarStore();
+  const {
+    setSecontToolbarMessage,
+    setSecontToolbarPath,
+    resetSecondToolbar,
+  }: any = secondToolbarStore();
   const [initialFormValues, setInitialFormValues] = useState<UserModalSchema>({
     ...initialValues,
   });
+  // const [paginationModel, setPaginationModel] = useState({
+  //   page: 0,
+  //   pageSize: 5,
+  // });
 
   const modalTitle = id ? "Edit" : "Add New User";
   const submitBtnName = id ? "Update" : "Add User";
@@ -102,8 +112,8 @@ const Users = ({ className }: any) => {
 
   const handleConfirmDelete = async () => {
     await deleteUser(id);
-    setCount(count - 1);
-    await getUsers(page, 5);
+    setCount(counter_users - 1);
+    await getUsers(modelPage.page, 10);
     setIsModalOpen(false);
   };
 
@@ -138,23 +148,19 @@ const Users = ({ className }: any) => {
   );
 
   useEffect(() => {
-    setSecontToolbarMessage('USERS');
-    setSecontToolbarPath('List')
+    setSecontToolbarMessage("USERS");
+    setSecontToolbarPath("List");
     getAllTeams();
-    getUsers(page, 5);
+    getUsers(modelPage.page, modelPage.sizePerPage);
 
     return () => {
       resetSecondToolbar();
-    }
+    };
   }, []);
 
-  const handleChangePage = async (event: unknown, newPage: number) => {
-    setPage(newPage);
-    try {
-      getUsers(newPage, rowsPerPage);
-    } catch (error) {
-      console.error(error);
-    }
+  const handleChangePage = (model: any) => {
+    setPage(model.page + 1);
+    getUsers(model.page, model.pageSize);
   };
 
   const addNewUser = () => {
@@ -162,16 +168,20 @@ const Users = ({ className }: any) => {
     setId(null);
   };
 
-  const handleChangeRowsPerPage = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    try {
-      setRowsPerPage(parseInt(event.target.value, 10));
-      getUsers(page, parseInt(event.target.value, 10));
-    } catch (error) {
-      console.error(error);
-    }
+  const handleChangeRowsPerPage = async (model: any) => {
+      setSizePerPage(model.pageSize)
+      // setRowsPerPage(parseInt(model.page, model.pageSize));
+      getUsers(undefined, undefined);
+    
   };
+
+  // const handlePageChange: any = async (model: any) => {
+  //   setPaginationModel((prev) => ({
+  //     ...prev,
+  //     page: model.page,
+  //   }));
+  //   getUsers(model.page, model.pageSize);
+  // };
 
   const handleSearchInputChange = (event: any) => {
     setSearchValue(event?.target.value);
@@ -203,7 +213,7 @@ const Users = ({ className }: any) => {
       );
     }
     setOpen(false);
-    await getUsers(page, 5);
+    // await getUsers(page, 5);
     setInitialFormValues(initialValues);
   };
 
@@ -272,84 +282,90 @@ const Users = ({ className }: any) => {
     },
   ];
 
-  console.log("users?.length", users?.length);
+
 
   return (
-    <Box className={`${className} test`}>
-      <Card sx={{ marginTop: "15px" }}>
-        {isLoading && <Loader />}
+    <>
+        <Box className={`${className} test`}>
+          <Card sx={{ marginTop: "15px" }}>
+            <CardContent>
+              <Button
+                variant="outlined"
+                onClick={() => addNewUser()}
+                startIcon={<AddIcon />}
+                size="small"
+                sx={addBtnStyle}
+              >
+                Add user
+              </Button>
 
-        <CardContent>
-          <Button
-            variant="outlined"
-            onClick={() => addNewUser()}
-            startIcon={<AddIcon />}
-            size="small"
-            sx={addBtnStyle}
-          >
-            Add user
-          </Button>
+              <SearchInput
+                onChange={(event: any) => handleSearchInputChange(event)}
+                onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
+                  if (event.key === "Enter") {
+                    event.preventDefault(); // Prevent form submission if inside a form
+                    getUsers(1, 10);
+                  }
+                }}
+              />
 
-          <SearchInput
-            onChange={(event: any) => handleSearchInputChange(event)}
-            onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
-              if (event.key === "Enter") {
-                event.preventDefault(); // Prevent form submission if inside a form
-                getUsers(0, 10);
-              }
-            }}
-          />
+              <CustomDataGrid
+                rows={users}
+                columns={columns}
+                initialState={{
+                  pagination: {
+                    paginationModel: {
+                      pageSize: 10,
+                    },
+                  },
+                }}
+                rowCount={counter_users}
+                // pageSize={modelPage.sizePage}
+                pageSizeOptions={[5, 10, 25, 50]}
+                onPaginationModelChange={(model: any) => {handleChangePage(model); handleChangeRowsPerPage(model)}}
+                disableRowSelectionOnClick
+                disableVirtualization
+                loading={isLoading}
+                paginationMode="server"
+                pagination
+                
+              />
+            </CardContent>
+          </Card>
 
-          <CustomDataGrid
-            rows={users}
-            columns={columns}
-            initialState={{
-              pagination: {
-                paginationModel: {
-                  pageSize: 5,
-                },
-              },
-            }}
-            pageSizeOptions={[5]}
-            disableRowSelectionOnClick
-            disableVirtualization
-            loading={isLoading}
-          />
-        </CardContent>
-      </Card>
+          {open && (
+            <CustomModal
+              isOpen={open}
+              onClose={() => {
+                setOpen(false);
+                setInitialFormValues(initialValues);
+              }}
+              title={modalTitle}
+            >
+              <GenericAddEditForm
+                initialValues={initialFormValues}
+                validationSchema={validationUserSchema}
+                apiRequest={handleSubmitModal}
+                hasSubmitButton={true}
+                submitBtnName={submitBtnName}
+                form={(formProps: any) => (
+                  <UserForm formProps={formProps} userTeamList={teamsOptions} />
+                )}
+                btnStyle={submitBtnStyle}
+              />
+            </CustomModal>
+          )}
 
-      {open && (
-        <CustomModal
-          isOpen={open}
-          onClose={() => {
-            setOpen(false);
-            setInitialFormValues(initialValues);
-          }}
-          title={modalTitle}
-        >
-          <GenericAddEditForm
-            initialValues={initialFormValues}
-            validationSchema={validationUserSchema}
-            apiRequest={handleSubmitModal}
-            hasSubmitButton={true}
-            submitBtnName={submitBtnName}
-            form={(formProps: any) => (
-              <UserForm formProps={formProps} userTeamList={teamsOptions} />
-            )}
-            btnStyle={submitBtnStyle}
-          />
-        </CustomModal>
-      )}
-
-      {isModalOpen && (
-        <DeleteConfirmationModal
-          open={isModalOpen}
-          onClose={handleCloseModal}
-          onConfirm={handleConfirmDelete}
-          itemName="this user"
-        />
-      )}
-    </Box>
+          {isModalOpen && (
+            <DeleteConfirmationModal
+              open={isModalOpen}
+              onClose={handleCloseModal}
+              onConfirm={handleConfirmDelete}
+              itemName="this user"
+            />
+          )}
+        </Box>
+    </>
   );
 };
 

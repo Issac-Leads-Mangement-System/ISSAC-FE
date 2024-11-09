@@ -23,25 +23,25 @@ const menus: any = [
       },
     ],
   },
-  {
-    name: "Leads",
-    icon: <InterpreterModeIcon/>,
-    children: [
-      {
-        name: "List",
-        icon: <ListAltIcon />,
-        route: "/leads"
-      },
-      {
-        name: "Types",
-        icon: <BorderColorIcon />
-      },
-      {
-        name: "Status",
-        icon: <SignalWifiStatusbar4BarIcon />
-      }
-    ]
-  }
+  // {
+  //   name: "Leads",
+  //   icon: <InterpreterModeIcon/>,
+  //   children: [
+  //     {
+  //       name: "List",
+  //       icon: <ListAltIcon />,
+  //       route: "/leads"
+  //     },
+  //     {
+  //       name: "Types",
+  //       icon: <BorderColorIcon />
+  //     },
+  //     {
+  //       name: "Status",
+  //       icon: <SignalWifiStatusbar4BarIcon />
+  //     }
+  //   ]
+  // }
 ];
 
 export default menus;

@@ -8,33 +8,44 @@ interface AuthState {
   setUser: (id: string, role: string) => void;
   getUserById: (id: string) => void;
   logout: () => void;
-  count: number;
+  counter_users: number;
   user: any;
   isLoading: boolean;
   searchValue: string;
+  setPage: (page: number) => void;
+  setSizePerPage: (sizePerPage: number) => void;
+  modelPage: any;
 }
 
-const usersStore = create<AuthState>((set) => ({
+const usersStore: any = create<AuthState>((set) => ({
   users: [],
   id: null,
   role: null,
-  count: 0,
+  counter_users: 0,
   user: {},
   isLoading: false,
   searchValue: "",
+  modelPage: {
+    page: 1,
+    sizePerPage: 10
+  },
   setUser: (id, role) => set({ id, role }),
   logout: () => set({ id: null, role: null }),
   getUsers: async (page: number, limit: number) => {
-    const { searchValue } = usersStore.getState();
+    const { searchValue, modelPage } = usersStore.getState();
     set({ isLoading: true });
     const response = await api.post(
       `${process.env.REACT_APP_BASE_URL}/users/?page=${
-        page + 1
-      }&limit=${limit}&search=${searchValue}`
+        modelPage.page
+      }&limit=${modelPage.sizePerPage}&search=${searchValue}`
     );
+    if(response.data.users_response) {
+      set({ users: response.data.users_response });
+    }
+    if(response.data.counter_users) {
+      set({ counter_users: response.data.counter_users });
+    }
     set({ isLoading: false });
-    set({ users: response.data.users_response });
-    set({ count: response.data.counter_users });
   },
   getUserById: async (id) => {
     set({ isLoading: true });
@@ -44,7 +55,25 @@ const usersStore = create<AuthState>((set) => ({
     set({ isLoading: false });
     set({ user: response.data });
   },
-  setCount: (count: number) => set({ count: count }),
+  setCount: (count: number) => set({ counter_users: count }),
+  setPage: (page: number) => {
+    // @ts-ignore
+    set((state: any) => ({
+      modelPage: {
+        ...state.modelPage,
+        page,
+      },
+    }))
+  },
+  setSizePerPage: (sizePerPage: any) => {
+    // @ts-ignore
+    set((state: any) => ({
+      modelPage: {
+        ...state.modelPage,
+        sizePerPage,
+      }
+    }))
+  },
   deleteUser: async (id: number) => {
     set({ isLoading: true });
     await api.delete(

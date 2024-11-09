@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import styled, { ThemeProvider } from "styled-components";
-import { Theme } from "../../theme/Theme";
 import { JwtPayload as WtJwtPayload } from "jwt-decode";
 
 import LogoApp from "../../assets/images/loginImage.jpg";
@@ -20,6 +19,7 @@ import { InputType } from "../../common/Input/models";
 import { LoginStyle } from "./LoginStyle";
 import Logo from "../../assets/images/transparent-logo.png";
 import { useNavigate } from "react-router-dom";
+import { Theme } from "../../theme/Theme";
 // import LoadingButton from "@mui/lab/LoadingButton";
 
 interface JwtPayload extends WtJwtPayload {
