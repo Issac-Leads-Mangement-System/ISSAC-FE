@@ -40,6 +40,7 @@ const menus = [
       {
         name: "Status",
         icon: <SignalWifiStatusbar4BarIcon />,
+        route: "/leads-status",
       },
     ],
   },

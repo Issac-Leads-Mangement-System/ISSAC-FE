@@ -10,18 +10,14 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import CustomModal from "../../common/Modal/CustomModal/CustomModal";
 import { GenericAddEditForm } from "../../common/forms-generic-ad-edit/GenericAdEditForm";
-import {
-  UserModalSchema,
-  initialValues,
-  validationUserSchema,
-} from "../../forms/userModalSchema";
-import { UserForm } from "../../common/Modal/User/UserForm";
 import { addBtnStyle, submitBtnStyle } from "../../common/constants";
 import teamsStore from "../../store/Teams/teams-store";
 import { DeleteConfirmationModal } from "../../common/Modal/ConfirmationDialog/ConfirmationDialog";
 import secondToolbarStore from "../../store/SecondToolbar/second-tollbar-store";
 import { LeadsStyle } from "./LeadsStyle";
 import leadsTypesStore from "../../store/Leads/types-store";
+import { initialValues, ILeadsStatusModal, validationLeadsStatusSchema } from "../../forms/leadsStatusModalSchema";
+import { LeadsStatusForm } from "../../common/Modal/Leads/LeadsStatusForm";
 
 const CustomDataGrid: any = styledMaterial(DataGrid)(
   ({ theme, styleColumns }: any) => ({
@@ -63,13 +59,15 @@ const CustomDataGrid: any = styledMaterial(DataGrid)(
   })
 );
 
-const LeadsTypes = ({ className }: any) => {
+const LeadsStatus = ({ className }: any) => {
   const [open, setOpen] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [id, setId] = useState<null | number>(null);
   const {
-    getTypes,
+    getStatus,
+    saveStatus,
+    resetStore,
     // setCount,
     // users,
     // count,
@@ -85,12 +83,12 @@ const LeadsTypes = ({ className }: any) => {
     setSecontToolbarPath,
     resetSecondToolbar,
   }: any = secondToolbarStore();
-  const [initialFormValues, setInitialFormValues] = useState<UserModalSchema>({
+  const [initialFormValues, setInitialFormValues] = useState<ILeadsStatusModal>({
     ...initialValues,
   });
 
-  const modalTitle = id ? "Edit" : "Add New User";
-  const submitBtnName = id ? "Update" : "Add User";
+  const modalTitle = id ? "Edit" : "Add New Status";
+  const submitBtnName = id ? "Update" : "Add Status";
 
   const token: any = localStorage.getItem("authToken");
 
@@ -104,7 +102,7 @@ const LeadsTypes = ({ className }: any) => {
   const handleConfirmDelete = async () => {
     // await deleteUser(id);
     // setCount(count - 1);
-    await getTypes(page, 5);
+    await getStatus(page, 5);
     setIsModalOpen(false);
   };
 
@@ -140,12 +138,13 @@ const LeadsTypes = ({ className }: any) => {
 
   useEffect(() => {
     setSecontToolbarMessage("LEADS");
-    setSecontToolbarPath("/ types");
+    setSecontToolbarPath(" / Statuses");
     // getAllTeams();
-    getTypes(page, 5);
+    getStatus(page, 5);
 
     return () => {
       resetSecondToolbar();
+      resetStore();
     };
   }, []);
 
@@ -174,34 +173,40 @@ const LeadsTypes = ({ className }: any) => {
   //     }
   //   };
   const handleSubmitModal = async (values: any) => {
-    if (id) {
-      await axios.put(
-        `${process.env.REACT_APP_BASE_URL}/users/edit_user/${id}`,
-        values,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-    } else {
-      await axios.post(
-        `${process.env.REACT_APP_BASE_URL}/users/add_user`,
-        values,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-    }
+    saveStatus(values);
+    // if (id) {
+    //   await axios.put(
+    //     `${process.env.REACT_APP_BASE_URL}/users/edit_user/${id}`,
+    //     values,
+    //     {
+    //       headers: {
+    //         Authorization: `Bearer ${token}`,
+    //       },
+    //     }
+    //   );
+    // } else {
+    //   await axios.post(
+    //     `${process.env.REACT_APP_BASE_URL}/users/add_user`,
+    //     values,
+    //     {
+    //       headers: {
+    //         Authorization: `Bearer ${token}`,
+    //       },
+    //     }
+    //   );
+    // }
     setOpen(false);
-    await getTypes(page, 5);
-    setInitialFormValues(initialValues);
+    // await getTypes(page, 5);
+    // setInitialFormValues(initialValues);
   };
 
+  const addLeadsStatus = () => {
+    setOpen(true);
+    setId(null);
+  }
+
   const columns: GridColDef<(typeof types)[number]>[] = [
-    { field: "type_name", headerName: "Type name", width: 250 },
+    { field: "status_name", headerName: "Status name", width: 250 },
     { field: "created_date", headerName: "Created date", width: 250 },
 
     {
@@ -252,12 +257,12 @@ const LeadsTypes = ({ className }: any) => {
         <CardContent>
           <Button
             variant="outlined"
-            // onClick={() => addNewUser()}
+            onClick={() => addLeadsStatus()}
             startIcon={<AddIcon />}
             size="small"
             sx={addBtnStyle}
           >
-            Add type
+            Add status
           </Button>
 
           {/* <SearchInput /> */}
@@ -265,17 +270,17 @@ const LeadsTypes = ({ className }: any) => {
           <CustomDataGrid
             rows={types}
             columns={columns}
-            loading={isLoading}
             initialState={{
               pagination: {
                 paginationModel: {
-                  pageSize: 5,
+                  pageSize: 10,
                 },
               },
             }}
-            pageSizeOptions={[5]}
+            pageSizeOptions={[5, 10, 25, 50]}
             disableRowSelectionOnClick
             disableVirtualization
+            loading={isLoading}
           />
         </CardContent>
       </Card>
@@ -291,12 +296,12 @@ const LeadsTypes = ({ className }: any) => {
         >
           <GenericAddEditForm
             initialValues={initialFormValues}
-            validationSchema={validationUserSchema}
+            validationSchema={validationLeadsStatusSchema}
             apiRequest={handleSubmitModal}
             hasSubmitButton={true}
             submitBtnName={submitBtnName}
             form={(formProps: any) => (
-              <UserForm formProps={formProps} userTeamList={teamsOptions} />
+              <LeadsStatusForm formProps={formProps} />
             )}
             btnStyle={submitBtnStyle}
           />
@@ -315,6 +320,6 @@ const LeadsTypes = ({ className }: any) => {
   );
 };
 
-export default styled(LeadsTypes)`
+export default styled(LeadsStatus)`
   ${LeadsStyle}
 `;

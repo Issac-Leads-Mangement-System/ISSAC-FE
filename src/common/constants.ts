@@ -31,6 +31,9 @@ export const INPUTS = {
   TEAM_ID: {
     NAME: "team_id",
   },
+  LEADS: {
+    STATUS: "status_name"
+  }
 };
 
 export const ROLE = ["admin", "manager", "employee"];

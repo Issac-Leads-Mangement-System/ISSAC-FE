@@ -3,16 +3,19 @@ import api from "../../api";
 
 interface LeadsTypesState {
   types: any[];
+  status: any[];
   id: string | null;
   count: number;
   //   teamsOptions: any[];
   //   team: any;
   isLoading: boolean;
   searchValue: string;
+  getStatus: any;
 }
 
 const leadsTypesStore = create<LeadsTypesState>((set) => ({
   types: [],
+  status: [],
   id: null,
   //   role: null,
   count: 0,
@@ -28,10 +31,44 @@ const leadsTypesStore = create<LeadsTypesState>((set) => ({
         page + 1
       }&limit=${limit}&search=${searchValue}`
     );
-    set({ isLoading: false });
     set({ types: response.data.leads_types_response });
     set({ count: response.data.counter_leads_types });
+    set({ isLoading: false });
   },
+
+  getStatus: async (page: number, limit: number) => {
+    const { searchValue } = leadsTypesStore.getState();
+    set({ isLoading: true });
+    const response = await api.get(
+      `${process.env.REACT_APP_BASE_URL}/leads/statuses/?page=${
+        page + 1
+      }&limit=${limit}&search=${searchValue}`
+    );
+    set({ types: response.data });
+    set({ count: response.data.length });
+    set({ isLoading: false });
+  },
+
+  saveStatus: async (body: any) => {
+    set({ isLoading: true });
+    const response = await api.post(`${process.env.REACT_APP_BASE_URL}/leads/statuses/add_status`, body);
+    if(response) {
+      const { getStatus } = leadsTypesStore.getState();
+      // remove this hardcoded
+      getStatus(0, 10);
+    }
+    set({ isLoading: false });
+  },
+  resetStore: () => {
+    set({
+      types: [],
+      status: [],
+      id: null,
+      count: 0,
+      isLoading: false,
+      searchValue: "",
+    })
+  }
   //   getAllTeams: async () => {
   //     set({ isLoading: true });
   //     const response = await api.get(
