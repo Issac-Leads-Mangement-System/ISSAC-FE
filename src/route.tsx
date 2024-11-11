@@ -3,10 +3,12 @@ import { Route, Routes } from "react-router-dom";
 import { ProtectedRoute } from "./routes/ProtectRoute";
 import Users from "./pages/Users/Users";
 import { AdminPage } from "./pages/AdminPage";
-
-import useAuthStore from "./store/authStore/authStore";
 import Team from "./pages/Team/Team";
 import Leads from "./pages/Leads/Leads";
+import LeadsTypes from "./pages/Leads/LeadsTypes";
+
+import useAuthStore from "./store/authStore/authStore";
+import LeadsStatus from "./pages/Leads/LeadsStatus";
 
 export const PrivateRoute = () => {
   const { role } = useAuthStore((state) => state);
@@ -37,11 +39,29 @@ export const PrivateRoute = () => {
           </ProtectedRoute>
         }
       />
-       <Route
+      <Route
         path="/leads"
         element={
           <ProtectedRoute isAllowed={!!role} user={role}>
             <Leads />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/leads-types"
+        element={
+          <ProtectedRoute isAllowed={!!role} user={role}>
+            <LeadsTypes />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/leads-status"
+        element={
+          <ProtectedRoute isAllowed={!!role} user={role}>
+            <LeadsStatus />
           </ProtectedRoute>
         }
       />

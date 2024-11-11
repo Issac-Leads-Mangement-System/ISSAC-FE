@@ -4,10 +4,8 @@ import { Box, Button, Card, CardContent, Chip } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { DataGrid, GridActionsCellItem, GridColDef } from "@mui/x-data-grid";
 
-import { UsersStyle } from "./UsersStyle";
 import styled from "styled-components";
 import { styled as styledMaterial } from "@mui/material";
-import usersStore from "../../store/Users/users-store";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import CustomModal from "../../common/Modal/CustomModal/CustomModal";
@@ -21,8 +19,9 @@ import { UserForm } from "../../common/Modal/User/UserForm";
 import { addBtnStyle, submitBtnStyle } from "../../common/constants";
 import teamsStore from "../../store/Teams/teams-store";
 import { DeleteConfirmationModal } from "../../common/Modal/ConfirmationDialog/ConfirmationDialog";
-import { SearchInput } from "../../common/Input/SearchInput";
 import secondToolbarStore from "../../store/SecondToolbar/second-tollbar-store";
+import { LeadsStyle } from "./LeadsStyle";
+import leadsTypesStore from "../../store/Leads/types-store";
 
 const CustomDataGrid: any = styledMaterial(DataGrid)(
   ({ theme, styleColumns }: any) => ({
@@ -64,25 +63,22 @@ const CustomDataGrid: any = styledMaterial(DataGrid)(
   })
 );
 
-const Users = ({ className }: any) => {
+const LeadsTypes = ({ className }: any) => {
   const [open, setOpen] = useState(false);
-  // const [page, setPage] = useState(0);
-  // const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const [id, setId] = useState<null | number>(null);
   const {
-    getUsers,
-    setCount,
-    users,
-    counter_users,
-    getUserById,
-    user,
-    deleteUser,
+    getTypes,
+    // setCount,
+    // users,
+    // count,
+    // getUserById,
+    // user,
+    // deleteUser,
+    types,
     isLoading,
-    setSearchValue,
-    modelPage,
-    setPage,
-    setSizePerPage,
-  }: any = usersStore();
+  }: any = leadsTypesStore();
   const { getAllTeams, teamsOptions }: any = teamsStore();
   const {
     setSecontToolbarMessage,
@@ -92,10 +88,6 @@ const Users = ({ className }: any) => {
   const [initialFormValues, setInitialFormValues] = useState<UserModalSchema>({
     ...initialValues,
   });
-  // const [paginationModel, setPaginationModel] = useState({
-  //   page: 0,
-  //   pageSize: 5,
-  // });
 
   const modalTitle = id ? "Edit" : "Add New User";
   const submitBtnName = id ? "Update" : "Add User";
@@ -110,9 +102,9 @@ const Users = ({ className }: any) => {
   };
 
   const handleConfirmDelete = async () => {
-    await deleteUser(id);
-    setCount(counter_users - 1);
-    await getUsers(modelPage.page, 10);
+    // await deleteUser(id);
+    // setCount(count - 1);
+    await getTypes(page, 5);
     setIsModalOpen(false);
   };
 
@@ -120,74 +112,67 @@ const Users = ({ className }: any) => {
     setIsModalOpen(false);
   };
 
-  const handleEditClick = useCallback(
-    async (id: number) => {
-      try {
-        await getUserById(id);
+  //   const handleEditClick = useCallback(
+  //     async (id: number) => {
+  //       try {
+  //         await getUserById(id);
 
-        // Wait for the team data to be updated in the store
-        await new Promise((resolve) => setTimeout(resolve, 0));
+  //         // Wait for the team data to be updated in the store
+  //         await new Promise((resolve) => setTimeout(resolve, 0));
 
-        // Now safely access the updated team data
-        const {
-          created_date,
-          team_name,
-          id: userId,
-          ...rest
-        } = usersStore.getState().user;
-        setId(id);
-        setOpen(true);
-        setInitialFormValues(rest);
-      } catch (error) {
-        console.error("Error fetching user:", error);
-        // Handle error appropriately (e.g., show error message)
-      }
-    },
-    [user]
-  );
+  //         // Now safely access the updated team data
+  //         const {
+  //           created_date,
+  //           team_name,
+  //           id: userId,
+  //           ...rest
+  //         } = usersStore.getState().user;
+  //         setId(id);
+  //         setOpen(true);
+  //         setInitialFormValues(rest);
+  //       } catch (error) {
+  //         console.error("Error fetching user:", error);
+  //         // Handle error appropriately (e.g., show error message)
+  //       }
+  //     },
+  //     [user]
+  //   );
 
   useEffect(() => {
-    setSecontToolbarMessage("USERS");
-    setSecontToolbarPath("List");
-    getAllTeams();
-    getUsers(modelPage.page, modelPage.sizePerPage);
+    setSecontToolbarMessage("LEADS");
+    setSecontToolbarPath("/ types");
+    // getAllTeams();
+    getTypes(page, 5);
 
     return () => {
       resetSecondToolbar();
     };
   }, []);
 
-  const handleChangePage = (model: any) => {
-    setPage(model.page + 1);
-    getUsers(model.page, model.pageSize);
-  };
+  //   const handleChangePage = async (event: unknown, newPage: number) => {
+  //     setPage(newPage);
+  //     try {
+  //       getUsers(newPage, rowsPerPage);
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   };
 
-  const addNewUser = () => {
-    setOpen(true);
-    setId(null);
-  };
+  //   const addNewUser = () => {
+  //     setOpen(true);
+  //     setId(null);
+  //   };
 
-  const handleChangeRowsPerPage = async (model: any) => {
-    setSizePerPage(model.pageSize);
-    // setRowsPerPage(parseInt(model.page, model.pageSize));
-    getUsers(undefined, undefined);
-  };
-
-  // const handlePageChange: any = async (model: any) => {
-  //   setPaginationModel((prev) => ({
-  //     ...prev,
-  //     page: model.page,
-  //   }));
-  //   getUsers(model.page, model.pageSize);
-  // };
-
-  const handleSearchInputChange = (event: any) => {
-    setSearchValue(event?.target.value);
-    if (!event?.target.value) {
-      getUsers(0, 10);
-    }
-  };
-
+  //   const handleChangeRowsPerPage = async (
+  //     event: React.ChangeEvent<HTMLInputElement>
+  //   ) => {
+  //     try {
+  //       setRowsPerPage(parseInt(event.target.value, 10));
+  //       getUsers(page, parseInt(event.target.value, 10));
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   };
   const handleSubmitModal = async (values: any) => {
     if (id) {
       await axios.put(
@@ -211,35 +196,14 @@ const Users = ({ className }: any) => {
       );
     }
     setOpen(false);
-    // await getUsers(page, 5);
+    await getTypes(page, 5);
     setInitialFormValues(initialValues);
   };
 
-  const columns: GridColDef<(typeof users)[number]>[] = [
-    { field: "first_name", headerName: "First name", width: 250 },
-    { field: "last_name", headerName: "Last name", width: 250 },
-    { field: "email", headerName: "Email", width: 350 },
-    { field: "phone_number", headerName: "Phone number", width: 300 },
-    { field: "user_role", headerName: "User role", width: 250 },
-    { field: "team_name", headerName: "Team name", width: 300 },
-    {
-      field: "user_status",
-      headerName: "User status",
-      width: 250,
-      renderCell: (params: any) => {
-        const { row } = params;
-        return [
-          <Chip
-            key={crypto.randomUUID()}
-            label={
-              row.user_status.charAt(0).toUpperCase() + row.user_status.slice(1)
-            }
-            color={row.user_status ? "success" : "error"}
-            variant="outlined"
-          />,
-        ];
-      },
-    },
+  const columns: GridColDef<(typeof types)[number]>[] = [
+    { field: "type_name", headerName: "Type name", width: 250 },
+    { field: "created_date", headerName: "Created date", width: 250 },
+
     {
       field: "actions",
       type: "actions",
@@ -257,21 +221,23 @@ const Users = ({ className }: any) => {
               icon={<ManageAccountsIcon />}
               label="Previw"
               key={id}
+              disabled
               sx={{
                 color: "black",
               }}
               className="textPrimary"
-              onClick={() => handleEditClick(id)}
+              // onClick={() => handleEditClick(id)}
             />,
             <GridActionsCellItem
               icon={<DeleteForeverIcon />}
               label="Previw"
               key={id}
+              disabled
               sx={{
                 color: "red",
               }}
               className="textPrimary"
-              onClick={() => handleDeleteClick(id)}
+              // onClick={() => handleDeleteClick(id)}
             />,
           ];
         }
@@ -282,50 +248,34 @@ const Users = ({ className }: any) => {
 
   return (
     <Box className={`${className} test`}>
-      <Card sx={{ marginTop: "15px" }}>
+      <Card>
         <CardContent>
           <Button
             variant="outlined"
-            onClick={() => addNewUser()}
+            // onClick={() => addNewUser()}
             startIcon={<AddIcon />}
             size="small"
             sx={addBtnStyle}
           >
-            Add user
+            Add type
           </Button>
 
-          <SearchInput
-            onChange={(event: any) => handleSearchInputChange(event)}
-            onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
-              if (event.key === "Enter") {
-                event.preventDefault(); // Prevent form submission if inside a form
-                getUsers(1, 10);
-              }
-            }}
-          />
+          {/* <SearchInput /> */}
 
           <CustomDataGrid
-            rows={users}
+            rows={types}
             columns={columns}
+            loading={isLoading}
             initialState={{
               pagination: {
                 paginationModel: {
-                  pageSize: 10,
+                  pageSize: 5,
                 },
               },
             }}
-            rowCount={counter_users}
-            // pageSize={modelPage.sizePage}
-            pageSizeOptions={[5, 10, 25, 50]}
-            onPaginationModelChange={(model: any) => {
-              handleChangePage(model);
-              handleChangeRowsPerPage(model);
-            }}
+            pageSizeOptions={[5]}
             disableRowSelectionOnClick
             disableVirtualization
-            loading={isLoading}
-            paginationMode="server"
-            pagination
           />
         </CardContent>
       </Card>
@@ -365,6 +315,6 @@ const Users = ({ className }: any) => {
   );
 };
 
-export default styled(Users)`
-  ${UsersStyle}
+export default styled(LeadsTypes)`
+  ${LeadsStyle}
 `;

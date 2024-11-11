@@ -71,19 +71,18 @@ function App() {
           <Box sx={{ display: "flex" }}>
             <Drawer variant="permanent" open={open}>
               <LeftMenu open={open} />
+              {/* <NestedList open={open} /> */}
             </Drawer>
             <Box component="main" sx={{ flexGrow: 1, width: "80%" }}>
               <Box>
-              <ToolbarComponent
-                handleDrawerOpen={handleDrawerOpen}
-                open={open}
-                handleLogout={handleLogout}
-              />
-              <SecondToolbar/>
+                <ToolbarComponent
+                  handleDrawerOpen={handleDrawerOpen}
+                  open={open}
+                  handleLogout={handleLogout}
+                />
+                <SecondToolbar />
               </Box>
-              <Box>
-              {role && <PrivateRoute />}
-              </Box>
+              <Box>{role && <PrivateRoute />}</Box>
             </Box>
           </Box>
         </div>

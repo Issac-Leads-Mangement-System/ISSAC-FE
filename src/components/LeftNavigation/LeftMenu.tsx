@@ -1,18 +1,10 @@
-import {
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-} from "@mui/material";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import Logo from "../../assets/images/logo_new.png";
-import menus from "./constants";
 import { LeftMenuStyle } from "./LeftMenuStyle";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+
 import { useState } from "react";
+import NestedList from "./LeftMenu1";
 
 const LeftMenu = ({ className, open }: any) => {
   const navigate = useNavigate();
@@ -28,7 +20,7 @@ const LeftMenu = ({ className, open }: any) => {
       <div className="issac-logo-leftbar">
         {open && <img className="issac-img-leftbar" src={Logo} alt="logo" />}
       </div>
-      <List>
+      {/* <List>
         {menus.map((menu: any, index: any) => (
           <ListItem
             onClick={() => {
@@ -112,7 +104,8 @@ const LeftMenu = ({ className, open }: any) => {
               ))}
           </ListItem>
         ))}
-      </List>
+      </List> */}
+      <NestedList open={open} />
     </div>
   );
 };
