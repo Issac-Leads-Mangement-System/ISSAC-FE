@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from "react";
-import axios from "axios";
 import { Box, Button, Card, CardContent, Chip } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { DataGrid, GridActionsCellItem, GridColDef } from "@mui/x-data-grid";
@@ -10,14 +9,27 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import CustomModal from "../../common/Modal/CustomModal/CustomModal";
 import { GenericAddEditForm } from "../../common/forms-generic-ad-edit/GenericAdEditForm";
-import { addBtnStyle, submitBtnStyle } from "../../common/constants";
+import {
+  addBtnStyle,
+  filterBtnStyle,
+  submitBtnStyle,
+} from "../../common/constants";
 import teamsStore from "../../store/Teams/teams-store";
 import { DeleteConfirmationModal } from "../../common/Modal/ConfirmationDialog/ConfirmationDialog";
 import secondToolbarStore from "../../store/SecondToolbar/second-tollbar-store";
 import { LeadsStyle } from "./LeadsStyle";
 import leadsTypesStore from "../../store/Leads/types-store";
-import { initialValues, ILeadsStatusModal, validationLeadsStatusSchema } from "../../forms/leadsStatusModalSchema";
+import {
+  initialValues,
+  ILeadsStatusModal,
+  validationLeadsStatusSchema,
+} from "../../forms/leadsStatusModalSchema";
 import { LeadsStatusForm } from "../../common/Modal/Leads/LeadsStatusForm";
+import Filters from "../../components/Filters/filters";
+import leadsStatusesStore from "../../store/Leads/statuses-store";
+import { FilterLeadsStatuses } from "../../common/forms-filters/FilterLeadsStatuses";
+import { SearchInput } from "../../common/Input/SearchInput";
+import FilterListIcon from "@mui/icons-material/FilterList";
 
 const CustomDataGrid: any = styledMaterial(DataGrid)(
   ({ theme, styleColumns }: any) => ({
@@ -62,31 +74,33 @@ const CustomDataGrid: any = styledMaterial(DataGrid)(
 const LeadsStatus = ({ className }: any) => {
   const [open, setOpen] = useState(false);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
   const [id, setId] = useState<null | number>(null);
   const {
     getStatus,
     saveStatus,
     resetStore,
-    // setCount,
-    // users,
-    // count,
-    // getUserById,
-    // user,
-    // deleteUser,
-    types,
+    deleteStatuses,
+    getLeadStatusesById,
+    status,
+    updateStatus,
+    statuses,
     isLoading,
-  }: any = leadsTypesStore();
+    resetFilters,
+    setSearchValue,
+  }: any = leadsStatusesStore();
   const { getAllTeams, teamsOptions }: any = teamsStore();
   const {
     setSecontToolbarMessage,
     setSecontToolbarPath,
     resetSecondToolbar,
   }: any = secondToolbarStore();
-  const [initialFormValues, setInitialFormValues] = useState<ILeadsStatusModal>({
-    ...initialValues,
-  });
+  const [initialFormValues, setInitialFormValues] = useState<ILeadsStatusModal>(
+    {
+      ...initialValues,
+    }
+  );
 
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const modalTitle = id ? "Edit" : "Add New Status";
   const submitBtnName = id ? "Update" : "Add Status";
 
@@ -94,15 +108,14 @@ const LeadsStatus = ({ className }: any) => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleDeleteClick = (id: number) => {
+  const handleDeleteClick = async (id: number) => {
     setId(id);
     setIsModalOpen(true);
   };
 
   const handleConfirmDelete = async () => {
-    // await deleteUser(id);
-    // setCount(count - 1);
-    await getStatus(page, 5);
+    await deleteStatuses(id);
+    await getStatus(1, 10);
     setIsModalOpen(false);
   };
 
@@ -110,36 +123,9 @@ const LeadsStatus = ({ className }: any) => {
     setIsModalOpen(false);
   };
 
-  //   const handleEditClick = useCallback(
-  //     async (id: number) => {
-  //       try {
-  //         await getUserById(id);
-
-  //         // Wait for the team data to be updated in the store
-  //         await new Promise((resolve) => setTimeout(resolve, 0));
-
-  //         // Now safely access the updated team data
-  //         const {
-  //           created_date,
-  //           team_name,
-  //           id: userId,
-  //           ...rest
-  //         } = usersStore.getState().user;
-  //         setId(id);
-  //         setOpen(true);
-  //         setInitialFormValues(rest);
-  //       } catch (error) {
-  //         console.error("Error fetching user:", error);
-  //         // Handle error appropriately (e.g., show error message)
-  //       }
-  //     },
-  //     [user]
-  //   );
-
   useEffect(() => {
     setSecontToolbarMessage("LEADS");
     setSecontToolbarPath(" / Statuses");
-    // getAllTeams();
     getStatus(page, 5);
 
     return () => {
@@ -148,64 +134,52 @@ const LeadsStatus = ({ className }: any) => {
     };
   }, []);
 
-  //   const handleChangePage = async (event: unknown, newPage: number) => {
-  //     setPage(newPage);
-  //     try {
-  //       getUsers(newPage, rowsPerPage);
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   };
-
-  //   const addNewUser = () => {
-  //     setOpen(true);
-  //     setId(null);
-  //   };
-
-  //   const handleChangeRowsPerPage = async (
-  //     event: React.ChangeEvent<HTMLInputElement>
-  //   ) => {
-  //     try {
-  //       setRowsPerPage(parseInt(event.target.value, 10));
-  //       getUsers(page, parseInt(event.target.value, 10));
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   };
   const handleSubmitModal = async (values: any) => {
-    saveStatus(values);
-    // if (id) {
-    //   await axios.put(
-    //     `${process.env.REACT_APP_BASE_URL}/users/edit_user/${id}`,
-    //     values,
-    //     {
-    //       headers: {
-    //         Authorization: `Bearer ${token}`,
-    //       },
-    //     }
-    //   );
-    // } else {
-    //   await axios.post(
-    //     `${process.env.REACT_APP_BASE_URL}/users/add_user`,
-    //     values,
-    //     {
-    //       headers: {
-    //         Authorization: `Bearer ${token}`,
-    //       },
-    //     }
-    //   );
-    // }
+    if (!id) {
+      saveStatus(values);
+    } else {
+      await updateStatus(values);
+      await getStatus(page, 10);
+    }
     setOpen(false);
-    // await getTypes(page, 5);
-    // setInitialFormValues(initialValues);
   };
+
+  const handleEditClick = useCallback(
+    async (id: number) => {
+      try {
+        await getLeadStatusesById(id);
+        await new Promise((resolve) => setTimeout(resolve, 0));
+
+        setId(id);
+        setOpen(true);
+        const { status } = leadsTypesStore.getState();
+        setInitialFormValues(status);
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
+    },
+    [status]
+  );
 
   const addLeadsStatus = () => {
     setOpen(true);
     setId(null);
-  }
+  };
 
-  const columns: GridColDef<(typeof types)[number]>[] = [
+  const handleFiltersClose = () => {
+    setIsFilterOpen(false);
+  };
+
+  const handleFilter = async () => {
+    setIsFilterOpen(false);
+    await getStatus(1, 10);
+  };
+
+  const resetFilter = () => {
+    resetFilters();
+  };
+
+  const columns: GridColDef<(typeof statuses)[number]>[] = [
     { field: "status_name", headerName: "Status name", width: 250 },
     { field: "created_date", headerName: "Created date", width: 250 },
 
@@ -226,23 +200,21 @@ const LeadsStatus = ({ className }: any) => {
               icon={<ManageAccountsIcon />}
               label="Previw"
               key={id}
-              disabled
               sx={{
                 color: "black",
               }}
               className="textPrimary"
-              // onClick={() => handleEditClick(id)}
+              onClick={() => handleEditClick(id)}
             />,
             <GridActionsCellItem
               icon={<DeleteForeverIcon />}
               label="Previw"
               key={id}
-              disabled
               sx={{
                 color: "red",
               }}
               className="textPrimary"
-              // onClick={() => handleDeleteClick(id)}
+              onClick={() => handleDeleteClick(id)}
             />,
           ];
         }
@@ -251,24 +223,62 @@ const LeadsStatus = ({ className }: any) => {
     },
   ];
 
+  const handleSearchInputChange = (event: any) => {
+    setSearchValue(event?.target.value);
+    if (!event?.target.value) {
+      getStatus(0, 10);
+    }
+  };
+
   return (
     <Box className={`${className} test`}>
       <Card>
         <CardContent>
-          <Button
-            variant="outlined"
-            onClick={() => addLeadsStatus()}
-            startIcon={<AddIcon />}
-            size="small"
-            sx={addBtnStyle}
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              paddingBottom: 1,
+            }}
           >
-            Add status
-          </Button>
+            <SearchInput
+              onChange={(event: any) => {
+                handleSearchInputChange(event);
+              }}
+              onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
+                if (event.key === "Enter") {
+                  event.preventDefault(); 
+                  getStatus(0, 10);
+                }
+              }}
+            />
 
-          {/* <SearchInput /> */}
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Button
+                variant="outlined"
+                onClick={() => setIsFilterOpen(true)}
+                startIcon={<FilterListIcon />}
+                size="small"
+                sx={filterBtnStyle}
+              >
+                Filters
+              </Button>
+
+              <Button
+                variant="outlined"
+                onClick={() => addLeadsStatus()}
+                startIcon={<AddIcon />}
+                size="small"
+                sx={addBtnStyle}
+              >
+                Add status
+              </Button>
+            </Box>
+          </Box>
 
           <CustomDataGrid
-            rows={types}
+            rows={statuses}
             columns={columns}
             initialState={{
               pagination: {
@@ -290,7 +300,6 @@ const LeadsStatus = ({ className }: any) => {
           isOpen={open}
           onClose={() => {
             setOpen(false);
-            setInitialFormValues(initialValues);
           }}
           title={modalTitle}
         >
@@ -300,9 +309,7 @@ const LeadsStatus = ({ className }: any) => {
             apiRequest={handleSubmitModal}
             hasSubmitButton={true}
             submitBtnName={submitBtnName}
-            form={(formProps: any) => (
-              <LeadsStatusForm formProps={formProps} />
-            )}
+            form={(formProps: any) => <LeadsStatusForm formProps={formProps} />}
             btnStyle={submitBtnStyle}
           />
         </CustomModal>
@@ -315,6 +322,17 @@ const LeadsStatus = ({ className }: any) => {
           onConfirm={handleConfirmDelete}
           itemName="this user"
         />
+      )}
+
+      {isFilterOpen && (
+        <Filters
+          open={isFilterOpen}
+          onClose={handleFiltersClose}
+          handleFilter={handleFilter}
+          resetFilter={resetFilter}
+        >
+          <FilterLeadsStatuses />
+        </Filters>
       )}
     </Box>
   );
