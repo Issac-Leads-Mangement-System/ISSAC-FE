@@ -1,12 +1,9 @@
 import {
-  FormControl,
-  IconButton,
-  Input,
-  InputAdornment,
-  InputLabel,
   SxProps,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
+import { styled } from '@mui/system';
+import { InputBase, Box } from '@mui/material';
 
 type Props = {
   sx?: SxProps;
@@ -14,52 +11,36 @@ type Props = {
   onKeyDown: any;
 };
 
+const StyledSearchInput = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  border: '1px solid #d3d3d3',
+  borderRadius: theme.shape.borderRadius,
+  padding: '5px 0 0 5px', 
+  width: '30%',
+  backgroundColor: '#fafafa', 
+}));
+
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
+  marginLeft: theme.spacing(1),
+  flex: 1,
+  color: '#666', 
+  '&::placeholder': {
+    color: '#aaa',
+  },
+}));
+
 export const SearchInput = ({ sx, onChange, onKeyDown }: Props) => {
   return (
-    <FormControl
-      sx={{
-        m: 1,
-        width: "250px",
-        ...sx,
-        position: "absolute",
-        top: "85px",
-        right: "32px",
-        "&.Mui-focused": {
-          color: "black",
-        },
-      }}
-      variant="standard"
-    >
-      <InputLabel
-        htmlFor="standard-adornment-search"
-        sx={{
-          fontSize: "12px",
-          top: "12px",
-          "&.Mui-focused": {
-            color: "black",
-          },
-        }}
-      >
-        Search for ...
-      </InputLabel>
-      <Input
-        id="standard-adornment-search"
-        type="text"
+    <StyledSearchInput>
+      <SearchIcon color="action" />
+      <StyledInputBase
+        placeholder="Search for..."
+        size="small"
         onChange={onChange}
         onKeyDown={onKeyDown}
-        endAdornment={
-          <InputAdornment position="end">
-            <IconButton>
-              <SearchIcon />
-            </IconButton>
-          </InputAdornment>
-        }
-        sx={{
-          "&::after": {
-            borderBottom: "2px solid black",
-          },
-        }}
+        inputProps={{ 'aria-label': 'search' }}
       />
-    </FormControl>
+    </StyledSearchInput>
   );
 };
