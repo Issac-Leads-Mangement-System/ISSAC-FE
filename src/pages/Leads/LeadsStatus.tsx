@@ -24,7 +24,7 @@ import {
   ILeadsStatusModal,
   validationLeadsStatusSchema,
 } from "../../forms/leadsStatusModalSchema";
-import { LeadsStatusForm } from "../../common/Modal/Leads/LeadsStatusForm";
+import { LeadsStatusForm } from "../../common/Modal/LeadsStatus/LeadsStatusForm";
 import Filters from "../../components/Filters/filters";
 import leadsStatusesStore from "../../store/Leads/statuses-store";
 import { FilterLeadsStatuses } from "../../common/forms-filters/FilterLeadsStatuses";
@@ -70,6 +70,7 @@ const CustomDataGrid: any = styledMaterial(DataGrid)(
     },
   })
 );
+// create a seprate component for CustomDataGrid
 
 const LeadsStatus = ({ className }: any) => {
   const [open, setOpen] = useState(false);
@@ -77,7 +78,7 @@ const LeadsStatus = ({ className }: any) => {
   const [id, setId] = useState<null | number>(null);
   const {
     getStatus,
-    saveStatus,
+    addStatus,
     resetStore,
     deleteStatuses,
     getLeadStatusesById,
@@ -136,7 +137,7 @@ const LeadsStatus = ({ className }: any) => {
 
   const handleSubmitModal = async (values: any) => {
     if (!id) {
-      saveStatus(values);
+      addStatus(values);
     } else {
       await updateStatus(values);
       await getStatus(page, 10);
@@ -152,7 +153,7 @@ const LeadsStatus = ({ className }: any) => {
 
         setId(id);
         setOpen(true);
-        const { status } = leadsTypesStore.getState();
+        const { status } = leadsStatusesStore.getState();
         setInitialFormValues(status);
       } catch (error) {
         console.error("Error fetching user:", error);
@@ -248,14 +249,14 @@ const LeadsStatus = ({ className }: any) => {
               }}
               onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
                 if (event.key === "Enter") {
-                  event.preventDefault(); 
+                  event.preventDefault();
                   getStatus(0, 10);
                 }
               }}
             />
 
             <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Button
+              {/* <Button
                 variant="outlined"
                 onClick={() => setIsFilterOpen(true)}
                 startIcon={<FilterListIcon />}
@@ -263,7 +264,7 @@ const LeadsStatus = ({ className }: any) => {
                 sx={filterBtnStyle}
               >
                 Filters
-              </Button>
+              </Button> */}
 
               <Button
                 variant="outlined"
@@ -320,7 +321,7 @@ const LeadsStatus = ({ className }: any) => {
           open={isModalOpen}
           onClose={handleCloseModal}
           onConfirm={handleConfirmDelete}
-          itemName="this user"
+          itemName="this status"
         />
       )}
 

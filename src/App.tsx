@@ -14,6 +14,7 @@ import "./App.css";
 
 import useAuthStore from "./store/authStore/authStore";
 import SecondToolbar from "./components/SecondToolbar/SecondToolbar";
+import { Toaster } from "./common/Toaster/Toaster";
 
 function App() {
   const [open, setOpen] = useState(true);
@@ -54,13 +55,14 @@ function App() {
       } catch (error) {
         setLoading(false);
         console.error("get uset error", error);
+        localStorage.clear();
+        navigate("/");
         //if token is expired redirect the user to the login page
       }
     }
   };
 
   useEffect(() => {
-    //get user
     getUser();
   }, [token]);
 
@@ -71,7 +73,6 @@ function App() {
           <Box sx={{ display: "flex" }}>
             <Drawer variant="permanent" open={open}>
               <LeftMenu open={open} />
-              {/* <NestedList open={open} /> */}
             </Drawer>
             <Box component="main" sx={{ flexGrow: 1, width: "80%" }}>
               <Box>
@@ -87,6 +88,7 @@ function App() {
           </Box>
         </div>
       )}
+      <Toaster />
 
       <Routes>
         <Route index element={<Login />} />
