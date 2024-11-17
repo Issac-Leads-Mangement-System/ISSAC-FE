@@ -55,6 +55,8 @@ function App() {
       } catch (error) {
         setLoading(false);
         console.error("get uset error", error);
+        localStorage.clear();
+        navigate("/");
         //if token is expired redirect the user to the login page
       }
     }

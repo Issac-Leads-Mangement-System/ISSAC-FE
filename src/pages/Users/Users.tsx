@@ -82,6 +82,8 @@ const Users = ({ className }: any) => {
     modelPage,
     setPage,
     setSizePerPage,
+    addUser,
+    editUser,
   }: any = usersStore();
   const { getAllTeams, teamsOptions }: any = teamsStore();
   const {
@@ -112,7 +114,7 @@ const Users = ({ className }: any) => {
   const handleConfirmDelete = async () => {
     await deleteUser(id);
     setCount(counter_users - 1);
-    await getUsers(modelPage.page, 10);
+    getUsers();
     setIsModalOpen(false);
   };
 
@@ -122,35 +124,30 @@ const Users = ({ className }: any) => {
 
   const handleEditClick = useCallback(
     async (id: number) => {
-      try {
-        await getUserById(id);
+      // Fetch user data by ID
+      await getUserById(id);
 
-        // Wait for the team data to be updated in the store
-        await new Promise((resolve) => setTimeout(resolve, 0));
-
-        // Now safely access the updated team data
-        const {
-          created_date,
-          team_name,
-          id: userId,
-          ...rest
-        } = usersStore.getState().user;
-        setId(id);
-        setOpen(true);
-        setInitialFormValues(rest);
-      } catch (error) {
-        console.error("Error fetching user:", error);
-        // Handle error appropriately (e.g., show error message)
+      // Safely extract user details from the store
+      const user = usersStore.getState().user;
+      if (!user) {
+        return;
       }
+
+      const { created_date, team_name, id: userId, ...rest } = user;
+
+      // Set state for editing
+      setId(id);
+      setOpen(true);
+      setInitialFormValues(rest);
     },
-    [user]
+    [getUserById]
   );
 
   useEffect(() => {
     setSecontToolbarMessage("USERS");
     setSecontToolbarPath("List");
     getAllTeams();
-    getUsers(modelPage.page, modelPage.sizePerPage);
+    getUsers();
 
     return () => {
       resetSecondToolbar();
@@ -159,7 +156,7 @@ const Users = ({ className }: any) => {
 
   const handleChangePage = (model: any) => {
     setPage(model.page + 1);
-    getUsers(model.page, model.pageSize);
+    getUsers();
   };
 
   const addNewUser = () => {
@@ -170,7 +167,7 @@ const Users = ({ className }: any) => {
   const handleChangeRowsPerPage = async (model: any) => {
     setSizePerPage(model.pageSize);
     // setRowsPerPage(parseInt(model.page, model.pageSize));
-    getUsers(undefined, undefined);
+    getUsers();
   };
 
   // const handlePageChange: any = async (model: any) => {
@@ -184,34 +181,20 @@ const Users = ({ className }: any) => {
   const handleSearchInputChange = (event: any) => {
     setSearchValue(event?.target.value);
     if (!event?.target.value) {
-      getUsers(0, 10);
+      getUsers();
     }
   };
 
   const handleSubmitModal = async (values: any) => {
     if (id) {
-      await axios.put(
-        `${process.env.REACT_APP_BASE_URL}/users/edit_user/${id}`,
-        values,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      // edit user
+      await editUser(id, values);
     } else {
-      await axios.post(
-        `${process.env.REACT_APP_BASE_URL}/users/add_user`,
-        values,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      // add new user
+      await addUser(values);
     }
     setOpen(false);
-    // await getUsers(page, 5);
+    await getUsers();
     setInitialFormValues(initialValues);
   };
 
@@ -284,25 +267,34 @@ const Users = ({ className }: any) => {
     <Box className={`${className} test`}>
       <Card sx={{ marginTop: "15px" }}>
         <CardContent>
-          <Button
-            variant="outlined"
-            onClick={() => addNewUser()}
-            startIcon={<AddIcon />}
-            size="small"
-            sx={addBtnStyle}
-          >
-            Add user
-          </Button>
-
-          <SearchInput
-            onChange={(event: any) => handleSearchInputChange(event)}
-            onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
-              if (event.key === "Enter") {
-                event.preventDefault(); // Prevent form submission if inside a form
-                getUsers(1, 10);
-              }
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              paddingBottom: 1,
             }}
-          />
+          >
+            <SearchInput
+              onChange={(event: any) => handleSearchInputChange(event)}
+              onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
+                if (event.key === "Enter") {
+                  event.preventDefault(); // Prevent form submission if inside a form
+                  getUsers();
+                }
+              }}
+            />
+
+            <Button
+              variant="outlined"
+              onClick={() => addNewUser()}
+              startIcon={<AddIcon />}
+              size="small"
+              sx={addBtnStyle}
+            >
+              Add user
+            </Button>
+          </Box>
 
           <CustomDataGrid
             rows={users}
@@ -323,9 +315,9 @@ const Users = ({ className }: any) => {
             }}
             disableRowSelectionOnClick
             disableVirtualization
-            loading={isLoading}
             paginationMode="server"
             pagination
+            loading={isLoading}
           />
         </CardContent>
       </Card>

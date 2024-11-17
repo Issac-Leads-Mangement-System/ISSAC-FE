@@ -23,7 +23,11 @@ import { LeadsStyle } from "./LeadsStyle";
 import leadsTypesStore from "../../store/Leads/types-store";
 import { SearchInput } from "../../common/Input/SearchInput";
 import { TypesFormForm } from "../../common/Modal/LeadsTypes/TypesForm";
-import { ILeadsTypesModalSchema, initialValues, validationLeadsTypesSchema } from "../../forms/leadsTypeModalSchema";
+import {
+  ILeadsTypesModalSchema,
+  initialValues,
+  validationLeadsTypesSchema,
+} from "../../forms/leadsTypeModalSchema";
 
 const CustomDataGrid: any = styledMaterial(DataGrid)(
   ({ theme, styleColumns }: any) => ({
@@ -70,16 +74,27 @@ const LeadsTypes = ({ className }: any) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [id, setId] = useState<null | number>(null);
-  const { getTypes, setSearchValue, types, isLoading, saveTypes, deleteType, type, getLeadsTypeById, updateType }: any = leadsTypesStore();
+  const {
+    getTypes,
+    setSearchValue,
+    types,
+    isLoading,
+    saveTypes,
+    deleteType,
+    type,
+    getLeadsTypeById,
+    updateType,
+  }: any = leadsTypesStore();
   const { getAllTeams, teamsOptions }: any = teamsStore();
   const {
     setSecontToolbarMessage,
     setSecontToolbarPath,
     resetSecondToolbar,
   }: any = secondToolbarStore();
-  const [initialFormValues, setInitialFormValues] = useState<ILeadsTypesModalSchema>({
-    ...initialValues,
-  });
+  const [initialFormValues, setInitialFormValues] =
+    useState<ILeadsTypesModalSchema>({
+      ...initialValues,
+    });
 
   const modalTitle = id ? "Edit" : "Add New Type";
   const submitBtnName = id ? "Update" : "Add Type";
@@ -108,8 +123,8 @@ const LeadsTypes = ({ className }: any) => {
   const addNewType = () => {
     setOpen(true);
     setId(null);
-  }
-  
+  };
+
   const handleEditClick = useCallback(
     async (id: number) => {
       try {
@@ -138,18 +153,14 @@ const LeadsTypes = ({ className }: any) => {
     };
   }, []);
 
-  
   const handleSubmitModal = async (values: any) => {
-    if(id) { 
-      console.log('zzz val', values)
+    if (id) {
       updateType(values);
     } else {
       await saveTypes(values);
     }
     await getTypes(0, 10);
     setOpen(false);
-
-
   };
 
   const handleSearchInputChange = (event: any) => {
@@ -273,9 +284,7 @@ const LeadsTypes = ({ className }: any) => {
             apiRequest={handleSubmitModal}
             hasSubmitButton={true}
             submitBtnName={submitBtnName}
-            form={(formProps: any) => (
-              <TypesFormForm formProps={formProps} />
-            )}
+            form={(formProps: any) => <TypesFormForm formProps={formProps} />}
             btnStyle={submitBtnStyle}
           />
         </CustomModal>
