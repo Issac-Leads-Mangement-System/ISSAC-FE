@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import axios from "axios";
-import { Button, Card, CardContent } from "@mui/material";
+import { Box, Button, Card, CardContent } from "@mui/material";
 import {
   DataGrid,
   GridActionsCellItem,
@@ -27,15 +26,12 @@ import { SearchInput } from "../../common/Input/SearchInput";
 
 const Team = ({ className }: any) => {
   const [open, setOpen] = useState(false);
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
   const [userList, setUserList] = useState([]);
   const [countUsers, setCountUsers] = useState(0);
   const [id, setId] = useState<null | number>(null);
   const [initialFormValues, setInitialFormValues] = useState<TeamModalSchema>({
     ...initialValues,
   });
-  const token: any = localStorage.getItem("authToken");
   const {
     getTeams,
     teams,
@@ -44,10 +40,14 @@ const Team = ({ className }: any) => {
     deleteTeam,
     isLoading,
     setSearchValue,
+    addTeam,
+    editTeam,
+    setPage,
+    setSizePerPage,
+    count,
   }: any = teamsStore();
   const modalTitle = id ? "Edit team" : "Add New Team";
   const submitBtnName = id ? "Update" : "Add Team";
-
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleDeleteClick = (id: number) => {
@@ -59,7 +59,7 @@ const Team = ({ className }: any) => {
     await deleteTeam(id);
     setUserList(userList.filter((user: any) => user.id !== id));
     setCountUsers(countUsers - 1);
-    await getTeams(page, 5);
+    await getTeams();
     setIsModalOpen(false);
   };
 
@@ -69,79 +69,35 @@ const Team = ({ className }: any) => {
 
   const handleEditClick = useCallback(
     async (id: number) => {
-      try {
-        await getTeam(id);
+      await getTeam(id);
 
-        // Wait for the team data to be updated in the store
-        await new Promise((resolve) => setTimeout(resolve, 0));
-
-        // Now safely access the updated team data
-        const updatedTeam = teamsStore.getState().team;
-        setId(id);
-        setOpen(true);
-        setInitialFormValues(updatedTeam);
-      } catch (error) {
-        console.error("Error fetching team:", error);
-        // Handle error appropriately (e.g., show error message)
-      }
+      // Now safely access the updated team data
+      const updatedTeam = teamsStore.getState().team;
+      setId(id);
+      setOpen(true);
+      setInitialFormValues(updatedTeam);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [team]
   );
 
   useEffect(() => {
-    getTeams(page, 5);
+    getTeams();
   }, []);
 
-  const handleChangePage = async (event: unknown, newPage: number) => {
-    setPage(newPage);
-    try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_BASE_URL}/users/teams/?page=${
-          newPage + 1
-        }&limit=${rowsPerPage}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      if (response?.data?.teams_response?.length > 0) {
-        setUserList(response.data.teams_response);
-      } else if (response?.data?.length > 0) {
-        setUserList(response.data);
-      }
-    } catch (error) {
-      console.error(error);
-    }
+  const handleChangePage = (model: any) => {
+    setPage(model.page + 1);
+    getTeams();
+  };
+
+  const handleChangeRowsPerPage = (model: any) => {
+    setSizePerPage(model.pageSize);
+    getTeams();
   };
 
   const addNewTeam = () => {
     setOpen(true);
     setId(null);
-  };
-
-  const handleChangeRowsPerPage = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    try {
-      setRowsPerPage(parseInt(event.target.value, 10));
-      const response = await axios.get(
-        `${process.env.REACT_APP_BASE_URL}/users/teams/?page=${
-          page === 0 ? page + 1 : page
-        }&limit=${parseInt(event.target.value, 10)}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      if (response?.data?.teams_response?.length > 0) {
-        setUserList(response.data.teams_response);
-      }
-    } catch (error) {
-      console.error(error);
-    }
   };
 
   const handleSearchInputChange = (event: any) => {
@@ -153,27 +109,12 @@ const Team = ({ className }: any) => {
 
   const handleSubmitModal = async (values: any) => {
     if (id) {
-      await axios.put(
-        `${process.env.REACT_APP_BASE_URL}/users/edit_team/${id}`,
-        values,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await editTeam(id, values);
     } else {
-      await axios.post(
-        `${process.env.REACT_APP_BASE_URL}/users/add_team`,
-        values,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await addTeam(values);
     }
-    await getTeams(page, 5);
+
+    await getTeams();
 
     setOpen(false);
     setInitialFormValues(initialValues);
@@ -224,28 +165,37 @@ const Team = ({ className }: any) => {
     <div className={`${className} test`}>
       <Card sx={{ marginTop: "15px" }}>
         <CardContent>
-          <Button
-            className="issac-user-button"
-            variant="outlined"
-            onClick={() => addNewTeam()}
-            startIcon={<AddIcon />}
-            size="small"
-            sx={addBtnStyle}
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              paddingBottom: 1,
+            }}
           >
-            Add team
-          </Button>
+            <SearchInput
+              onChange={(event: any) => {
+                handleSearchInputChange(event);
+              }}
+              onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
+                if (event.key === "Enter") {
+                  event.preventDefault();
+                  getTeams(0, 10);
+                }
+              }}
+            />
 
-          <SearchInput
-            onChange={(event: any) => {
-              handleSearchInputChange(event);
-            }}
-            onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
-              if (event.key === "Enter") {
-                event.preventDefault(); // Prevent form submission if inside a form
-                getTeams(0, 10);
-              }
-            }}
-          />
+            <Button
+              className="issac-user-button"
+              variant="outlined"
+              onClick={() => addNewTeam()}
+              startIcon={<AddIcon />}
+              size="small"
+              sx={addBtnStyle}
+            >
+              Add team
+            </Button>
+          </Box>
 
           <DataGrid
             rows={teams}
@@ -253,12 +203,20 @@ const Team = ({ className }: any) => {
             initialState={{
               pagination: {
                 paginationModel: {
-                  pageSize: 5,
+                  pageSize: 10,
                 },
               },
             }}
-            pageSizeOptions={[5]}
+            pageSizeOptions={[5, 10, 25, 50]}
+            onPaginationModelChange={(model: any) => {
+              handleChangeRowsPerPage(model);
+              handleChangePage(model);
+            }}
+            rowCount={count}
             disableRowSelectionOnClick
+            disableVirtualization
+            paginationMode="server"
+            pagination
             loading={isLoading}
           />
         </CardContent>
@@ -290,7 +248,7 @@ const Team = ({ className }: any) => {
           open={isModalOpen}
           onClose={handleCloseModal}
           onConfirm={handleConfirmDelete}
-          itemName="this user"
+          itemName="this team"
         />
       )}
     </div>
