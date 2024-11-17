@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import MuiDrawer from "@mui/material/Drawer";
+import { Severity } from "../store/Notification/notification-store";
 
 const drawerWidth = 220;
 
@@ -123,3 +124,24 @@ export const List = styled(ListItem)({
     },
   },
 });
+
+export const getSeverityLevel = (statusCode: number): Severity => {
+  if (typeof statusCode === "string") {
+    return "error";
+  }
+
+  if (statusCode >= 200 && statusCode <= 299) {
+    return "success";
+  } else if (
+    (statusCode >= 100 && statusCode <= 199) ||
+    (statusCode >= 300 && statusCode <= 399)
+  ) {
+    return "info";
+  } else if (statusCode >= 400 && statusCode <= 499) {
+    return "warning";
+  } else if (statusCode >= 500 && statusCode <= 599) {
+    return "error";
+  } else {
+    return "error";
+  }
+};

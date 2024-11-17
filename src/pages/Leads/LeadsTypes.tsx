@@ -12,7 +12,6 @@ import CustomModal from "../../common/Modal/CustomModal/CustomModal";
 import { GenericAddEditForm } from "../../common/forms-generic-ad-edit/GenericAdEditForm";
 import {
   UserModalSchema,
-  initialValues,
   validationUserSchema,
 } from "../../forms/userModalSchema";
 import { UserForm } from "../../common/Modal/User/UserForm";
@@ -22,6 +21,9 @@ import { DeleteConfirmationModal } from "../../common/Modal/ConfirmationDialog/C
 import secondToolbarStore from "../../store/SecondToolbar/second-tollbar-store";
 import { LeadsStyle } from "./LeadsStyle";
 import leadsTypesStore from "../../store/Leads/types-store";
+import { SearchInput } from "../../common/Input/SearchInput";
+import { TypesFormForm } from "../../common/Modal/LeadsTypes/TypesForm";
+import { ILeadsTypesModalSchema, initialValues, validationLeadsTypesSchema } from "../../forms/leadsTypeModalSchema";
 
 const CustomDataGrid: any = styledMaterial(DataGrid)(
   ({ theme, styleColumns }: any) => ({
@@ -68,29 +70,19 @@ const LeadsTypes = ({ className }: any) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [id, setId] = useState<null | number>(null);
-  const {
-    getTypes,
-    // setCount,
-    // users,
-    // count,
-    // getUserById,
-    // user,
-    // deleteUser,
-    types,
-    isLoading,
-  }: any = leadsTypesStore();
+  const { getTypes, setSearchValue, types, isLoading, saveTypes, deleteType, type, getLeadsTypeById, updateType }: any = leadsTypesStore();
   const { getAllTeams, teamsOptions }: any = teamsStore();
   const {
     setSecontToolbarMessage,
     setSecontToolbarPath,
     resetSecondToolbar,
   }: any = secondToolbarStore();
-  const [initialFormValues, setInitialFormValues] = useState<UserModalSchema>({
+  const [initialFormValues, setInitialFormValues] = useState<ILeadsTypesModalSchema>({
     ...initialValues,
   });
 
-  const modalTitle = id ? "Edit" : "Add New User";
-  const submitBtnName = id ? "Update" : "Add User";
+  const modalTitle = id ? "Edit" : "Add New Type";
+  const submitBtnName = id ? "Update" : "Add Type";
 
   const token: any = localStorage.getItem("authToken");
 
@@ -104,6 +96,7 @@ const LeadsTypes = ({ className }: any) => {
   const handleConfirmDelete = async () => {
     // await deleteUser(id);
     // setCount(count - 1);
+    await deleteType(id);
     await getTypes(page, 5);
     setIsModalOpen(false);
   };
@@ -112,31 +105,27 @@ const LeadsTypes = ({ className }: any) => {
     setIsModalOpen(false);
   };
 
-  //   const handleEditClick = useCallback(
-  //     async (id: number) => {
-  //       try {
-  //         await getUserById(id);
+  const addNewType = () => {
+    setOpen(true);
+    setId(null);
+  }
+  
+  const handleEditClick = useCallback(
+    async (id: number) => {
+      try {
+        await getLeadsTypeById(id);
+        await new Promise((resolve) => setTimeout(resolve, 0));
 
-  //         // Wait for the team data to be updated in the store
-  //         await new Promise((resolve) => setTimeout(resolve, 0));
-
-  //         // Now safely access the updated team data
-  //         const {
-  //           created_date,
-  //           team_name,
-  //           id: userId,
-  //           ...rest
-  //         } = usersStore.getState().user;
-  //         setId(id);
-  //         setOpen(true);
-  //         setInitialFormValues(rest);
-  //       } catch (error) {
-  //         console.error("Error fetching user:", error);
-  //         // Handle error appropriately (e.g., show error message)
-  //       }
-  //     },
-  //     [user]
-  //   );
+        setId(id);
+        setOpen(true);
+        const { type } = leadsTypesStore.getState();
+        setInitialFormValues(type);
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
+    },
+    [type]
+  );
 
   useEffect(() => {
     setSecontToolbarMessage("LEADS");
@@ -149,55 +138,25 @@ const LeadsTypes = ({ className }: any) => {
     };
   }, []);
 
-  //   const handleChangePage = async (event: unknown, newPage: number) => {
-  //     setPage(newPage);
-  //     try {
-  //       getUsers(newPage, rowsPerPage);
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   };
-
-  //   const addNewUser = () => {
-  //     setOpen(true);
-  //     setId(null);
-  //   };
-
-  //   const handleChangeRowsPerPage = async (
-  //     event: React.ChangeEvent<HTMLInputElement>
-  //   ) => {
-  //     try {
-  //       setRowsPerPage(parseInt(event.target.value, 10));
-  //       getUsers(page, parseInt(event.target.value, 10));
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   };
+  
   const handleSubmitModal = async (values: any) => {
-    if (id) {
-      await axios.put(
-        `${process.env.REACT_APP_BASE_URL}/users/edit_user/${id}`,
-        values,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+    if(id) { 
+      console.log('zzz val', values)
+      updateType(values);
     } else {
-      await axios.post(
-        `${process.env.REACT_APP_BASE_URL}/users/add_user`,
-        values,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await saveTypes(values);
     }
+    await getTypes(0, 10);
     setOpen(false);
-    await getTypes(page, 5);
-    setInitialFormValues(initialValues);
+
+
+  };
+
+  const handleSearchInputChange = (event: any) => {
+    setSearchValue(event?.target.value);
+    if (!event?.target.value) {
+      getTypes(0, 10);
+    }
   };
 
   const columns: GridColDef<(typeof types)[number]>[] = [
@@ -221,23 +180,21 @@ const LeadsTypes = ({ className }: any) => {
               icon={<ManageAccountsIcon />}
               label="Previw"
               key={id}
-              disabled
               sx={{
                 color: "black",
               }}
               className="textPrimary"
-              // onClick={() => handleEditClick(id)}
+              onClick={() => handleEditClick(id)}
             />,
             <GridActionsCellItem
               icon={<DeleteForeverIcon />}
               label="Previw"
               key={id}
-              disabled
               sx={{
                 color: "red",
               }}
               className="textPrimary"
-              // onClick={() => handleDeleteClick(id)}
+              onClick={() => handleDeleteClick(id)}
             />,
           ];
         }
@@ -250,17 +207,38 @@ const LeadsTypes = ({ className }: any) => {
     <Box className={`${className} test`}>
       <Card>
         <CardContent>
-          <Button
-            variant="outlined"
-            // onClick={() => addNewUser()}
-            startIcon={<AddIcon />}
-            size="small"
-            sx={addBtnStyle}
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              paddingBottom: 1,
+            }}
           >
-            Add type
-          </Button>
+            <SearchInput
+              onChange={(event: any) => {
+                handleSearchInputChange(event);
+              }}
+              onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
+                if (event.key === "Enter") {
+                  event.preventDefault();
+                  getTypes(0, 10);
+                }
+              }}
+            />
 
-          {/* <SearchInput /> */}
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Button
+                variant="outlined"
+                onClick={() => addNewType()}
+                startIcon={<AddIcon />}
+                size="small"
+                sx={addBtnStyle}
+              >
+                Add type
+              </Button>
+            </Box>
+          </Box>
 
           <CustomDataGrid
             rows={types}
@@ -285,18 +263,18 @@ const LeadsTypes = ({ className }: any) => {
           isOpen={open}
           onClose={() => {
             setOpen(false);
-            setInitialFormValues(initialValues);
+            // setInitialFormValues(initialValues);
           }}
           title={modalTitle}
         >
           <GenericAddEditForm
             initialValues={initialFormValues}
-            validationSchema={validationUserSchema}
+            validationSchema={validationLeadsTypesSchema}
             apiRequest={handleSubmitModal}
             hasSubmitButton={true}
             submitBtnName={submitBtnName}
             form={(formProps: any) => (
-              <UserForm formProps={formProps} userTeamList={teamsOptions} />
+              <TypesFormForm formProps={formProps} />
             )}
             btnStyle={submitBtnStyle}
           />
@@ -308,7 +286,7 @@ const LeadsTypes = ({ className }: any) => {
           open={isModalOpen}
           onClose={handleCloseModal}
           onConfirm={handleConfirmDelete}
-          itemName="this user"
+          itemName="this type"
         />
       )}
     </Box>
