@@ -136,6 +136,7 @@ const Leads = ({ className }: any) => {
     pagination,
     setPage,
     deleteLeads,
+    resetFilters,
   }: any = leadsStore();
   const {
     setSecontToolbarMessage,
@@ -250,6 +251,8 @@ const Leads = ({ className }: any) => {
     } else {
       saveLeads(values, typeOfAdd);
     }
+    await getLeads();
+    setOpen(false);
   };
 
   const handleSearchInputChange = (event: any) => {
@@ -270,7 +273,7 @@ const Leads = ({ className }: any) => {
   };
 
   const resetFilter = () => {
-    // resetFilters();
+    resetFilters();
   };
 
 
@@ -321,6 +324,7 @@ const Leads = ({ className }: any) => {
             <GridActionsCellItem
               icon={<DeleteForeverIcon />}
               label="Previw"
+              disabled
               key={id}
               sx={{
                 color: "red",

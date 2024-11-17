@@ -179,7 +179,8 @@ const leadsStore = create<ILeadsState>((set) => ({
   resetFilters: () => {
     set({
       activate_filters: {
-        status_name: "",
+        lead_type_id: [],
+        lead_status_id: [],
       },
     });
   },
