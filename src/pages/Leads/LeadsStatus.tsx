@@ -271,7 +271,16 @@ const LeadsStatus = ({ className }: any) => {
                 onClick={() => addLeadsStatus()}
                 startIcon={<AddIcon />}
                 size="small"
-                sx={addBtnStyle}
+                // sx={addBtnStyle}
+                sx={{
+                  bgcolor: "#2bb89b",
+                  color: "#fff",
+                  border: 'none',
+                  textTransform: "none",
+                  "&:hover": {
+                    bgcolor: "#2bb89b",
+                  },
+                }}
               >
                 Add status
               </Button>

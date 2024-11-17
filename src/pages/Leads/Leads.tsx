@@ -28,7 +28,7 @@ import {
   validationLeadsSchema,
 } from "../../forms/leadsModalSchema";
 import { UserForm } from "../../common/Modal/User/UserForm";
-import { addBtnStyle, submitBtnStyle } from "../../common/constants";
+import { addBtnStyle, filterBtnStyle, submitBtnStyle } from "../../common/constants";
 import teamsStore from "../../store/Teams/teams-store";
 import { Loader } from "../../common/Loader/Loader";
 import { DeleteConfirmationModal } from "../../common/Modal/ConfirmationDialog/ConfirmationDialog";
@@ -36,12 +36,17 @@ import { SearchInput } from "../../common/Input/SearchInput";
 import secondToolbarStore from "../../store/SecondToolbar/second-tollbar-store";
 import { LeadsStyle } from "./LeadsStyle";
 import leadsStore from "../../store/Leads/leads-store";
-import EditIcon from '@mui/icons-material/Edit';
-import FileCopyIcon from '@mui/icons-material/FileCopy';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
-import UploadFileIcon from '@mui/icons-material/UploadFile';
+import EditIcon from "@mui/icons-material/Edit";
+import FileCopyIcon from "@mui/icons-material/FileCopy";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
+import UploadFileIcon from "@mui/icons-material/UploadFile";
 import { LeadsForm } from "../../common/Modal/Leads/LeadsForm";
+import leadsTypesStore from "../../store/Leads/types-store";
+import leadsStatusesStore from "../../store/Leads/statuses-store";
+import FilterListIcon from "@mui/icons-material/FilterList";
+import Filters from "../../components/Filters/filters";
+import { FilterLeads } from "../../common/forms-filters/FilterLeads";
 
 const CustomDataGrid: any = styledMaterial(DataGrid)(
   ({ theme, styleColumns }: any) => ({
@@ -110,38 +115,42 @@ const StyledMenu = styled((props: MenuProps) => (
       "& .MuiSvgIcon-root": {
         fontSize: 18,
       },
-      "&:active": {
-        
-      },
+      "&:active": {},
     },
   },
 }));
 
 const Leads = ({ className }: any) => {
   const [open, setOpen] = useState(false);
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
   const [id, setId] = useState<null | number>(null);
   const {
-    getUsers,
-    setCount,
-    users,
+    leads,
+    lead,
+    getLeads,
+    setSearchValue,
+    getLeadById,
+    saveLeads,
+    updateLeads,
     count,
-    getUserById,
-    user,
-    deleteUser,
-    isLoading,
-  }: any = usersStore();
-  const { leads, getLeads, setSearchValue, getLeadById, saveLeads }: any = leadsStore();
-  const { getAllTeams, teamsOptions }: any = teamsStore();
+    setRowsPerPage,
+    pagination,
+    setPage,
+    deleteLeads,
+  }: any = leadsStore();
   const {
     setSecontToolbarMessage,
     setSecontToolbarPath,
     resetSecondToolbar,
   }: any = secondToolbarStore();
-  const [initialFormValues, setInitialFormValues] = useState<ILeadsModalSchema>({
-    ...initialValues,
-  });
+  const { getTypes }: any = leadsTypesStore();
+  const {
+    getStatus,
+  }: any = leadsStatusesStore();
+  const [initialFormValues, setInitialFormValues] = useState<ILeadsModalSchema>(
+    {
+      ...initialValues,
+    }
+  );
 
   const modalTitle = id ? "Edit" : "Add New Lead";
   const submitBtnName = id ? "Update" : "Add Lead";
@@ -149,9 +158,10 @@ const Leads = ({ className }: any) => {
   const token: any = localStorage.getItem("authToken");
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const [typeOfAdd, setTypeOfAdd] = useState(false);
+  const [typeOfAdd, setTypeOfAdd] = useState(false);
   const openOption = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -166,9 +176,8 @@ const Leads = ({ className }: any) => {
   };
 
   const handleConfirmDelete = async () => {
-    await deleteUser(id);
-    setCount(count - 1);
-    await getUsers(page, 5);
+    await deleteLeads(id);
+    await getLeads();
     setIsModalOpen(false);
   };
 
@@ -179,51 +188,38 @@ const Leads = ({ className }: any) => {
   const handleEditClick = useCallback(
     async (id: number) => {
       try {
-
         await getLeadById(id);
         const { lead } = leadsStore.getState();
-        console.log('zzz here', lead)
+        lead.type_id = lead.lead_type.lead_type_id;
+        lead.lead_status_id = lead.lead_status.lead_status_id;
         setInitialFormValues(lead);
         // Wait for the team data to be updated in the store
         await new Promise((resolve) => setTimeout(resolve, 0));
-
-        // Now safely access the updated team data
-        // const {
-        //   created_date,
-        //   team_name,
-        //   id: userId,
-        //   ...rest
-        // } = usersStore.getState().user;
         setId(id);
         setOpen(true);
-        // setInitialFormValues(rest);
       } catch (error) {
         console.error("Error fetching user:", error);
-        // Handle error appropriately (e.g., show error message)
       }
     },
-    [user]
+    [lead]
   );
 
   useEffect(() => {
     setSecontToolbarMessage("LEADS");
     setSecontToolbarPath("List");
-    // getAllTeams();
-    // getUsers(page, 5);
-    getLeads(page, 10);
+    getLeads();
+    getTypes(0, 50);
+    getStatus(0, 50);
 
     return () => {
       resetSecondToolbar();
     };
   }, []);
+  
 
-  const handleChangePage = async (event: unknown, newPage: number) => {
-    setPage(newPage);
-    try {
-      getUsers(newPage, rowsPerPage);
-    } catch (error) {
-      console.error(error);
-    }
+  const handleChangePage = async (model: any) => {
+    setPage(model.page)
+    await getLeads();
   };
 
   const addNewUser = () => {
@@ -233,58 +229,51 @@ const Leads = ({ className }: any) => {
 
   const addLead = (typeAdd: boolean) => {
     setOpen(true);
+    setId(null);
     setTypeOfAdd(typeAdd);
-  }
+  };
 
   const handleChangeRowsPerPage = async (
-    event: React.ChangeEvent<HTMLInputElement>
+    model: any
   ) => {
     try {
-      setRowsPerPage(parseInt(event.target.value, 10));
-      getUsers(page, parseInt(event.target.value, 10));
+      setRowsPerPage(model.pageSize);
+      setPage(model.page)
+      await getLeads();
     } catch (error) {
       console.error(error);
     }
   };
   const handleSubmitModal = async (values: any) => {
-    if(id) {
-
+    if (id) {
+      updateLeads(values);
     } else {
       saveLeads(values, typeOfAdd);
-      console.log('craete');
     }
-    // if (id) {
-    //   await axios.put(
-    //     `${process.env.REACT_APP_BASE_URL}/users/edit_user/${id}`,
-    //     values,
-    //     {
-    //       headers: {
-    //         Authorization: `Bearer ${token}`,
-    //       },
-    //     }
-    //   );
-    // } else {
-    //   await axios.post(
-    //     `${process.env.REACT_APP_BASE_URL}/users/add_user`,
-    //     values,
-    //     {
-    //       headers: {
-    //         Authorization: `Bearer ${token}`,
-    //       },
-    //     }
-    //   );
-    // }
-    // setOpen(false);
-    // await getUsers(page, 5);
-    // setInitialFormValues(initialValues);
   };
 
   const handleSearchInputChange = (event: any) => {
     setSearchValue(event?.target.value);
     if (!event?.target.value) {
-      getLeads(page, 10);
+      getLeads();
     }
   };
+
+  const handleFiltersClose = () => {
+    setIsFilterOpen(false);
+  };
+
+  const handleFilter = async () => {
+    await getLeads();
+    setIsFilterOpen(false);
+    // await getStatus(1, 10);
+  };
+
+  const resetFilter = () => {
+    // resetFilters();
+  };
+
+
 
   const columns: GridColDef<(typeof leads)[number]>[] = [
     { field: "id", headerName: "Id", width: 150 },
@@ -355,7 +344,7 @@ const Leads = ({ className }: any) => {
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
-              paddingBottom: 1,
+              paddingBottom: 2,
             }}
           >
             <SearchInput
@@ -371,7 +360,17 @@ const Leads = ({ className }: any) => {
             />
             <Box sx={{ display: "flex", alignItems: "center" }}>
               <Button
-                size='small'
+                variant="outlined"
+                onClick={() => setIsFilterOpen(true)}
+                startIcon={<FilterListIcon />}
+                size="small"
+                sx={filterBtnStyle}
+              >
+                Filters
+              </Button> 
+
+              <Button
+                size="small"
                 id="demo-customized-button"
                 aria-controls={openOption ? "demo-customized-menu" : undefined}
                 aria-haspopup="true"
@@ -380,6 +379,14 @@ const Leads = ({ className }: any) => {
                 disableElevation
                 onClick={handleClick}
                 endIcon={<KeyboardArrowDownIcon />}
+                sx={{
+                  bgcolor: "#2bb89b",
+                  color: "#fff",
+                  textTransform: "none",
+                  "&:hover": {
+                    bgcolor: "#2bb89b",
+                  },
+                }}
               >
                 Add lead
               </Button>
@@ -393,7 +400,7 @@ const Leads = ({ className }: any) => {
                 onClose={handleClose}
               >
                 <MenuItem onClick={() => addLead(false)} disableRipple>
-                  <PersonAddAltIcon  /> Add one lead
+                  <PersonAddAltIcon /> Add one lead
                 </MenuItem>
                 <MenuItem onClick={() => addLead(true)} disableRipple>
                   <UploadFileIcon /> Upload file
@@ -402,20 +409,32 @@ const Leads = ({ className }: any) => {
             </Box>
           </Box>
 
-          <CustomDataGrid
-            rows={leads}
-            columns={columns}
-            initialState={{
-              pagination: {
-                paginationModel: {
-                  pageSize: 5,
+          {leads?.length > 0 && (
+            <CustomDataGrid
+              rows={leads}
+              columns={columns}
+              initialState={{
+                pagination: {
+                  paginationModel: {
+                    pageSize: 10,
+                  },
                 },
-              },
-            }}
-            pageSizeOptions={[5]}
-            disableRowSelectionOnClick
-            disableVirtualization
-          />
+              }}
+              onPaginationModelChange={(model: any) => {
+                if (model.pageSize !== pagination.pageSize) {
+                  handleChangeRowsPerPage(model);
+                }
+                if (model.page !== pagination.page) {
+                  handleChangePage(model);
+                }
+              }}
+              rowCount={count}
+              pageSizeOptions={[5, 10, 25, 50]}
+              disableRowSelectionOnClick
+              disableVirtualization
+              paginationMode="server"
+            />
+          )}
         </CardContent>
       </Card>
 
@@ -435,7 +454,7 @@ const Leads = ({ className }: any) => {
             hasSubmitButton={true}
             submitBtnName={submitBtnName}
             form={(formProps: any) => (
-              <LeadsForm formProps={formProps} typeOfAdd={typeOfAdd} />
+              <LeadsForm formProps={formProps} typeOfAdd={typeOfAdd} id={id} />
             )}
             btnStyle={submitBtnStyle}
           />
@@ -447,8 +466,19 @@ const Leads = ({ className }: any) => {
           open={isModalOpen}
           onClose={handleCloseModal}
           onConfirm={handleConfirmDelete}
-          itemName="this user"
+          itemName="this lead"
         />
+      )}
+
+      {isFilterOpen && (
+        <Filters
+          open={isFilterOpen}
+          onClose={handleFiltersClose}
+          handleFilter={handleFilter}
+          resetFilter={resetFilter}
+        >
+          <FilterLeads />
+        </Filters>
       )}
     </Box>
   );

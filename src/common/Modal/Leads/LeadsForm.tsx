@@ -9,8 +9,6 @@ import {
 import { styled } from "@mui/material/styles";
 import { generateFormikInputFieldProps } from "../../../forms/formikHelper";
 import Input from "../../Input/Input";
-import { INPUTS, ROLE } from "../../constants";
-import { useEffect } from "react";
 import leadsTypesStore from "../../../store/Leads/types-store";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import leadsStatusesStore from "../../../store/Leads/statuses-store";
@@ -27,20 +25,16 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 
-export const LeadsForm = ({ formProps, typeOfAdd }: any) => {
-  const { getTypes, types }: any = leadsTypesStore();
+export const LeadsForm = ({ formProps, typeOfAdd, id }: any) => {
+  const { types }: any = leadsTypesStore();
   const {
-    getStatus,
     statuses,
   }: any = leadsStatusesStore();
 
-  useEffect(() => {
-    getTypes(0, 50);
-    getStatus(0, 50);
-  }, []);
-
   return (
-    <Grid2 container spacing={2}>
+    <>
+    {types?.length > 0 && statuses?.length > 0 && (
+      <Grid2 container spacing={2}>
       <Grid2 size={12}>
         <FormControl size="small" sx={{ width: "100%" }}>
           <InputLabel id="type">Type</InputLabel>
@@ -83,6 +77,7 @@ export const LeadsForm = ({ formProps, typeOfAdd }: any) => {
           <Input
           {...generateFormikInputFieldProps(formProps, 'id')}
           label="Id"
+          disabled={id ? true : false}
           style={{ display: "flex" }}
           size="small"
         />
@@ -116,5 +111,7 @@ export const LeadsForm = ({ formProps, typeOfAdd }: any) => {
         </>
       )}
     </Grid2>
+    )}
+    </>
   );
 };
