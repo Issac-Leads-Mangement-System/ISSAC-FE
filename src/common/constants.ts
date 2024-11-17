@@ -33,6 +33,9 @@ export const INPUTS = {
   },
   LEADS: {
     STATUS: "status_name"
+  },
+  TYPES: {
+    NAME: "type_name"
   }
 };
 

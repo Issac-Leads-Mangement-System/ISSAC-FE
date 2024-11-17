@@ -24,7 +24,7 @@ import {
   ILeadsStatusModal,
   validationLeadsStatusSchema,
 } from "../../forms/leadsStatusModalSchema";
-import { LeadsStatusForm } from "../../common/Modal/Leads/LeadsStatusForm";
+import { LeadsStatusForm } from "../../common/Modal/LeadsStatus/LeadsStatusForm";
 import Filters from "../../components/Filters/filters";
 import leadsStatusesStore from "../../store/Leads/statuses-store";
 import { FilterLeadsStatuses } from "../../common/forms-filters/FilterLeadsStatuses";
@@ -152,7 +152,7 @@ const LeadsStatus = ({ className }: any) => {
 
         setId(id);
         setOpen(true);
-        const { status } = leadsTypesStore.getState();
+        const { status } = leadsStatusesStore.getState();
         setInitialFormValues(status);
       } catch (error) {
         console.error("Error fetching user:", error);
@@ -255,7 +255,7 @@ const LeadsStatus = ({ className }: any) => {
             />
 
             <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Button
+              {/* <Button
                 variant="outlined"
                 onClick={() => setIsFilterOpen(true)}
                 startIcon={<FilterListIcon />}
@@ -263,7 +263,7 @@ const LeadsStatus = ({ className }: any) => {
                 sx={filterBtnStyle}
               >
                 Filters
-              </Button>
+              </Button> */}
 
               <Button
                 variant="outlined"
