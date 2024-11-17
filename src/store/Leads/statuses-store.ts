@@ -54,7 +54,6 @@ const leadsStatusesStore = create<LeadsTypesState>((set) => ({
     set({isLoading: true});
     const response = await api.delete(`${process.env.REACT_APP_BASE_URL}/leads/statuses/delete_status/${id}`);
     if(response) {
-      console.log('zzz res', response)
     }
 
     set({isLoading: false});
@@ -65,7 +64,6 @@ const leadsStatusesStore = create<LeadsTypesState>((set) => ({
     const response = await api.get(`${process.env.REACT_APP_BASE_URL}/leads/statuses/${id}`);
     // if(response) {
     //   // set({})
-    //   console.log('zzz store get by id ',response.data)
       set({status: response.data})
     // }
     set({isLoading: false});

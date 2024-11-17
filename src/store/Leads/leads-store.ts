@@ -10,6 +10,7 @@ interface ILeadsState {
   searchValue: string;
   activate_filters: any;
   setActiveFilters: any;
+  pagination: any;
 }
 
 const leadsStore = create<ILeadsState>((set) => ({
@@ -17,25 +18,28 @@ const leadsStore = create<ILeadsState>((set) => ({
   lead: {},
   id: null,
   activate_filters: {
-    status_name: '',
-    date: undefined,
+    lead_type_id: [],
+    lead_status_id: [],
   },
   count: 0,
   isLoading: false,
   searchValue: "",
+  pagination: {
+    pageSize: 10,
+    page: 0
+  },
   setSearchValue: (value: string) => set({ searchValue: value }),
   setActiveFilters: (value: string, key:string) => (set({activate_filters: {[key]: value}})),
-  getLeads: async (page: number, limit: number) => {
-    const { searchValue, activate_filters } = leadsStore.getState();
+  getLeads: async () => {
+    const { searchValue, activate_filters, pagination } = leadsStore.getState();
     set({isLoading: true});
     const response: any = await api.post(
       `${process.env.REACT_APP_BASE_URL}/leads/?page=${
-        page + 1
-      }&limit=${limit}&search=${searchValue}`
+        pagination.page + 1
+      }&limit=${pagination.pageSize}&search=${searchValue}`, activate_filters
     );
-    console.log(response)
     set({ leads: response.data.leads_response });
-    set({ count: response.counter_leads });
+    set({ count: response.data.counter_leads });
     set({isLoading: false});
   },
   getLeadById: async (id: number) => {
@@ -50,7 +54,7 @@ const leadsStore = create<ILeadsState>((set) => ({
       delete values.lead_message;
       delete values.lead_status_id;
       const formData = new FormData();
-      formData.append('type_id', values.type_id); // Adaugă `type_id`
+      formData.append('type_id', values.type_id); 
       formData.append('file', values.file); 
       const response = await api.post(`${process.env.REACT_APP_BASE_URL}/leads/upload?type_id=${values.type_id}`, formData);
     } else {
@@ -60,6 +64,51 @@ const leadsStore = create<ILeadsState>((set) => ({
       const response = await api.post(`${process.env.REACT_APP_BASE_URL}/leads/add_lead`, values)
     }
     set({isLoading: false});
+  },
+
+  setRowsPerPage: async(pageSize: number) => {
+    set((state) => ({
+      pagination: {
+        ...state.pagination,
+        pageSize,
+      },
+    }));
+  }, 
+
+  setPage: async (page: number) => {
+    set((state) => ({
+      pagination: {
+        ...state.pagination,
+        page,
+      },
+    }));
+  },
+
+  addToLeadType: (ids: any) =>
+    set((state) => ({
+      activate_filters: {
+        ...state.activate_filters,
+        lead_type_id: Array.from(new Set(ids)), // Elimină duplicatele
+      },
+    })),
+
+  updateLeads: async (values: any) => {
+    set({isLoading: true});
+    delete values.last_change_user_id;
+    delete values.lead_status;
+    delete values.lead_type;
+    values.lead_type_id = values.type_id;
+    delete values.type_id;
+    const response = await api.put(`${process.env.REACT_APP_BASE_URL}/leads/edit_lead`, values);
+    // set({lead: response.data});
+    set({isLoading: false})
+  },
+
+  deleteLeads: async (id: number) => {
+    set({isLoading: true});
+    const response = await api.delete(`${process.env.REACT_APP_BASE_URL}/leads/delete_leads/${id}`);
+    // set({lead: response.data});
+    set({isLoading: false})
   },
 
   resetStore: () => {

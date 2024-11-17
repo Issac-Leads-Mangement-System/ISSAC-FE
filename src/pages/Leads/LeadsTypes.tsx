@@ -141,7 +141,6 @@ const LeadsTypes = ({ className }: any) => {
   
   const handleSubmitModal = async (values: any) => {
     if(id) { 
-      console.log('zzz val', values)
       updateType(values);
     } else {
       await saveTypes(values);

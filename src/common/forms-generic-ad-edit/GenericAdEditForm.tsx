@@ -45,7 +45,17 @@ export function GenericAddEditForm<EntityType>(
                   name={props.submitBtnName || "Submit form"}
                   buttonType={"submit"}
                   disabled={formikProps.isSubmitting}
-                  style={props.btnStyle}
+                  // style={props.btnStyle}
+                  sx={{
+                    bgcolor: "#17a2b8",
+                    color: "#fff",
+                    borderRadius: 8,
+                    width: "45%",
+                    textTransform: "none",
+                    "&:hover": {
+                      bgcolor: "#138496",
+                    },
+                  }}
                 />
               </Box>
             )}
