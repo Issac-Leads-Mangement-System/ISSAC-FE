@@ -23,6 +23,7 @@ import {
 import teamsStore from "../../store/Teams/teams-store";
 import { DeleteConfirmationModal } from "../../common/Modal/ConfirmationDialog/ConfirmationDialog";
 import { SearchInput } from "../../common/Input/SearchInput";
+import secondToolbarStore from "../../store/SecondToolbar/second-tollbar-store";
 
 const Team = ({ className }: any) => {
   const [open, setOpen] = useState(false);
@@ -46,6 +47,11 @@ const Team = ({ className }: any) => {
     setSizePerPage,
     count,
   }: any = teamsStore();
+  const {
+    setSecontToolbarMessage,
+    setSecontToolbarPath,
+    resetSecondToolbar,
+  }: any = secondToolbarStore();
   const modalTitle = id ? "Edit team" : "Add New Team";
   const submitBtnName = id ? "Update" : "Add Team";
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -82,6 +88,8 @@ const Team = ({ className }: any) => {
   );
 
   useEffect(() => {
+    setSecontToolbarMessage("TEAMS");
+    setSecontToolbarPath("List");
     getTeams();
   }, []);
 
@@ -191,7 +199,16 @@ const Team = ({ className }: any) => {
               onClick={() => addNewTeam()}
               startIcon={<AddIcon />}
               size="small"
-              sx={addBtnStyle}
+              // sx={addBtnStyle}
+              sx={{
+                bgcolor: "#2bb89b",
+                color: "#fff",
+                border: 'none',
+                textTransform: "none",
+                "&:hover": {
+                  bgcolor: "#2bb89b",
+                },
+              }}
             >
               Add team
             </Button>

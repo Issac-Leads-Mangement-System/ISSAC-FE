@@ -466,7 +466,7 @@ const Leads = ({ className }: any) => {
           open={isModalOpen}
           onClose={handleCloseModal}
           onConfirm={handleConfirmDelete}
-          itemName="this user"
+          itemName="this lead"
         />
       )}
 
