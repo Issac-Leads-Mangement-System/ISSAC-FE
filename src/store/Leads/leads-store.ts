@@ -27,7 +27,7 @@ const leadsStore = create<ILeadsState>((set) => ({
   searchValue: "",
   pagination: {
     pageSize: 10,
-    page: 0
+    page: 0,
   },
   setSearchValue: (value: string) => set({ searchValue: value }),
   setActiveFilters: (value: string, key: string) =>
@@ -41,7 +41,8 @@ const leadsStore = create<ILeadsState>((set) => ({
       const response: any = await api.post(
         `${process.env.REACT_APP_BASE_URL}/leads/?page=${
           pagination.page + 1
-        }&limit=${pagination.pageSize}&search=${searchValue}`, activate_filters
+        }&limit=${pagination.pageSize}&search=${searchValue}`,
+        activate_filters
       );
       set({ leads: response.data.leads_response });
       set({ count: response.data.counter_leads });
@@ -121,14 +122,14 @@ const leadsStore = create<ILeadsState>((set) => ({
     }
   },
 
-  setRowsPerPage: async(pageSize: number) => {
+  setRowsPerPage: async (pageSize: number) => {
     set((state) => ({
       pagination: {
         ...state.pagination,
         pageSize,
       },
     }));
-  }, 
+  },
 
   setPage: async (page: number) => {
     set((state) => ({
@@ -148,22 +149,62 @@ const leadsStore = create<ILeadsState>((set) => ({
     })),
 
   updateLeads: async (values: any) => {
-    set({isLoading: true});
+    const { showNotification } = useNotificationStore.getState();
+    set({ isLoading: true });
     delete values.last_change_user_id;
     delete values.lead_status;
     delete values.lead_type;
     values.lead_type_id = values.type_id;
     delete values.type_id;
-    const response = await api.put(`${process.env.REACT_APP_BASE_URL}/leads/edit_lead`, values);
-    // set({lead: response.data});
-    set({isLoading: false})
+    try {
+      const response = await api.put(
+        `${process.env.REACT_APP_BASE_URL}/leads/edit_lead`,
+        values
+      );
+      if (response.status === 200) {
+        showNotification({
+          message: "Lead successfully edited!",
+          status: response.statusText,
+          severity: response.status,
+        });
+      }
+    } catch (error: any) {
+      showNotification({
+        message: error.message,
+        status: error.status,
+        severity: error.severity,
+      });
+    } finally {
+      set({ isLoading: false });
+    }
   },
 
-  deleteLeads: async (id: number) => {
-    set({isLoading: true});
-    const response = await api.delete(`${process.env.REACT_APP_BASE_URL}/leads/delete_leads/${id}`);
-    // set({lead: response.data});
-    set({isLoading: false})
+  deleteLeads: async (id: any) => {
+    const { showNotification } = useNotificationStore.getState();
+    set({ isLoading: true });
+    const formData = new FormData();
+    formData.append("id", id);
+    try {
+      const response = await api.delete(
+        `${process.env.REACT_APP_BASE_URL}/leads/delete_leads/`,
+        { data: [id] }
+      );
+      if (response.status === 200) {
+        showNotification({
+          message: "Lead successfully deleted!",
+          status: response.statusText,
+          severity: response.status,
+        });
+      }
+    } catch (error: any) {
+      showNotification({
+        message: error.message,
+        status: error.status,
+        severity: error.severity,
+      });
+    } finally {
+      set({ isLoading: false });
+    }
   },
 
   resetStore: () => {

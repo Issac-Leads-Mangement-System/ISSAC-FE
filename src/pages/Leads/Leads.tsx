@@ -1,25 +1,15 @@
 import React, { useCallback, useEffect, useState } from "react";
-import axios from "axios";
-import {
-  alpha,
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Chip,
-  Menu,
-  MenuItem,
-  MenuProps,
-  Typography,
-} from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import { DataGrid, GridActionsCellItem, GridColDef } from "@mui/x-data-grid";
-
-import styled from "styled-components";
-import { styled as styledMaterial } from "@mui/material";
-import usersStore from "../../store/Users/users-store";
+import { Box, Button, Card, CardContent, MenuItem } from "@mui/material";
+import { GridActionsCellItem, GridColDef } from "@mui/x-data-grid";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
+import UploadFileIcon from "@mui/icons-material/UploadFile";
+import FilterListIcon from "@mui/icons-material/FilterList";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+
+import styled from "styled-components";
+
 import CustomModal from "../../common/Modal/CustomModal/CustomModal";
 import { GenericAddEditForm } from "../../common/forms-generic-ad-edit/GenericAdEditForm";
 import {
@@ -27,98 +17,20 @@ import {
   initialValues,
   validationLeadsSchema,
 } from "../../forms/leadsModalSchema";
-import { UserForm } from "../../common/Modal/User/UserForm";
-import { addBtnStyle, filterBtnStyle, submitBtnStyle } from "../../common/constants";
-import teamsStore from "../../store/Teams/teams-store";
-import { Loader } from "../../common/Loader/Loader";
+import { filterBtnStyle, submitBtnStyle } from "../../common/constants";
 import { DeleteConfirmationModal } from "../../common/Modal/ConfirmationDialog/ConfirmationDialog";
 import { SearchInput } from "../../common/Input/SearchInput";
 import secondToolbarStore from "../../store/SecondToolbar/second-tollbar-store";
 import { LeadsStyle } from "./LeadsStyle";
 import leadsStore from "../../store/Leads/leads-store";
-import EditIcon from "@mui/icons-material/Edit";
-import FileCopyIcon from "@mui/icons-material/FileCopy";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
-import UploadFileIcon from "@mui/icons-material/UploadFile";
 import { LeadsForm } from "../../common/Modal/Leads/LeadsForm";
 import leadsTypesStore from "../../store/Leads/types-store";
 import leadsStatusesStore from "../../store/Leads/statuses-store";
-import FilterListIcon from "@mui/icons-material/FilterList";
 import Filters from "../../components/Filters/filters";
 import { FilterLeads } from "../../common/forms-filters/FilterLeads";
-
-const CustomDataGrid: any = styledMaterial(DataGrid)(
-  ({ theme, styleColumns }: any) => ({
-    "& .row-green": {
-      backgroundColor: "#dff0d8 !important",
-    },
-    "& .row-red": {
-      backgroundColor: "#f2dede !important",
-    },
-    "& .bold": {
-      fontWeight: "bold",
-    },
-    "& .MuiDataGrid-columnHeaders": {
-      position: "relative",
-    },
-    "& .MuiDataGrid-cell": {
-      position: "relative",
-    },
-    // Actions
-    "& .pinned-column": {
-      position: "sticky",
-      right: 0,
-      backgroundColor: "#fff",
-      zIndex: 2,
-    },
-    "& .MuiDataGrid-columnHeader--pinned": {
-      position: "sticky!important",
-      right: 0,
-      backgroundColor: "#fff",
-      zIndex: 100,
-    },
-
-    "& .MuiDataGrid-row": {
-      display: "flex",
-    },
-    "& .MuiDataGrid-scrollbar--horizontal": {
-      display: "grid",
-    },
-  })
-);
-
-const StyledMenu = styled((props: MenuProps) => (
-  <Menu
-    elevation={0}
-    anchorOrigin={{
-      vertical: "bottom",
-      horizontal: "right",
-    }}
-    transformOrigin={{
-      vertical: "top",
-      horizontal: "right",
-    }}
-    {...props}
-  />
-))(({ theme }) => ({
-  "& .MuiPaper-root": {
-    borderRadius: 6,
-    minWidth: 180,
-    color: "rgb(55, 65, 81)",
-    boxShadow:
-      "rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px",
-    "& .MuiMenu-list": {
-      padding: "4px 0",
-    },
-    "& .MuiMenuItem-root": {
-      "& .MuiSvgIcon-root": {
-        fontSize: 18,
-      },
-      "&:active": {},
-    },
-  },
-}));
+import { addBtnStyle } from "../../common/utils";
+import { CustomDataGrid } from "../../common/CustomDataGrid/custom-data-grid";
+import { StyledMenu } from "../../common/CustomMenu/custom-menu";
 
 const Leads = ({ className }: any) => {
   const [open, setOpen] = useState(false);
@@ -144,19 +56,15 @@ const Leads = ({ className }: any) => {
     resetSecondToolbar,
   }: any = secondToolbarStore();
   const { getTypes }: any = leadsTypesStore();
-  const {
-    getStatus,
-  }: any = leadsStatusesStore();
+  const { getStatus }: any = leadsStatusesStore();
   const [initialFormValues, setInitialFormValues] = useState<ILeadsModalSchema>(
     {
       ...initialValues,
     }
   );
 
-  const modalTitle = id ? "Edit" : "Add New Lead";
+  const modalTitle = id ? "Edit Leads" : "Add New Lead";
   const submitBtnName = id ? "Update" : "Add Lead";
-
-  const token: any = localStorage.getItem("authToken");
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -216,16 +124,10 @@ const Leads = ({ className }: any) => {
       resetSecondToolbar();
     };
   }, []);
-  
 
   const handleChangePage = async (model: any) => {
-    setPage(model.page)
+    setPage(model.page);
     await getLeads();
-  };
-
-  const addNewUser = () => {
-    setOpen(true);
-    setId(null);
   };
 
   const addLead = (typeAdd: boolean) => {
@@ -234,12 +136,10 @@ const Leads = ({ className }: any) => {
     setTypeOfAdd(typeAdd);
   };
 
-  const handleChangeRowsPerPage = async (
-    model: any
-  ) => {
+  const handleChangeRowsPerPage = async (model: any) => {
     try {
       setRowsPerPage(model.pageSize);
-      setPage(model.page)
+      setPage(model.page);
       await getLeads();
     } catch (error) {
       console.error(error);
@@ -269,14 +169,11 @@ const Leads = ({ className }: any) => {
   const handleFilter = async () => {
     await getLeads();
     setIsFilterOpen(false);
-    // await getStatus(1, 10);
   };
 
   const resetFilter = () => {
     resetFilters();
   };
-
-
 
   const columns: GridColDef<(typeof leads)[number]>[] = [
     { field: "id", headerName: "Id", width: 150 },
@@ -285,7 +182,7 @@ const Leads = ({ className }: any) => {
       field: "status_name",
       headerName: "Status name",
       width: 250,
-      valueGetter: (value: any, row: any) => {
+      valueGetter: (_, row: any) => {
         return `${row.lead_status.status_name}`;
       },
     },
@@ -293,7 +190,7 @@ const Leads = ({ className }: any) => {
       field: "type_name",
       headerName: "Type name",
       width: 250,
-      valueGetter: (value: any, row: any) => {
+      valueGetter: (_, row: any) => {
         return `${row.lead_type.type_name}`;
       },
     },
@@ -303,7 +200,7 @@ const Leads = ({ className }: any) => {
       type: "actions",
       width: 150,
       editable: false,
-      renderHeader: (params: any) => <strong>{"Actions "}</strong>,
+      renderHeader: () => <strong>{"Actions "}</strong>,
       filterable: false,
       cellClassName: "pinned-column",
       headerClassName: "MuiDataGrid-columnHeader--pinned",
@@ -324,7 +221,6 @@ const Leads = ({ className }: any) => {
             <GridActionsCellItem
               icon={<DeleteForeverIcon />}
               label="Previw"
-              disabled
               key={id}
               sx={{
                 color: "red",
@@ -371,7 +267,7 @@ const Leads = ({ className }: any) => {
                 sx={filterBtnStyle}
               >
                 Filters
-              </Button> 
+              </Button>
 
               <Button
                 size="small"
@@ -383,14 +279,7 @@ const Leads = ({ className }: any) => {
                 disableElevation
                 onClick={handleClick}
                 endIcon={<KeyboardArrowDownIcon />}
-                sx={{
-                  bgcolor: "#2bb89b",
-                  color: "#fff",
-                  textTransform: "none",
-                  "&:hover": {
-                    bgcolor: "#2bb89b",
-                  },
-                }}
+                sx={addBtnStyle}
               >
                 Add lead
               </Button>

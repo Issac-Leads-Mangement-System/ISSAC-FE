@@ -1,15 +1,14 @@
 import React, { useCallback, useEffect, useState } from "react";
-import axios from "axios";
 import { Box, Button, Card, CardContent, Chip } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import { DataGrid, GridActionsCellItem, GridColDef } from "@mui/x-data-grid";
+import { GridActionsCellItem, GridColDef } from "@mui/x-data-grid";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 
 import { UsersStyle } from "./UsersStyle";
 import styled from "styled-components";
-import { styled as styledMaterial } from "@mui/material";
 import usersStore from "../../store/Users/users-store";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+
 import CustomModal from "../../common/Modal/CustomModal/CustomModal";
 import { GenericAddEditForm } from "../../common/forms-generic-ad-edit/GenericAdEditForm";
 import {
@@ -18,56 +17,16 @@ import {
   validationUserSchema,
 } from "../../forms/userModalSchema";
 import { UserForm } from "../../common/Modal/User/UserForm";
-import { addBtnStyle, submitBtnStyle } from "../../common/constants";
+import { submitBtnStyle } from "../../common/constants";
 import teamsStore from "../../store/Teams/teams-store";
 import { DeleteConfirmationModal } from "../../common/Modal/ConfirmationDialog/ConfirmationDialog";
 import { SearchInput } from "../../common/Input/SearchInput";
 import secondToolbarStore from "../../store/SecondToolbar/second-tollbar-store";
-
-const CustomDataGrid: any = styledMaterial(DataGrid)(
-  ({ theme, styleColumns }: any) => ({
-    "& .row-green": {
-      backgroundColor: "#dff0d8 !important",
-    },
-    "& .row-red": {
-      backgroundColor: "#f2dede !important",
-    },
-    "& .bold": {
-      fontWeight: "bold",
-    },
-    "& .MuiDataGrid-columnHeaders": {
-      position: "relative",
-    },
-    "& .MuiDataGrid-cell": {
-      position: "relative",
-    },
-    // Actions
-    "& .pinned-column": {
-      position: "sticky",
-      right: 0,
-      backgroundColor: "#fff",
-      zIndex: 2,
-    },
-    "& .MuiDataGrid-columnHeader--pinned": {
-      position: "sticky!important",
-      right: 0,
-      backgroundColor: "#fff",
-      zIndex: 100,
-    },
-
-    "& .MuiDataGrid-row": {
-      display: "flex",
-    },
-    "& .MuiDataGrid-scrollbar--horizontal": {
-      display: "grid",
-    },
-  })
-);
+import { addBtnStyle } from "../../common/utils";
+import { CustomDataGrid } from "../../common/CustomDataGrid/custom-data-grid";
 
 const Users = ({ className }: any) => {
   const [open, setOpen] = useState(false);
-  // const [page, setPage] = useState(0);
-  // const [rowsPerPage, setRowsPerPage] = useState(10);
   const [id, setId] = useState<null | number>(null);
   const {
     getUsers,
@@ -75,11 +34,9 @@ const Users = ({ className }: any) => {
     users,
     counter_users,
     getUserById,
-    user,
     deleteUser,
     isLoading,
     setSearchValue,
-    modelPage,
     setPage,
     setSizePerPage,
     addUser,
@@ -94,15 +51,9 @@ const Users = ({ className }: any) => {
   const [initialFormValues, setInitialFormValues] = useState<UserModalSchema>({
     ...initialValues,
   });
-  // const [paginationModel, setPaginationModel] = useState({
-  //   page: 0,
-  //   pageSize: 5,
-  // });
 
-  const modalTitle = id ? "Edit" : "Add New User";
+  const modalTitle = id ? "Edit User" : "Add New User";
   const submitBtnName = id ? "Update" : "Add User";
-
-  const token: any = localStorage.getItem("authToken");
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -164,19 +115,10 @@ const Users = ({ className }: any) => {
     setId(null);
   };
 
-  const handleChangeRowsPerPage = async (model: any) => {
+  const handleChangeRowsPerPage = (model: any) => {
     setSizePerPage(model.pageSize);
-    // setRowsPerPage(parseInt(model.page, model.pageSize));
     getUsers();
   };
-
-  // const handlePageChange: any = async (model: any) => {
-  //   setPaginationModel((prev) => ({
-  //     ...prev,
-  //     page: model.page,
-  //   }));
-  //   getUsers(model.page, model.pageSize);
-  // };
 
   const handleSearchInputChange = (event: any) => {
     setSearchValue(event?.target.value);
@@ -279,7 +221,7 @@ const Users = ({ className }: any) => {
               onChange={(event: any) => handleSearchInputChange(event)}
               onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
                 if (event.key === "Enter") {
-                  event.preventDefault(); // Prevent form submission if inside a form
+                  event.preventDefault();
                   getUsers();
                 }
               }}
@@ -290,16 +232,7 @@ const Users = ({ className }: any) => {
               onClick={() => addNewUser()}
               startIcon={<AddIcon />}
               size="small"
-              // sx={addBtnStyle}
-              sx={{
-                bgcolor: "#2bb89b",
-                color: "#fff",
-                border: 'none',
-                textTransform: "none",
-                "&:hover": {
-                  bgcolor: "#2bb89b",
-                },
-              }}
+              sx={addBtnStyle}
             >
               Add user
             </Button>
@@ -316,7 +249,6 @@ const Users = ({ className }: any) => {
               },
             }}
             rowCount={counter_users}
-            // pageSize={modelPage.sizePage}
             pageSizeOptions={[5, 10, 25, 50]}
             onPaginationModelChange={(model: any) => {
               handleChangePage(model);
