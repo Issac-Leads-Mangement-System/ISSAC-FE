@@ -10,7 +10,6 @@ import styled from "styled-components";
 import CustomModal from "../../common/Modal/CustomModal/CustomModal";
 import { GenericAddEditForm } from "../../common/forms-generic-ad-edit/GenericAdEditForm";
 import { submitBtnStyle } from "../../common/constants";
-import teamsStore from "../../store/Teams/teams-store";
 import { DeleteConfirmationModal } from "../../common/Modal/ConfirmationDialog/ConfirmationDialog";
 import secondToolbarStore from "../../store/SecondToolbar/second-tollbar-store";
 import { LeadsStyle } from "./LeadsStyle";
@@ -26,8 +25,9 @@ import { FilterLeadsStatuses } from "../../common/forms-filters/FilterLeadsStatu
 import { SearchInput } from "../../common/Input/SearchInput";
 import { addBtnStyle } from "../../common/utils";
 import { CustomDataGrid } from "../../common/CustomDataGrid/custom-data-grid";
+import { PageContainer } from "../../common/PageContainer/page-container";
 
-const LeadsStatus = ({ className }: any) => {
+const LeadsStatus = () => {
   const [open, setOpen] = useState(false);
   const [page, setPage] = useState(0);
   const [id, setId] = useState<null | number>(null);
@@ -76,7 +76,7 @@ const LeadsStatus = ({ className }: any) => {
 
   useEffect(() => {
     setSecontToolbarMessage("LEADS");
-    setSecontToolbarPath(" / Statuses");
+    setSecontToolbarPath("Statuses");
     getStatus(page, 5);
 
     return () => {
@@ -182,7 +182,7 @@ const LeadsStatus = ({ className }: any) => {
   };
 
   return (
-    <Box className={`${className} test`}>
+    <PageContainer>
       <Card>
         <CardContent>
           <Box
@@ -275,7 +275,7 @@ const LeadsStatus = ({ className }: any) => {
           <FilterLeadsStatuses />
         </Filters>
       )}
-    </Box>
+    </PageContainer>
   );
 };
 

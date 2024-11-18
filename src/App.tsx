@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
+import { ThemeProvider } from "@mui/material/styles";
 import { Box } from "@mui/material";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
@@ -15,6 +16,7 @@ import "./App.css";
 import useAuthStore from "./store/authStore/authStore";
 import SecondToolbar from "./components/SecondToolbar/SecondToolbar";
 import { Toaster } from "./common/Toaster/Toaster";
+import { Theme } from "./theme/Theme";
 
 function App() {
   const [open, setOpen] = useState(true);
@@ -67,7 +69,7 @@ function App() {
   }, [token]);
 
   return (
-    <>
+    <ThemeProvider theme={Theme}>
       {localStorage.getItem("authToken") && (
         <div>
           <Box sx={{ display: "flex" }}>
@@ -93,7 +95,7 @@ function App() {
       <Routes>
         <Route index element={<Login />} />
       </Routes>
-    </>
+    </ThemeProvider>
   );
 }
 

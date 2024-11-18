@@ -1,6 +1,6 @@
-import { heIL } from "@mui/material/locale";
+import { createTheme } from "@mui/material/styles";
 
-const Color = {
+export const Color = {
   MainColor: "#ff2f5b",
   AppBackground: "#f7f7f7",
   LightBlue: "#99BCD9",
@@ -32,7 +32,6 @@ const Color = {
   DarkBlack: "#000000",
   WhiteGray: "#F9FAFB",
   LightGray: "#ACB9C6",
-
   Primary: "#13aa52",
   Secondary: "#273742",
   Tertiary: "#116149",
@@ -47,8 +46,35 @@ const Size = {
   smallSize: "0.8rem",
 };
 
-export const Theme = {
-  Color,
-  Size,
-  heIL,
-};
+export const Theme = createTheme({
+  typography: {
+    fontFamily: [
+      "Montserrat",
+      "-apple-system",
+      "BlinkMacSystemFont",
+      '"Segoe UI"',
+      "Roboto",
+      '"Helvetica Neue"',
+      "Arial",
+      "sans-serif",
+      '"Apple Color Emoji"',
+      '"Segoe UI Emoji"',
+      '"Segoe UI Symbol"',
+    ].join(","),
+  },
+  // palette: {
+  //   custom: Color,
+  // },
+  components: {
+    MuiButton: {
+      defaultProps: {
+        size: "medium",
+      },
+    },
+    MuiTextField: {
+      defaultProps: {
+        size: "medium",
+      },
+    },
+  },
+});

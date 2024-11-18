@@ -25,8 +25,9 @@ import { DeleteConfirmationModal } from "../../common/Modal/ConfirmationDialog/C
 import { SearchInput } from "../../common/Input/SearchInput";
 import secondToolbarStore from "../../store/SecondToolbar/second-tollbar-store";
 import { addBtnStyle } from "../../common/utils";
+import { PageContainer } from "../../common/PageContainer/page-container";
 
-const Team = ({ className }: any) => {
+const Team = () => {
   const [open, setOpen] = useState(false);
   const [userList, setUserList] = useState([]);
   const [countUsers, setCountUsers] = useState(0);
@@ -168,7 +169,7 @@ const Team = ({ className }: any) => {
   ];
 
   return (
-    <div className={`${className} test`}>
+    <PageContainer>
       <Card sx={{ marginTop: "15px" }}>
         <CardContent>
           <Box
@@ -257,7 +258,7 @@ const Team = ({ className }: any) => {
           itemName="this team"
         />
       )}
-    </div>
+    </PageContainer>
   );
 };
 

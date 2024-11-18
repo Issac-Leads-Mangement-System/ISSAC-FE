@@ -23,8 +23,9 @@ import {
 } from "../../forms/leadsTypeModalSchema";
 import { addBtnStyle } from "../../common/utils";
 import { CustomDataGrid } from "../../common/CustomDataGrid/custom-data-grid";
+import { PageContainer } from "../../common/PageContainer/page-container";
 
-const LeadsTypes = ({ className }: any) => {
+const LeadsTypes = () => {
   const [open, setOpen] = useState(false);
   const [page, setPage] = useState(0);
   const [id, setId] = useState<null | number>(null);
@@ -93,7 +94,7 @@ const LeadsTypes = ({ className }: any) => {
 
   useEffect(() => {
     setSecontToolbarMessage("LEADS");
-    setSecontToolbarPath("/ types");
+    setSecontToolbarPath("Types");
     getTypes(page, 5);
 
     return () => {
@@ -162,7 +163,7 @@ const LeadsTypes = ({ className }: any) => {
   ];
 
   return (
-    <Box className={`${className} test`}>
+    <PageContainer>
       <Card>
         <CardContent>
           <Box
@@ -244,7 +245,7 @@ const LeadsTypes = ({ className }: any) => {
           itemName="this type"
         />
       )}
-    </Box>
+    </PageContainer>
   );
 };
 

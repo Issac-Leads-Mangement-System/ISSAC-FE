@@ -31,8 +31,9 @@ import { FilterLeads } from "../../common/forms-filters/FilterLeads";
 import { addBtnStyle } from "../../common/utils";
 import { CustomDataGrid } from "../../common/CustomDataGrid/custom-data-grid";
 import { StyledMenu } from "../../common/CustomMenu/custom-menu";
+import { PageContainer } from "../../common/PageContainer/page-container";
 
-const Leads = ({ className }: any) => {
+const Leads = () => {
   const [open, setOpen] = useState(false);
   const [id, setId] = useState<null | number>(null);
   const {
@@ -236,7 +237,7 @@ const Leads = ({ className }: any) => {
   ];
 
   return (
-    <Box className={`${className} test`}>
+    <PageContainer>
       <Card>
         <CardContent>
           <Box
@@ -373,7 +374,7 @@ const Leads = ({ className }: any) => {
           <FilterLeads />
         </Filters>
       )}
-    </Box>
+    </PageContainer>
   );
 };
 

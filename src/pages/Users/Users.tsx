@@ -5,8 +5,6 @@ import { GridActionsCellItem, GridColDef } from "@mui/x-data-grid";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 
-import { UsersStyle } from "./UsersStyle";
-import styled from "styled-components";
 import usersStore from "../../store/Users/users-store";
 
 import CustomModal from "../../common/Modal/CustomModal/CustomModal";
@@ -24,8 +22,9 @@ import { SearchInput } from "../../common/Input/SearchInput";
 import secondToolbarStore from "../../store/SecondToolbar/second-tollbar-store";
 import { addBtnStyle } from "../../common/utils";
 import { CustomDataGrid } from "../../common/CustomDataGrid/custom-data-grid";
+import { PageContainer } from "../../common/PageContainer/page-container";
 
-const Users = ({ className }: any) => {
+export const Users = () => {
   const [open, setOpen] = useState(false);
   const [id, setId] = useState<null | number>(null);
   const {
@@ -206,7 +205,7 @@ const Users = ({ className }: any) => {
   ];
 
   return (
-    <Box className={`${className} test`}>
+    <PageContainer>
       <Card sx={{ marginTop: "15px" }}>
         <CardContent>
           <Box
@@ -294,10 +293,6 @@ const Users = ({ className }: any) => {
           itemName="this user"
         />
       )}
-    </Box>
+    </PageContainer>
   );
 };
-
-export default styled(Users)`
-  ${UsersStyle}
-`;
