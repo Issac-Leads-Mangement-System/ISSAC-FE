@@ -36,7 +36,6 @@ const closedMixin = (theme: Theme): CSSObject => ({
 
 export const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
-  // alignItems: "center",
   justifyContent: "flex-end",
   padding: theme.spacing(0, 1),
   // necessary for content to be below app bar
@@ -84,7 +83,6 @@ export const Drawer = styled(MuiDrawer, {
 
 export const StyledTableCell = styled(TableCell)(({ theme }): any => ({
   [`&.${tableCellClasses.head}`]: {
-    // backgroundColor: "#ff2f5b",
     backgroundColor: "#38454a",
     paddingTop: "8px",
     paddingBottom: "8px",
@@ -98,10 +96,8 @@ export const StyledTableCell = styled(TableCell)(({ theme }): any => ({
   },
 }));
 
-export const StyledTableRow = styled(TableRow)(({ theme }): any => ({
-  "&:nth-of-type(even)": {
-    // backgroundColor: theme.palette.action.hover,
-  },
+export const StyledTableRow = styled(TableRow)((): any => ({
+  "&:nth-of-type(even)": {},
   // hide last border
   "&:last-child td, &:last-child th": {
     border: 0,
@@ -144,4 +140,14 @@ export const getSeverityLevel = (statusCode: number): Severity => {
   } else {
     return "error";
   }
+};
+
+export const addBtnStyle = {
+  bgcolor: "#2bb89b",
+  color: "#fff",
+  border: "none",
+  textTransform: "none",
+  "&:hover": {
+    bgcolor: "#2bb89b",
+  },
 };

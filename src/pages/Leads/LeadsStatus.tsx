@@ -1,24 +1,18 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Box, Button, Card, CardContent, Chip } from "@mui/material";
+import { Box, Button, Card, CardContent } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import { DataGrid, GridActionsCellItem, GridColDef } from "@mui/x-data-grid";
-
-import styled from "styled-components";
-import { styled as styledMaterial } from "@mui/material";
+import { GridActionsCellItem, GridColDef } from "@mui/x-data-grid";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+
+import styled from "styled-components";
+
 import CustomModal from "../../common/Modal/CustomModal/CustomModal";
 import { GenericAddEditForm } from "../../common/forms-generic-ad-edit/GenericAdEditForm";
-import {
-  addBtnStyle,
-  filterBtnStyle,
-  submitBtnStyle,
-} from "../../common/constants";
-import teamsStore from "../../store/Teams/teams-store";
+import { submitBtnStyle } from "../../common/constants";
 import { DeleteConfirmationModal } from "../../common/Modal/ConfirmationDialog/ConfirmationDialog";
 import secondToolbarStore from "../../store/SecondToolbar/second-tollbar-store";
 import { LeadsStyle } from "./LeadsStyle";
-import leadsTypesStore from "../../store/Leads/types-store";
 import {
   initialValues,
   ILeadsStatusModal,
@@ -29,50 +23,11 @@ import Filters from "../../components/Filters/filters";
 import leadsStatusesStore from "../../store/Leads/statuses-store";
 import { FilterLeadsStatuses } from "../../common/forms-filters/FilterLeadsStatuses";
 import { SearchInput } from "../../common/Input/SearchInput";
-import FilterListIcon from "@mui/icons-material/FilterList";
+import { addBtnStyle } from "../../common/utils";
+import { CustomDataGrid } from "../../common/CustomDataGrid/custom-data-grid";
+import { PageContainer } from "../../common/PageContainer/page-container";
 
-const CustomDataGrid: any = styledMaterial(DataGrid)(
-  ({ theme, styleColumns }: any) => ({
-    "& .row-green": {
-      backgroundColor: "#dff0d8 !important",
-    },
-    "& .row-red": {
-      backgroundColor: "#f2dede !important",
-    },
-    "& .bold": {
-      fontWeight: "bold",
-    },
-    "& .MuiDataGrid-columnHeaders": {
-      position: "relative",
-    },
-    "& .MuiDataGrid-cell": {
-      position: "relative",
-    },
-    // Actions
-    "& .pinned-column": {
-      position: "sticky",
-      right: 0,
-      backgroundColor: "#fff",
-      zIndex: 2,
-    },
-    "& .MuiDataGrid-columnHeader--pinned": {
-      position: "sticky!important",
-      right: 0,
-      backgroundColor: "#fff",
-      zIndex: 100,
-    },
-
-    "& .MuiDataGrid-row": {
-      display: "flex",
-    },
-    "& .MuiDataGrid-scrollbar--horizontal": {
-      display: "grid",
-    },
-  })
-);
-// create a seprate component for CustomDataGrid
-
-const LeadsStatus = ({ className }: any) => {
+const LeadsStatus = () => {
   const [open, setOpen] = useState(false);
   const [page, setPage] = useState(0);
   const [id, setId] = useState<null | number>(null);
@@ -89,7 +44,6 @@ const LeadsStatus = ({ className }: any) => {
     resetFilters,
     setSearchValue,
   }: any = leadsStatusesStore();
-  const { getAllTeams, teamsOptions }: any = teamsStore();
   const {
     setSecontToolbarMessage,
     setSecontToolbarPath,
@@ -100,13 +54,9 @@ const LeadsStatus = ({ className }: any) => {
       ...initialValues,
     }
   );
-
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const modalTitle = id ? "Edit" : "Add New Status";
+  const modalTitle = id ? "Edit Status" : "Add New Status";
   const submitBtnName = id ? "Update" : "Add Status";
-
-  const token: any = localStorage.getItem("authToken");
-
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleDeleteClick = async (id: number) => {
@@ -126,7 +76,7 @@ const LeadsStatus = ({ className }: any) => {
 
   useEffect(() => {
     setSecontToolbarMessage("LEADS");
-    setSecontToolbarPath(" / Statuses");
+    setSecontToolbarPath("Statuses");
     getStatus(page, 5);
 
     return () => {
@@ -232,7 +182,7 @@ const LeadsStatus = ({ className }: any) => {
   };
 
   return (
-    <Box className={`${className} test`}>
+    <PageContainer>
       <Card>
         <CardContent>
           <Box
@@ -256,31 +206,12 @@ const LeadsStatus = ({ className }: any) => {
             />
 
             <Box sx={{ display: "flex", alignItems: "center" }}>
-              {/* <Button
-                variant="outlined"
-                onClick={() => setIsFilterOpen(true)}
-                startIcon={<FilterListIcon />}
-                size="small"
-                sx={filterBtnStyle}
-              >
-                Filters
-              </Button> */}
-
               <Button
                 variant="outlined"
                 onClick={() => addLeadsStatus()}
                 startIcon={<AddIcon />}
                 size="small"
-                // sx={addBtnStyle}
-                sx={{
-                  bgcolor: "#2bb89b",
-                  color: "#fff",
-                  border: 'none',
-                  textTransform: "none",
-                  "&:hover": {
-                    bgcolor: "#2bb89b",
-                  },
-                }}
+                sx={addBtnStyle}
               >
                 Add status
               </Button>
@@ -344,7 +275,7 @@ const LeadsStatus = ({ className }: any) => {
           <FilterLeadsStatuses />
         </Filters>
       )}
-    </Box>
+    </PageContainer>
   );
 };
 

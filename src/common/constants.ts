@@ -32,38 +32,33 @@ export const INPUTS = {
     NAME: "team_id",
   },
   LEADS: {
-    STATUS: "status_name"
+    STATUS: "status_name",
   },
   TYPES: {
-    NAME: "type_name"
-  }
+    NAME: "type_name",
+  },
 };
 
 export const FILTER_STATUSES = {
   STATUS_NAME: {
-    NAME: 'status_name',
-    PLACEHOLDER: 'Status name'
-  }
-}
+    NAME: "status_name",
+    PLACEHOLDER: "Status name",
+  },
+};
 
 export const ROLE = ["admin", "manager", "employee"];
 
 export const DUMMY_TEAMS = ["team_barak", "team_issac"];
 
-export const addBtnStyle = {
-  color: "white",
-  background: "#38454a",
-};
-
 export const filterBtnStyle = {
-  bgcolor: '#17a2b8', // teal color for background
-  color: '#fff', // white text
-  textTransform: 'none',
-  '&:hover': {
-    bgcolor: '#138496', // slightly darker teal on hover
+  bgcolor: "#17a2b8", // teal color for background
+  color: "#fff", // white text
+  textTransform: "none",
+  "&:hover": {
+    bgcolor: "#138496", // slightly darker teal on hover
   },
   marginRight: "5px",
-}
+};
 
 export const submitBtnStyle = {
   background: "black",

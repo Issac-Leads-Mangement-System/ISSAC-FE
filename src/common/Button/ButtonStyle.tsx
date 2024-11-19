@@ -1,40 +1,40 @@
 import { css } from "styled-components";
-import { Theme } from "../../theme/Theme";
+import { Color } from "../../theme/Theme";
 
 const ButtonTypes = {
   primary: {
-    border: `1px solid ${Theme.Color.JungleGreen}`,
+    border: `1px solid ${Color.JungleGreen}`,
     borderRadius: "4px",
-    background: `${Theme.Color.JungleGreen}`,
-    color: `${Theme.Color.White}`,
+    background: `${Color.JungleGreen}`,
+    color: `${Color.White}`,
     fontSize: "14px",
   },
   secondary: {
-    border: `1px solid ${Theme.Color.Astral}`,
+    border: `1px solid ${Color.Astral}`,
     borderRadius: "4px",
     background: "transparent",
-    color: `${Theme.Color.Astral}`,
+    color: `${Color.Astral}`,
     fontSize: "14px",
   },
   tertiary: {
-    border: `1px solid ${Theme.Color.Astral}`,
+    border: `1px solid ${Color.Astral}`,
     borderRadius: "4px",
-    background: `${Theme.Color.White}`,
-    color: `${Theme.Color.Astral}`,
+    background: `${Color.White}`,
+    color: `${Color.Astral}`,
     fontSize: "14px",
   },
   default: {
     border: "1px solid rgba(52, 122, 180, 0.1)",
     borderRadius: "4px",
     background: "rgba(31, 100, 157, .1)",
-    color: `${Theme.Color.Astral}`,
+    color: `${Color.Astral}`,
     fontSize: "14px",
   },
   error: {
     border: "none",
     borderRadius: "4px",
     background: "#ef5350",
-    color: `${Theme.Color.White}`,
+    color: `${Color.White}`,
     fontSize: "12px",
   },
 };

@@ -1,22 +1,15 @@
 import React, { useCallback, useEffect, useState } from "react";
-import axios from "axios";
-import { Box, Button, Card, CardContent, Chip } from "@mui/material";
+import { Box, Button, Card, CardContent } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import { DataGrid, GridActionsCellItem, GridColDef } from "@mui/x-data-grid";
+import { GridActionsCellItem, GridColDef } from "@mui/x-data-grid";
 
 import styled from "styled-components";
-import { styled as styledMaterial } from "@mui/material";
+
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import CustomModal from "../../common/Modal/CustomModal/CustomModal";
 import { GenericAddEditForm } from "../../common/forms-generic-ad-edit/GenericAdEditForm";
-import {
-  UserModalSchema,
-  validationUserSchema,
-} from "../../forms/userModalSchema";
-import { UserForm } from "../../common/Modal/User/UserForm";
-import { addBtnStyle, submitBtnStyle } from "../../common/constants";
-import teamsStore from "../../store/Teams/teams-store";
+import { submitBtnStyle } from "../../common/constants";
 import { DeleteConfirmationModal } from "../../common/Modal/ConfirmationDialog/ConfirmationDialog";
 import secondToolbarStore from "../../store/SecondToolbar/second-tollbar-store";
 import { LeadsStyle } from "./LeadsStyle";
@@ -28,51 +21,13 @@ import {
   initialValues,
   validationLeadsTypesSchema,
 } from "../../forms/leadsTypeModalSchema";
+import { addBtnStyle } from "../../common/utils";
+import { CustomDataGrid } from "../../common/CustomDataGrid/custom-data-grid";
+import { PageContainer } from "../../common/PageContainer/page-container";
 
-const CustomDataGrid: any = styledMaterial(DataGrid)(
-  ({ theme, styleColumns }: any) => ({
-    "& .row-green": {
-      backgroundColor: "#dff0d8 !important",
-    },
-    "& .row-red": {
-      backgroundColor: "#f2dede !important",
-    },
-    "& .bold": {
-      fontWeight: "bold",
-    },
-    "& .MuiDataGrid-columnHeaders": {
-      position: "relative",
-    },
-    "& .MuiDataGrid-cell": {
-      position: "relative",
-    },
-    // Actions
-    "& .pinned-column": {
-      position: "sticky",
-      right: 0,
-      backgroundColor: "#fff",
-      zIndex: 2,
-    },
-    "& .MuiDataGrid-columnHeader--pinned": {
-      position: "sticky!important",
-      right: 0,
-      backgroundColor: "#fff",
-      zIndex: 100,
-    },
-
-    "& .MuiDataGrid-row": {
-      display: "flex",
-    },
-    "& .MuiDataGrid-scrollbar--horizontal": {
-      display: "grid",
-    },
-  })
-);
-
-const LeadsTypes = ({ className }: any) => {
+const LeadsTypes = () => {
   const [open, setOpen] = useState(false);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
   const [id, setId] = useState<null | number>(null);
   const {
     getTypes,
@@ -85,7 +40,6 @@ const LeadsTypes = ({ className }: any) => {
     getLeadsTypeById,
     updateType,
   }: any = leadsTypesStore();
-  const { getAllTeams, teamsOptions }: any = teamsStore();
   const {
     setSecontToolbarMessage,
     setSecontToolbarPath,
@@ -96,10 +50,8 @@ const LeadsTypes = ({ className }: any) => {
       ...initialValues,
     });
 
-  const modalTitle = id ? "Edit" : "Add New Type";
+  const modalTitle = id ? "Edit Type" : "Add New Type";
   const submitBtnName = id ? "Update" : "Add Type";
-
-  const token: any = localStorage.getItem("authToken");
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -109,8 +61,6 @@ const LeadsTypes = ({ className }: any) => {
   };
 
   const handleConfirmDelete = async () => {
-    // await deleteUser(id);
-    // setCount(count - 1);
     await deleteType(id);
     await getTypes(page, 5);
     setIsModalOpen(false);
@@ -144,8 +94,7 @@ const LeadsTypes = ({ className }: any) => {
 
   useEffect(() => {
     setSecontToolbarMessage("LEADS");
-    setSecontToolbarPath("/ types");
-    // getAllTeams();
+    setSecontToolbarPath("Types");
     getTypes(page, 5);
 
     return () => {
@@ -173,7 +122,6 @@ const LeadsTypes = ({ className }: any) => {
   const columns: GridColDef<(typeof types)[number]>[] = [
     { field: "type_name", headerName: "Type name", width: 250 },
     { field: "created_date", headerName: "Created date", width: 250 },
-
     {
       field: "actions",
       type: "actions",
@@ -215,7 +163,7 @@ const LeadsTypes = ({ className }: any) => {
   ];
 
   return (
-    <Box className={`${className} test`}>
+    <PageContainer>
       <Card>
         <CardContent>
           <Box
@@ -244,16 +192,7 @@ const LeadsTypes = ({ className }: any) => {
                 onClick={() => addNewType()}
                 startIcon={<AddIcon />}
                 size="small"
-                // sx={addBtnStyle}
-                sx={{
-                  bgcolor: "#2bb89b",
-                  color: "#fff",
-                  border: 'none',
-                  textTransform: "none",
-                  "&:hover": {
-                    bgcolor: "#2bb89b",
-                  },
-                }}
+                sx={addBtnStyle}
               >
                 Add type
               </Button>
@@ -283,7 +222,6 @@ const LeadsTypes = ({ className }: any) => {
           isOpen={open}
           onClose={() => {
             setOpen(false);
-            // setInitialFormValues(initialValues);
           }}
           title={modalTitle}
         >
@@ -307,7 +245,7 @@ const LeadsTypes = ({ className }: any) => {
           itemName="this type"
         />
       )}
-    </Box>
+    </PageContainer>
   );
 };
 

@@ -14,7 +14,7 @@ import { TeamStyle } from "./TeamStyle";
 import CustomModal from "../../common/Modal/CustomModal/CustomModal";
 import { GenericAddEditForm } from "../../common/forms-generic-ad-edit/GenericAdEditForm";
 import { TeamForm } from "../../common/Modal/Teams/TeamForm";
-import { addBtnStyle, submitBtnStyle } from "../../common/constants";
+import { submitBtnStyle } from "../../common/constants";
 import {
   TeamModalSchema,
   initialValues,
@@ -24,8 +24,10 @@ import teamsStore from "../../store/Teams/teams-store";
 import { DeleteConfirmationModal } from "../../common/Modal/ConfirmationDialog/ConfirmationDialog";
 import { SearchInput } from "../../common/Input/SearchInput";
 import secondToolbarStore from "../../store/SecondToolbar/second-tollbar-store";
+import { addBtnStyle } from "../../common/utils";
+import { PageContainer } from "../../common/PageContainer/page-container";
 
-const Team = ({ className }: any) => {
+const Team = () => {
   const [open, setOpen] = useState(false);
   const [userList, setUserList] = useState([]);
   const [countUsers, setCountUsers] = useState(0);
@@ -47,11 +49,8 @@ const Team = ({ className }: any) => {
     setSizePerPage,
     count,
   }: any = teamsStore();
-  const {
-    setSecontToolbarMessage,
-    setSecontToolbarPath,
-    resetSecondToolbar,
-  }: any = secondToolbarStore();
+  const { setSecontToolbarMessage, setSecontToolbarPath }: any =
+    secondToolbarStore();
   const modalTitle = id ? "Edit team" : "Add New Team";
   const submitBtnName = id ? "Update" : "Add Team";
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -170,7 +169,7 @@ const Team = ({ className }: any) => {
   ];
 
   return (
-    <div className={`${className} test`}>
+    <PageContainer>
       <Card sx={{ marginTop: "15px" }}>
         <CardContent>
           <Box
@@ -199,16 +198,7 @@ const Team = ({ className }: any) => {
               onClick={() => addNewTeam()}
               startIcon={<AddIcon />}
               size="small"
-              // sx={addBtnStyle}
-              sx={{
-                bgcolor: "#2bb89b",
-                color: "#fff",
-                border: 'none',
-                textTransform: "none",
-                "&:hover": {
-                  bgcolor: "#2bb89b",
-                },
-              }}
+              sx={addBtnStyle}
             >
               Add team
             </Button>
@@ -268,7 +258,7 @@ const Team = ({ className }: any) => {
           itemName="this team"
         />
       )}
-    </div>
+    </PageContainer>
   );
 };
 

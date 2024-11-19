@@ -1,6 +1,5 @@
 import { Box, IconButton, Modal, Typography, Divider } from "@mui/material";
 import { GridCloseIcon } from "@mui/x-data-grid";
-import CloseIcon from "@mui/icons-material/Close";
 
 const CustomModal = ({
   isOpen,
@@ -16,11 +15,10 @@ const CustomModal = ({
   const style = {
     position: "absolute",
     top: "50%",
-    bgcolor: '#f1f4f8', 
+    bgcolor: "#f1f4f8",
     left: "50%",
     transform: "translate(-50%, -50%)",
     width: "auto",
-    // bgcolor: "background.paper",
     border: "1px solid #000",
     boxShadow: 24,
     borderRadius: "3px",
@@ -40,8 +38,21 @@ const CustomModal = ({
           justifyContent="space-between"
           alignItems="center"
           mb={1}
+          sx={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            padding: 2,
+            bgcolor: "#f1f4f8",
+          }}
         >
-          {/* <Typography id="modal-title" variant="h6" component="h2">
+          <Typography
+            id="modal-title"
+            variant="h6"
+            component="h2"
+            sx={{ fontWeight: "bold", color: "#333" }}
+          >
             {title}
           </Typography>
           <IconButton
@@ -49,32 +60,12 @@ const CustomModal = ({
             sx={{ position: "absolute", top: "4px", right: "4px" }}
           >
             <GridCloseIcon />
-          </IconButton> */}
-          <Box
-          sx={{
-            width: '100%',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            padding: 2,
-            bgcolor: '#f1f4f8',
-          }}
-        >
-          <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#333' }}>
-            Leads Filters
-          </Typography>
-          <IconButton onClick={onClose}>
-            <CloseIcon />
           </IconButton>
-        </Box>
         </Box>
         <Divider />
 
         <Box mt={4}>{children}</Box>
-
       </Box>
-
-      
     </Modal>
   );
 };

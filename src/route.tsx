@@ -1,7 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 
 import { ProtectedRoute } from "./routes/ProtectRoute";
-import Users from "./pages/Users/Users";
 import { AdminPage } from "./pages/AdminPage";
 import Team from "./pages/Team/Team";
 import Leads from "./pages/Leads/Leads";
@@ -9,6 +8,7 @@ import LeadsTypes from "./pages/Leads/LeadsTypes";
 
 import useAuthStore from "./store/authStore/authStore";
 import LeadsStatus from "./pages/Leads/LeadsStatus";
+import { Users } from "./pages/Users/Users";
 
 export const PrivateRoute = () => {
   const { role } = useAuthStore((state) => state);
