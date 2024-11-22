@@ -48,6 +48,8 @@ export const FILTER_STATUSES = {
 
 export const ROLE = ["admin", "manager", "employee"];
 
+export const USER_STATUS = ['active', 'inactive'];
+
 export const DUMMY_TEAMS = ["team_barak", "team_issac"];
 
 export const filterBtnStyle = {

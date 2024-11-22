@@ -32,6 +32,8 @@ import { addBtnStyle } from "../../common/utils";
 import { CustomDataGrid } from "../../common/CustomDataGrid/custom-data-grid";
 import { StyledMenu } from "../../common/CustomMenu/custom-menu";
 import { PageContainer } from "../../common/PageContainer/page-container";
+import HistoryToggleOffIcon from '@mui/icons-material/HistoryToggleOff';
+import { LeadsHistory } from "../../common/Modal/LeadsHistory/LeadsHistory";
 
 const Leads = () => {
   const [open, setOpen] = useState(false);
@@ -69,9 +71,11 @@ const Leads = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [typeOfAdd, setTypeOfAdd] = useState(false);
+  const [idHistory, setIdHistory] = useState(null);
   const openOption = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -176,6 +180,11 @@ const Leads = () => {
     resetFilters();
   };
 
+  const handleHistoryLeadById = (id: any) => {
+    setIdHistory(id);
+    setIsHistoryOpen(true);
+  }
+
   const columns: GridColDef<(typeof leads)[number]>[] = [
     { field: "id", headerName: "Id", width: 150 },
     { field: "lead_message", headerName: "Lead message", width: 250 },
@@ -210,8 +219,21 @@ const Leads = () => {
         if (id) {
           return [
             <GridActionsCellItem
+              icon={<HistoryToggleOffIcon />}
+              label="History"
+              title="History"
+              key={id}
+              sx={{
+                color: "#003366",
+              }}
+              className="textPrimary"
+              onClick={() => handleHistoryLeadById(id)}
+            />,
+
+            <GridActionsCellItem
               icon={<ManageAccountsIcon />}
-              label="Previw"
+              label="Edit"
+              title="Edit"
               key={id}
               sx={{
                 color: "black",
@@ -221,7 +243,8 @@ const Leads = () => {
             />,
             <GridActionsCellItem
               icon={<DeleteForeverIcon />}
-              label="Previw"
+              label="Delete"
+              title="Delete"
               key={id}
               sx={{
                 color: "red",
@@ -373,6 +396,19 @@ const Leads = () => {
         >
           <FilterLeads />
         </Filters>
+      )}
+
+      {isHistoryOpen && (
+        <CustomModal
+        isOpen={isHistoryOpen}
+        onClose={() => {
+          setIsHistoryOpen(false);
+          setInitialFormValues(initialValues);
+        }}
+        title={'History'}
+      >
+        <LeadsHistory id={idHistory}/>
+      </CustomModal>
       )}
     </PageContainer>
   );

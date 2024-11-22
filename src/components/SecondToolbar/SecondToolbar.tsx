@@ -1,6 +1,6 @@
 import { Typography, Toolbar, Box, AppBar } from "@mui/material";
 import styled from "styled-components";
-import { SecondToolbarStyle } from "./ToolbarStyle";
+import { SecondToolbarStyle } from "./SecondToolbarStyle";
 import secondToolbarStore from "../../store/SecondToolbar/second-tollbar-store";
 
 
@@ -18,7 +18,7 @@ const SecondToolbarComponent = ({ className }: any) => {
             background: "white",
           }}
         >
-          <Typography variant="subtitle1" component="div" sx={{ flexGrow: 1, color: 'black', ml:2 }}>{name}</Typography>
+          <Typography variant="subtitle1" component="div" sx={{ flexGrow: 1, color: 'black', ml:2, fontWeight: "bold" }}>{name}</Typography>
           <Typography variant="subtitle1" component="div" sx={{ color: '#878a99', mr: 2 }}>{path}</Typography>
         </Toolbar>
       </AppBar>
