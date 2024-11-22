@@ -8,7 +8,7 @@ interface LeadsHistoryState {
 }
 
 const leadsHistoryStore = create<LeadsHistoryState>((set) => ({
-  lead_history: {},
+  lead_history: [],
   isLoading: false,
   getHistoryLeadById: async (id: number) => {
     const { showNotification } = useNotificationStore.getState();
@@ -18,7 +18,11 @@ const leadsHistoryStore = create<LeadsHistoryState>((set) => ({
       const response = await api.get(
         `${process.env.REACT_APP_BASE_URL}/leads/history/${id}`
       );
-      set({ lead_history: response.data });
+      const transform_data = response.data.map((data: any) => {
+        data.id = crypto.randomUUID();
+        return data;
+      })
+      set({ lead_history: transform_data });
     } catch (error: any) {
       showNotification({
         message: error.message,
@@ -31,7 +35,7 @@ const leadsHistoryStore = create<LeadsHistoryState>((set) => ({
   },
 
   resetLeadById: () => {
-    set({lead_history: {}})
+    set({lead_history: []})
   }
 }));
 
