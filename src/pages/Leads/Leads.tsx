@@ -152,9 +152,9 @@ const Leads = () => {
   };
   const handleSubmitModal = async (values: any) => {
     if (id) {
-      updateLeads(values);
+      await updateLeads(values);
     } else {
-      saveLeads(values, typeOfAdd);
+      await saveLeads(values, typeOfAdd);
     }
     await getLeads();
     setOpen(false);
