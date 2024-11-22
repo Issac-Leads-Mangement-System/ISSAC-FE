@@ -19,6 +19,11 @@ interface AuthState {
     page: number;
     sizePerPage: number;
   };
+  activate_filters: {
+    user_role: any
+    user_status: any;
+    team_id: any
+  }
 }
 
 const usersStore: any = create<AuthState>((set) => ({
@@ -33,17 +38,22 @@ const usersStore: any = create<AuthState>((set) => ({
     page: 1,
     sizePerPage: 10,
   },
+  activate_filters: {
+    user_role: [],
+    user_status: [],
+    team_id: []
+  },
   setUser: (id, role) => set({ id, role }),
   logout: () => set({ id: null, role: null }),
   getUsers: async () => {
-    const { searchValue, modelPage } = usersStore.getState();
+    const { searchValue, modelPage, activate_filters } = usersStore.getState();
     const { showNotification } = useNotificationStore.getState();
 
     set({ isLoading: true });
 
     try {
       const response = await api.post(
-        `${process.env.REACT_APP_BASE_URL}/users/?page=${modelPage.page}&limit=${modelPage.sizePerPage}&search=${searchValue}`
+        `${process.env.REACT_APP_BASE_URL}/users/?page=${modelPage.page}&limit=${modelPage.sizePerPage}&search=${searchValue}`, activate_filters
       );
       if (response.data.users_response) {
         set({ users: response.data.users_response });
@@ -180,6 +190,22 @@ const usersStore: any = create<AuthState>((set) => ({
     }
   },
   setSearchValue: (value: string) => set({ searchValue: value }),
+  resetFilters: () => {
+    set({
+      activate_filters: {
+        user_role: [],
+        user_status: [],
+        team_id: []
+      },
+    });
+  },
+  setActiveFilters: (ids: any, key: string) =>
+    set((state) => ({
+      activate_filters: {
+        ...state.activate_filters,
+        [key]: Array.from(new Set(ids)), // Elimină duplicatele
+      },
+    })),
 }));
 
 export default usersStore;

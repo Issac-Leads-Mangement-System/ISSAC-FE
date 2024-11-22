@@ -190,7 +190,7 @@ const LeadsStatus = () => {
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
-              paddingBottom: 1,
+              paddingBottom: 2,
             }}
           >
             <SearchInput

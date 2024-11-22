@@ -26,7 +26,7 @@ export default function Filters({ open, onClose, handleFilter, children, resetFi
           }}
         >
           <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#333' }}>
-            Leads Filters
+            Filters
           </Typography>
           <IconButton onClick={onClose}>
             <CloseIcon />

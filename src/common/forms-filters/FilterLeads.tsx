@@ -2,10 +2,13 @@ import { Box, Checkbox, FormControl, InputLabel, ListItemText, MenuItem, Select,
 import OutlinedInput from "@mui/material/OutlinedInput";
 import leadsTypesStore from "../../store/Leads/types-store";
 import leadsStore from "../../store/Leads/leads-store";
+import leadsStatusesStore from "../../store/Leads/statuses-store";
 
 export const FilterLeads = () => {
-  const { activate_filters, addToLeadType }: any = leadsStore();
+  const { activate_filters, setActiveFilters }: any = leadsStore();
   const { types }: any = leadsTypesStore();
+  const { statuses }: any = leadsStatusesStore();
+
 
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
@@ -18,12 +21,11 @@ export const FilterLeads = () => {
     },
   };
 
-  const handleChange = (event: SelectChangeEvent<number[]>) => {
+  const handleChange = (event: SelectChangeEvent<number[]>, key: string) => {
     const {
       target: { value },
     } = event;
-
-    addToLeadType(typeof value === "string" ? value.split(",").map(Number) : value);
+    setActiveFilters(typeof value === "string" ? value.split(",").map(Number) : value, key);
   };
 
   return (
@@ -35,7 +37,7 @@ export const FilterLeads = () => {
           id="demo-multiple-checkbox"
           multiple
           value={activate_filters.lead_type_id}
-          onChange={handleChange}
+          onChange={(e) => handleChange(e, 'lead_type_id')}
           input={<OutlinedInput label="Type" />}
           renderValue={(selected: any) => {
             const count = selected.length;
@@ -51,6 +53,34 @@ export const FilterLeads = () => {
             <MenuItem key={type.id} value={type.id}>
               <Checkbox checked={activate_filters.lead_type_id.includes(type.id)} />
               <ListItemText primary={type.type_name} />
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+
+      <FormControl sx={{ m: 1, width: 300 }}>
+        <InputLabel id="demo-multiple-checkbox-label">Status</InputLabel>
+        <Select
+          labelId="demo-multiple-checkbox-label"
+          id="demo-multiple-checkbox"
+          multiple
+          value={activate_filters.lead_status_id}
+          onChange={(e) => handleChange(e, 'lead_status_id')}
+          input={<OutlinedInput label="Type" />}
+          renderValue={(selected: any) => {
+            const count = selected.length;
+            return count === 0
+              ? "No elements selected"
+              : count === 1
+              ? `${count} element selected`
+              : `${count} elements selected`;
+          }}
+          MenuProps={MenuProps}
+        >
+          {statuses.map((status: any) => (
+            <MenuItem key={status.id} value={status.id}>
+              <Checkbox checked={activate_filters.lead_status_id.includes(status.id)} />
+              <ListItemText primary={status.status_name} />
             </MenuItem>
           ))}
         </Select>

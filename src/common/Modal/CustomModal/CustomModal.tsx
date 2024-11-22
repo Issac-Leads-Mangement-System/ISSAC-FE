@@ -15,7 +15,7 @@ const CustomModal = ({
   const style = {
     position: "absolute",
     top: "50%",
-    bgcolor: "#f1f4f8",
+    bgcolor: "#ffffff",
     left: "50%",
     transform: "translate(-50%, -50%)",
     width: "auto",
@@ -44,7 +44,7 @@ const CustomModal = ({
             justifyContent: "space-between",
             alignItems: "center",
             padding: 2,
-            bgcolor: "#f1f4f8",
+            bgcolor: "#fffff",
           }}
         >
           <Typography

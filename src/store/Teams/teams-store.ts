@@ -59,7 +59,7 @@ const teamsStore = create<TeamsState>((set) => ({
 
     try {
       const response = await api.get(
-        `${process.env.REACT_APP_BASE_URL}/users/teams/?page=1`
+        `${process.env.REACT_APP_BASE_URL}/users/teams/`
       );
       set({ teamsOptions: response.data.teams_response });
     } catch (error: any) {

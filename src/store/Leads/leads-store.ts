@@ -30,8 +30,6 @@ const leadsStore = create<ILeadsState>((set) => ({
     page: 0,
   },
   setSearchValue: (value: string) => set({ searchValue: value }),
-  setActiveFilters: (value: string, key: string) =>
-    set({ activate_filters: { [key]: value } }),
   getLeads: async () => {
     const { searchValue, activate_filters, pagination } = leadsStore.getState();
     const { showNotification } = useNotificationStore.getState();
@@ -140,11 +138,11 @@ const leadsStore = create<ILeadsState>((set) => ({
     }));
   },
 
-  addToLeadType: (ids: any) =>
+  setActiveFilters: (ids: any, key: string) =>
     set((state) => ({
       activate_filters: {
         ...state.activate_filters,
-        lead_type_id: Array.from(new Set(ids)), // Elimină duplicatele
+        [key]: Array.from(new Set(ids)), // Elimină duplicatele
       },
     })),
 

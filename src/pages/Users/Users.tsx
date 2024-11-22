@@ -15,7 +15,7 @@ import {
   validationUserSchema,
 } from "../../forms/userModalSchema";
 import { UserForm } from "../../common/Modal/User/UserForm";
-import { submitBtnStyle } from "../../common/constants";
+import { filterBtnStyle, submitBtnStyle } from "../../common/constants";
 import teamsStore from "../../store/Teams/teams-store";
 import { DeleteConfirmationModal } from "../../common/Modal/ConfirmationDialog/ConfirmationDialog";
 import { SearchInput } from "../../common/Input/SearchInput";
@@ -23,6 +23,9 @@ import secondToolbarStore from "../../store/SecondToolbar/second-tollbar-store";
 import { addBtnStyle } from "../../common/utils";
 import { CustomDataGrid } from "../../common/CustomDataGrid/custom-data-grid";
 import { PageContainer } from "../../common/PageContainer/page-container";
+import FilterListIcon from "@mui/icons-material/FilterList";
+import Filters from "../../components/Filters/filters";
+import { FilterUsers } from "../../common/forms-filters/FilterUsers";
 
 export const Users = () => {
   const [open, setOpen] = useState(false);
@@ -40,8 +43,10 @@ export const Users = () => {
     setSizePerPage,
     addUser,
     editUser,
+    resetFilters,
   }: any = usersStore();
   const { getAllTeams, teamsOptions }: any = teamsStore();
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const {
     setSecontToolbarMessage,
     setSecontToolbarPath,
@@ -139,6 +144,19 @@ export const Users = () => {
     setInitialFormValues(initialValues);
   };
 
+  const handleFiltersClose = () => {
+    setIsFilterOpen(false);
+  };
+
+  const handleFilter = async () => {
+    await getUsers();
+    setIsFilterOpen(false);
+  };
+
+  const resetFilter = () => {
+    resetFilters();
+  };
+
   const columns: GridColDef<(typeof users)[number]>[] = [
     { field: "first_name", headerName: "First name", width: 250 },
     { field: "last_name", headerName: "Last name", width: 250 },
@@ -213,7 +231,7 @@ export const Users = () => {
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
-              paddingBottom: 1,
+              paddingBottom: 2,
             }}
           >
             <SearchInput
@@ -226,15 +244,27 @@ export const Users = () => {
               }}
             />
 
-            <Button
-              variant="outlined"
-              onClick={() => addNewUser()}
-              startIcon={<AddIcon />}
-              size="small"
-              sx={addBtnStyle}
-            >
-              Add user
-            </Button>
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Button
+                variant="outlined"
+                onClick={() => setIsFilterOpen(true)}
+                startIcon={<FilterListIcon />}
+                size="small"
+                sx={filterBtnStyle}
+              >
+                Filters
+              </Button>
+
+              <Button
+                variant="outlined"
+                onClick={() => addNewUser()}
+                startIcon={<AddIcon />}
+                size="small"
+                sx={addBtnStyle}
+              >
+                Add user
+              </Button>
+            </Box>
           </Box>
 
           <CustomDataGrid
@@ -292,6 +322,17 @@ export const Users = () => {
           onConfirm={handleConfirmDelete}
           itemName="this user"
         />
+      )}
+
+      {isFilterOpen && (
+        <Filters
+          open={isFilterOpen}
+          onClose={handleFiltersClose}
+          handleFilter={handleFilter}
+          resetFilter={resetFilter}
+        >
+          <FilterUsers />
+        </Filters>
       )}
     </PageContainer>
   );
