@@ -9,6 +9,8 @@ import LeadsTypes from "./pages/Leads/LeadsTypes";
 import useAuthStore from "./store/authStore/authStore";
 import LeadsStatus from "./pages/Leads/LeadsStatus";
 import { Users } from "./pages/Users/Users";
+import Jobs from "./pages/Jobs/Jobs";
+import AddJobs from "./pages/addJob/addJobs";
 
 export const PrivateRoute = () => {
   const { role } = useAuthStore((state) => state);
@@ -62,6 +64,22 @@ export const PrivateRoute = () => {
         element={
           <ProtectedRoute isAllowed={!!role} user={role}>
             <LeadsStatus />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/jobs"
+        element={
+          <ProtectedRoute isAllowed={!!role} user={role}>
+            <Jobs />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/add-job"
+        element={
+          <ProtectedRoute isAllowed={!!role} user={role}>
+            <AddJobs />
           </ProtectedRoute>
         }
       />

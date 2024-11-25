@@ -20,7 +20,6 @@ import { LoginStyle } from "./LoginStyle";
 import Logo from "../../assets/images/transparent-logo.png";
 import { useNavigate } from "react-router-dom";
 import { Theme } from "../../theme/Theme";
-// import LoadingButton from "@mui/lab/LoadingButton";
 
 interface JwtPayload extends WtJwtPayload {
   id: string;
@@ -118,20 +117,9 @@ const Login = ({ className, setUser }: any) => {
                     type={ButtonTypes.Primary}
                     name="Log In"
                     buttonType={ButtonType.Submit}
-                    // disabled={isLoading}
+                    disabled={isLoading}
                     className="submit-form"
                   />
-
-                  {/* <LoadingButton
-                    size="small"
-                    color="secondary"
-                    // onClick={handleClick}
-                    loading={isLoading}
-                    loadingPosition="end"
-                    variant="contained"
-                  >
-                    Log In
-                  </LoadingButton> */}
 
                   <p className="error">{apiError}</p>
                 </>

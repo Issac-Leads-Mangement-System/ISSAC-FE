@@ -23,6 +23,7 @@ const CustomModal = ({
     boxShadow: 24,
     borderRadius: "3px",
     padding: "32px 32px 16px 32px",
+    minWidth: "400px",
   };
 
   return (

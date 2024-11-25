@@ -5,6 +5,8 @@ import InterpreterModeIcon from "@mui/icons-material/InterpreterMode";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import SignalWifiStatusbar4BarIcon from "@mui/icons-material/SignalWifiStatusbar4Bar";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
+import WorkIcon from '@mui/icons-material/Work';
+import FeaturedPlayListIcon from '@mui/icons-material/FeaturedPlayList';
 
 const menus = [
   {
@@ -44,6 +46,17 @@ const menus = [
       },
     ],
   },
+  {
+    name: "Jobs",
+    icon: <WorkIcon/>,
+    children: [
+      {
+        name: "List",
+        icon: <FeaturedPlayListIcon />,
+        route: "/jobs"
+      }
+    ]
+  }
 ];
 
 export default menus;

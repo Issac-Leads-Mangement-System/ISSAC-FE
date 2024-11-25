@@ -64,7 +64,7 @@ const teamsStore = create<TeamsState>((set) => ({
       set({ teamsOptions: response.data.teams_response });
     } catch (error: any) {
       showNotification({
-        message: error.message,
+        message: error.response?.data?.detail || "An error occurred.",
         status: error.status,
         severity: error.severity,
       });
@@ -84,7 +84,7 @@ const teamsStore = create<TeamsState>((set) => ({
       set({ team: response.data });
     } catch (error: any) {
       showNotification({
-        message: error.message,
+        message: error.response?.data?.detail || "An error occurred.",
         status: error.status,
         severity: error.severity,
       });
@@ -111,7 +111,7 @@ const teamsStore = create<TeamsState>((set) => ({
       }
     } catch (error: any) {
       showNotification({
-        message: error.message,
+        message: error.response?.data?.detail || "An error occurred.",
         status: error.status,
         severity: error.severity,
       });
@@ -139,7 +139,7 @@ const teamsStore = create<TeamsState>((set) => ({
       }
     } catch (error: any) {
       showNotification({
-        message: error.message,
+        message: error.response?.data?.detail || "An error occurred.",
         status: error.status,
         severity: error.severity,
       });
@@ -166,7 +166,7 @@ const teamsStore = create<TeamsState>((set) => ({
       }
     } catch (error: any) {
       showNotification({
-        message: error.message,
+        message: error.response?.data?.detail || "An error occurred.",
         status: error.status,
         severity: error.severity,
       });
