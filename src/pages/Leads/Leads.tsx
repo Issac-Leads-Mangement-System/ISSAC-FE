@@ -101,6 +101,8 @@ const Leads = () => {
 
   const handleEditClick = useCallback(
     async (id: number) => {
+      setTypeOfAdd(false);
+
       try {
         await getLeadById(id);
         const { lead } = leadsStore.getState();

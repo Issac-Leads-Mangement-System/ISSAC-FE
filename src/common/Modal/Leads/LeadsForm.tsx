@@ -20,7 +20,7 @@ import Input from "../../Input/Input";
 
 import leadsTypesStore from "../../../store/Leads/types-store";
 import leadsStatusesStore from "../../../store/Leads/statuses-store";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -57,7 +57,7 @@ export const LeadsForm = ({ formProps, typeOfAdd, id }: any) => {
   const { statuses }: any = leadsStatusesStore();
 
   const [dragOver, setDragOver] = useState(false);
-  const [selectedFiles, setSelectedFiles]: any = useState([]);
+  const [uploadedFile, setUploadedFile]: any = useState(null);
 
   const handleDragOver = (e: any) => {
     e.preventDefault();
@@ -74,51 +74,49 @@ export const LeadsForm = ({ formProps, typeOfAdd, id }: any) => {
     setDragOver(false);
 
     const file = e.dataTransfer.files[0];
-    const isDuplicate = selectedFiles.some(
-      (f: any) => f.name === file.name && f.size === file.size
-    );
+    if (!file) {
+      return;
+    }
 
-    if (isDuplicate) {
+    if (uploadedFile && file.name === uploadedFile.name) {
       alert("This file has already been added!");
       return;
     }
 
     if (file && file.type === "text/csv") {
-      // setSelectedFiles((prevFiles: any) => [...prevFiles, file]);
-      const updatedFiles = [...selectedFiles, file];
-      setSelectedFiles(updatedFiles);
+      setUploadedFile(file);
 
       // Update Formik's values using the helper
-      formProps.setFieldValue("file", updatedFiles);
+      formProps.setFieldValue("file", file);
     } else {
       alert("Please upload a valid CSV file!");
     }
   };
 
   const handleFileInputChange = (e: any) => {
-    const files = Array.from(e.target.files); // Convert FileList to array
-    const newFiles = files.filter(
-      (file: any) =>
-        !selectedFiles.some(
-          (f: any) => f.name === file.name && f.size === file.size
-        )
-    ); // Avoid duplicates
+    const file = e.target.files[0];
+    if (!file) return;
 
-    if (newFiles.length > 0) {
-      setSelectedFiles((prevFiles: any) => [...prevFiles, ...newFiles]);
-    } else {
-      alert("These files have already been added!");
+    if (uploadedFile && file.name === uploadedFile.name) {
+      alert("This file has already been added!");
+      return;
     }
+
+    setUploadedFile(file);
+    formProps.setFieldValue("file", file);
 
     // Clear the input value to allow re-uploading the same file
     e.target.value = null;
   };
 
-  const handleRemoveFile = (fileName: any) => {
-    setSelectedFiles((prevFiles: any) =>
-      prevFiles.filter((file: any) => file.name !== fileName)
-    );
+  const handleRemoveFile = () => {
+    setUploadedFile(null);
+    formProps.setFieldValue("file", null);
   };
+
+  useEffect(() => {
+    setUploadedFile(null);
+  }, []);
 
   return (
     <>
@@ -156,6 +154,7 @@ export const LeadsForm = ({ formProps, typeOfAdd, id }: any) => {
                 tabIndex={-1}
                 startIcon={<CloudUploadIcon />}
                 sx={{ maxWidth: "210px", alignSelf: "center" }}
+                disabled={!!uploadedFile}
               >
                 Upload files
                 <VisuallyHiddenInput
@@ -168,30 +167,28 @@ export const LeadsForm = ({ formProps, typeOfAdd, id }: any) => {
               </Button>
             </Box>
           )}
-          {selectedFiles.length > 0 && (
+          {uploadedFile && (
             <Box sx={{ marginTop: "16px" }}>
               <Typography variant="h6">Uploaded Files:</Typography>
               <List>
-                {selectedFiles.map((file: any, index: number) => (
-                  <ListItem
-                    key={index}
-                    sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      border: "1px solid #ddd",
-                      borderRadius: "4px",
-                      padding: "8px 16px",
-                      marginBottom: "8px",
-                    }}
-                  >
-                    <Typography>
-                      {file.name} ({Math.round(file.size / 1024)} KB)
-                    </Typography>
-                    <IconButton onClick={() => handleRemoveFile(file.name)}>
-                      <DeleteIcon />
-                    </IconButton>
-                  </ListItem>
-                ))}
+                <ListItem
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    border: "1px solid #ddd",
+                    borderRadius: "4px",
+                    padding: "8px 16px",
+                    marginBottom: "8px",
+                  }}
+                >
+                  <Typography>
+                    {uploadedFile.name} ({Math.round(uploadedFile.size / 1024)}{" "}
+                    KB)
+                  </Typography>
+                  <IconButton onClick={() => handleRemoveFile()}>
+                    <DeleteIcon />
+                  </IconButton>
+                </ListItem>
               </List>
             </Box>
           )}
