@@ -46,7 +46,7 @@ const leadsStore = create<ILeadsState>((set) => ({
       set({ count: response.data.counter_leads });
     } catch (error: any) {
       showNotification({
-        message: error.message,
+        message: error.response?.data?.detail || "An error occurred.",
         status: error.status,
         severity: error.severity,
       });
@@ -64,7 +64,7 @@ const leadsStore = create<ILeadsState>((set) => ({
       set({ lead: response.data });
     } catch (error: any) {
       showNotification({
-        message: error.message,
+        message: error.response?.data?.detail || "An error occurred.",
         status: error.status,
         severity: error.severity,
       });
@@ -79,28 +79,42 @@ const leadsStore = create<ILeadsState>((set) => ({
       if (typeOfAdd) {
         delete values.lead_message;
         delete values.lead_status_id;
+
         const formData = new FormData();
-        formData.append("type_id", values.type_id); // Adaugă `type_id`
-        formData.append("file", values.file);
+        formData.append("type_id", values.type_id); // Add `type_id`
+
+        // Append all files from values.file (assumes it's an array of File objects)
+        if (Array.isArray(values.file)) {
+          values.file.forEach((file: File) => {
+            formData.append("file", file); // Appends each file with a unique key
+          });
+        } else {
+          formData.append("file", values.file); // Fallback for single file
+        }
+
         const response = await api.post(
           `${process.env.REACT_APP_BASE_URL}/leads/upload?type_id=${values.type_id}`,
           formData
         );
+
         if (response.status === 200) {
           showNotification({
-            message: "Lead successfully uploaded!",
+            message: "Leads successfully uploaded!",
             status: response.statusText,
             severity: response.status,
           });
         }
       } else {
-        values.lead_type_id = values.type_id;
+        // Handle adding a single lead
+        values.lead_type_id = values.type_id; // Map `type_id` to `lead_type_id`
         delete values.type_id;
         delete values.file;
+
         const response = await api.post(
           `${process.env.REACT_APP_BASE_URL}/leads/add_lead`,
           values
         );
+
         if (response.status === 200) {
           showNotification({
             message: "Lead successfully added!",
@@ -111,8 +125,8 @@ const leadsStore = create<ILeadsState>((set) => ({
       }
     } catch (error: any) {
       showNotification({
-        message: error.message,
-        status: error.status,
+        message: error.response?.data?.detail || "An error occurred.",
+        status: error.response?.status || 500,
         severity: error.severity,
       });
     } finally {
@@ -168,7 +182,7 @@ const leadsStore = create<ILeadsState>((set) => ({
       }
     } catch (error: any) {
       showNotification({
-        message: error.message,
+        message: error.response?.data?.detail || "An error occurred.",
         status: error.status,
         severity: error.severity,
       });
@@ -196,7 +210,7 @@ const leadsStore = create<ILeadsState>((set) => ({
       }
     } catch (error: any) {
       showNotification({
-        message: error.message,
+        message: error.response?.data?.detail || "An error occurred.",
         status: error.status,
         severity: error.severity,
       });

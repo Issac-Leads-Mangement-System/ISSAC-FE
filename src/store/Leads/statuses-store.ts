@@ -46,7 +46,7 @@ const leadsStatusesStore = create<LeadsTypesState>((set) => ({
       set({ count: response.data.length });
     } catch (error: any) {
       showNotification({
-        message: error.message,
+        message: error.response?.data?.detail || "An error occurred.",
         status: error.status,
         severity: error.severity,
       });
@@ -79,7 +79,7 @@ const leadsStatusesStore = create<LeadsTypesState>((set) => ({
       }
     } catch (error: any) {
       showNotification({
-        message: error.message,
+        message: error.response?.data?.detail || "An error occurred.",
         status: error.status,
         severity: error.severity,
       });
@@ -106,7 +106,7 @@ const leadsStatusesStore = create<LeadsTypesState>((set) => ({
       }
     } catch (error: any) {
       showNotification({
-        message: error.message,
+        message: error.response?.data?.detail || "An error occurred.",
         status: error.status,
         severity: error.severity,
       });
@@ -127,7 +127,7 @@ const leadsStatusesStore = create<LeadsTypesState>((set) => ({
       set({ status: response.data });
     } catch (error: any) {
       showNotification({
-        message: error.message,
+        message: error.response?.data?.detail || "An error occurred.",
         status: error.status,
         severity: error.severity,
       });
@@ -155,7 +155,7 @@ const leadsStatusesStore = create<LeadsTypesState>((set) => ({
       }
     } catch (error: any) {
       showNotification({
-        message: error.message,
+        message: error.response?.data?.detail || "An error occurred.",
         status: error.status,
         severity: error.severity,
       });

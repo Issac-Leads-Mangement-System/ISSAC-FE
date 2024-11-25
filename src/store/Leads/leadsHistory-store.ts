@@ -21,11 +21,11 @@ const leadsHistoryStore = create<LeadsHistoryState>((set) => ({
       const transform_data = response.data.map((data: any) => {
         data.id = crypto.randomUUID();
         return data;
-      })
+      });
       set({ lead_history: transform_data });
     } catch (error: any) {
       showNotification({
-        message: error.message,
+        message: error.response?.data?.detail || "An error occurred.",
         status: error.status,
         severity: error.severity,
       });
@@ -35,8 +35,8 @@ const leadsHistoryStore = create<LeadsHistoryState>((set) => ({
   },
 
   resetLeadById: () => {
-    set({lead_history: []})
-  }
+    set({ lead_history: [] });
+  },
 }));
 
 export default leadsHistoryStore;

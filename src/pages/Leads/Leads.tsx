@@ -32,7 +32,7 @@ import { addBtnStyle } from "../../common/utils";
 import { CustomDataGrid } from "../../common/CustomDataGrid/custom-data-grid";
 import { StyledMenu } from "../../common/CustomMenu/custom-menu";
 import { PageContainer } from "../../common/PageContainer/page-container";
-import HistoryToggleOffIcon from '@mui/icons-material/HistoryToggleOff';
+import HistoryToggleOffIcon from "@mui/icons-material/HistoryToggleOff";
 import { LeadsHistory } from "../../common/Modal/LeadsHistory/LeadsHistory";
 
 const Leads = () => {
@@ -150,6 +150,7 @@ const Leads = () => {
       console.error(error);
     }
   };
+
   const handleSubmitModal = async (values: any) => {
     if (id) {
       await updateLeads(values);
@@ -183,7 +184,7 @@ const Leads = () => {
   const handleHistoryLeadById = (id: any) => {
     setIdHistory(id);
     setIsHistoryOpen(true);
-  }
+  };
 
   const columns: GridColDef<(typeof leads)[number]>[] = [
     { field: "id", headerName: "Id", width: 150 },
@@ -400,15 +401,15 @@ const Leads = () => {
 
       {isHistoryOpen && (
         <CustomModal
-        isOpen={isHistoryOpen}
-        onClose={() => {
-          setIsHistoryOpen(false);
-          setInitialFormValues(initialValues);
-        }}
-        title={'History'}
-      >
-        <LeadsHistory id={idHistory}/>
-      </CustomModal>
+          isOpen={isHistoryOpen}
+          onClose={() => {
+            setIsHistoryOpen(false);
+            setInitialFormValues(initialValues);
+          }}
+          title={"History"}
+        >
+          <LeadsHistory id={idHistory} />
+        </CustomModal>
       )}
     </PageContainer>
   );

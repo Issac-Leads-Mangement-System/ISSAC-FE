@@ -20,10 +20,10 @@ interface AuthState {
     sizePerPage: number;
   };
   activate_filters: {
-    user_role: any
+    user_role: any;
     user_status: any;
-    team_id: any
-  }
+    team_id: any;
+  };
 }
 
 const usersStore: any = create<AuthState>((set) => ({
@@ -41,7 +41,7 @@ const usersStore: any = create<AuthState>((set) => ({
   activate_filters: {
     user_role: [],
     user_status: [],
-    team_id: []
+    team_id: [],
   },
   setUser: (id, role) => set({ id, role }),
   logout: () => set({ id: null, role: null }),
@@ -53,7 +53,8 @@ const usersStore: any = create<AuthState>((set) => ({
 
     try {
       const response = await api.post(
-        `${process.env.REACT_APP_BASE_URL}/users/?page=${modelPage.page}&limit=${modelPage.sizePerPage}&search=${searchValue}`, activate_filters
+        `${process.env.REACT_APP_BASE_URL}/users/?page=${modelPage.page}&limit=${modelPage.sizePerPage}&search=${searchValue}`,
+        activate_filters
       );
       if (response.data.users_response) {
         set({ users: response.data.users_response });
@@ -63,7 +64,7 @@ const usersStore: any = create<AuthState>((set) => ({
       }
     } catch (error: any) {
       showNotification({
-        message: error.message,
+        message: error.response?.data?.detail || "An error occurred.",
         status: error.status,
         severity: error.severity,
       });
@@ -83,7 +84,7 @@ const usersStore: any = create<AuthState>((set) => ({
       set({ user: response.data });
     } catch (error: any) {
       showNotification({
-        message: error.message,
+        message: error.response?.data?.detail || "An error occurred.",
         status: error.status,
         severity: error.severity,
       });
@@ -110,7 +111,7 @@ const usersStore: any = create<AuthState>((set) => ({
       }
     } catch (error: any) {
       showNotification({
-        message: error.message,
+        message: error.response?.data?.detail || "An error occurred.",
         status: error.status,
         severity: error.severity,
       });
@@ -136,7 +137,7 @@ const usersStore: any = create<AuthState>((set) => ({
       }
     } catch (error: any) {
       showNotification({
-        message: error.message,
+        message: error.response?.data?.detail || "An error occurred.",
         status: error.status,
         severity: error.severity,
       });
@@ -181,7 +182,7 @@ const usersStore: any = create<AuthState>((set) => ({
       }
     } catch (error: any) {
       showNotification({
-        message: error.message,
+        message: error.response?.data?.detail || "An error occurred.",
         status: error.status,
         severity: error.severity,
       });
@@ -195,7 +196,7 @@ const usersStore: any = create<AuthState>((set) => ({
       activate_filters: {
         user_role: [],
         user_status: [],
-        team_id: []
+        team_id: [],
       },
     });
   },
