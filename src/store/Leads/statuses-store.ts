@@ -36,7 +36,7 @@ const leadsStatusesStore = create<LeadsTypesState>((set) => ({
 
     try {
       const response = await api.get(
-        `${process.env.REACT_APP_BASE_URL}/leads/statuses/?page=${
+        `${process.env.REACT_APP_BASE_URL}/leads/statuses?page=${
           page + 1
         }&limit=${limit}&search=${searchValue}&status_name=${
           activate_filters.status_name
