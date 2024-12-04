@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Box, Button, Card, CardContent } from "@mui/material";
-
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import styled from "styled-components";
 
 import { SearchInput } from "../../common/Input/SearchInput";
@@ -13,10 +13,14 @@ import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router-dom";
 import leadsTypesStore from "../../store/Leads/types-store";
 import jobsStore from "../../store/Jobs/jobs-store";
-import { GridColDef, GridRowClassNameParams } from "@mui/x-data-grid";
+import {
+  GridActionsCellItem,
+  GridColDef,
+  GridRowClassNameParams,
+} from "@mui/x-data-grid";
 import { CustomDataGrid } from "../../common/CustomDataGrid/custom-data-grid";
 
-const Jobs = ({className}: any) => {
+const Jobs = ({ className }: any) => {
   const {
     setSecontToolbarMessage,
     setSecontToolbarPath,
@@ -41,6 +45,12 @@ const Jobs = ({className}: any) => {
 
   const addNewJob = () => {
     navigate("/add-job");
+  };
+
+  const handleViewClick = (id: number) => {
+    console.log("iii id", id);
+    navigate(`/job/${id}/stats`);
+    // got to the job stats page based on the id
   };
 
   const columns: GridColDef<(typeof jobs)[number]>[] = [
@@ -89,33 +99,61 @@ const Jobs = ({className}: any) => {
         return `${row.leads_user_info.total_leads_user}`;
       },
     },
+    {
+      field: "actions",
+      type: "actions",
+      width: 150,
+      editable: false,
+      renderHeader: (params: any) => <strong>{"Actions "}</strong>,
+      filterable: false,
+      cellClassName: "pinned-column",
+      headerClassName: "MuiDataGrid-columnHeader--pinned",
+      getActions: (params: any) => {
+        const { id } = params;
+        if (id) {
+          return [
+            <GridActionsCellItem
+              icon={<VisibilityIcon />}
+              label="Previw"
+              key={id}
+              // sx={{
+              //   color: "black",
+              // }}
+              className="textPrimary"
+              onClick={() => handleViewClick(id)}
+            />,
+          ];
+        }
+        return [];
+      },
+    },
   ];
   console.log("zzz jobs", jobs);
   return (
     <PageContainer>
       <div className={`${className}`}>
-      <Card>
-        <CardContent>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              paddingBottom: 2,
-            }}
-          >
-            <SearchInput
-              onChange={(event: any) => {
-                handleSearchInputChange(event);
+        <Card>
+          <CardContent>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                paddingBottom: 2,
               }}
-              onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
-                if (event.key === "Enter") {
-                  event.preventDefault();
-                }
-              }}
-            />
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-              {/* <Button
+            >
+              <SearchInput
+                onChange={(event: any) => {
+                  handleSearchInputChange(event);
+                }}
+                onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
+                  if (event.key === "Enter") {
+                    event.preventDefault();
+                  }
+                }}
+              />
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+                {/* <Button
                 variant="outlined"
                 onClick={() => setIsFilterOpen(true)}
                 startIcon={<FilterListIcon />}
@@ -125,58 +163,58 @@ const Jobs = ({className}: any) => {
                 Filters
               </Button> */}
 
-              <Button
-                variant="outlined"
-                onClick={() => addNewJob()}
-                startIcon={<AddIcon />}
-                size="small"
-                sx={addBtnStyle}
-              >
-                Add job
-              </Button>
+                <Button
+                  variant="outlined"
+                  onClick={() => addNewJob()}
+                  startIcon={<AddIcon />}
+                  size="small"
+                  sx={addBtnStyle}
+                >
+                  Add job
+                </Button>
+              </Box>
             </Box>
-          </Box>
-          {jobs?.length > 0 && (
-            <CustomDataGrid
-              rows={jobs}
-              columns={columns}
-              initialState={{
-                pagination: {
-                  paginationModel: {
-                    pageSize: 10,
+            {jobs?.length > 0 && (
+              <CustomDataGrid
+                rows={jobs}
+                columns={columns}
+                initialState={{
+                  pagination: {
+                    paginationModel: {
+                      pageSize: 10,
+                    },
                   },
-                },
-              }}
-              // onPaginationModelChange={(model: any) => {
-              //   if (model.pageSize !== pagination.pageSize) {
-              //     handleChangeRowsPerPage(model);
-              //   }
-              //   if (model.page !== pagination.page) {
-              //     handleChangePage(model);
-              //   }
-              // }}
-              // rowCount={count}
-              pageSizeOptions={[5, 10, 25, 50]}
-              disableRowSelectionOnClick
-              disableVirtualization
-              paginationMode="server"
-              getRowClassName={(params: GridRowClassNameParams) => {
-                console.log('zzz params', params.row.job_status)
-                switch (params.row.job_status) {
-                  case "close":
-                    return "row-closed";
-                  case "open":
-                    return "row-open";
-                  case "in progress":
-                    return "row-in-progress";
-                  default:
-                    return ""; // Default class if no match
-                }
-              }}
-            />
-          )}
-        </CardContent>
-      </Card>
+                }}
+                // onPaginationModelChange={(model: any) => {
+                //   if (model.pageSize !== pagination.pageSize) {
+                //     handleChangeRowsPerPage(model);
+                //   }
+                //   if (model.page !== pagination.page) {
+                //     handleChangePage(model);
+                //   }
+                // }}
+                // rowCount={count}
+                pageSizeOptions={[5, 10, 25, 50]}
+                disableRowSelectionOnClick
+                disableVirtualization
+                paginationMode="server"
+                getRowClassName={(params: GridRowClassNameParams) => {
+                  console.log("zzz params", params.row.job_status);
+                  switch (params.row.job_status) {
+                    case "close":
+                      return "row-closed";
+                    case "open":
+                      return "row-open";
+                    case "in progress":
+                      return "row-in-progress";
+                    default:
+                      return ""; // Default class if no match
+                  }
+                }}
+              />
+            )}
+          </CardContent>
+        </Card>
       </div>
     </PageContainer>
   );
