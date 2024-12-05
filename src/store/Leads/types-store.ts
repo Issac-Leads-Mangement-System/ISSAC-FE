@@ -32,7 +32,7 @@ const leadsTypesStore = create<LeadsTypesState>((set) => ({
 
     try {
       const response = await api.get(
-        `${process.env.REACT_APP_BASE_URL}/leads/types/?page=${
+        `${process.env.REACT_APP_BASE_URL}/leads/types?page=${
           page + 1
         }&limit=${limit}&search=${searchValue}`
       );

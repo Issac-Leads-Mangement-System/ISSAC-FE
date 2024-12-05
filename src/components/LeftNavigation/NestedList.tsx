@@ -25,8 +25,8 @@ export default function NestedList({ open }: { open: boolean }) {
     if (item.route) {
       navigate(item.route);
     }
-    if (item.name) {
-      setSelectedItem(item.name);
+    if (item.route) {
+      setSelectedItem(item.route);
     }
     if (item.children) {
       setOpenItems((prevOpenItems) => ({
@@ -48,7 +48,7 @@ export default function NestedList({ open }: { open: boolean }) {
               color: "white",
             }}
             onClick={() => handleClick(item)}
-            selected={selectedItem === item.name}
+            selected={selectedItem === item.route}
           >
             <ListItemIcon
               sx={{

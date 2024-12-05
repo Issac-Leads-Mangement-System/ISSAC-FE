@@ -30,6 +30,7 @@ const usersStore: any = create<AuthState>((set) => ({
   users: [],
   id: null,
   role: null,
+  team_id: null,
   counter_users: 0,
   user: {},
   isLoading: false,
@@ -44,6 +45,7 @@ const usersStore: any = create<AuthState>((set) => ({
     team_id: [],
   },
   setUser: (id, role) => set({ id, role }),
+  setUserData: (user: any) => set({user: user}) ,
   logout: () => set({ id: null, role: null }),
   getUsers: async () => {
     const { searchValue, modelPage, activate_filters } = usersStore.getState();

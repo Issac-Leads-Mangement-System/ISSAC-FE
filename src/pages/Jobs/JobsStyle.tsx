@@ -16,4 +16,14 @@ export const JobsStyle = () => css`
     text-align: center;
     padding: 0;
   }
+
+  .row-closed {
+    color: red;
+  }
+  .row-open {
+    color: #155724; /* Dark green text */
+  }
+  .row-in-progress {
+    color: #856404; /* Dark yellow text */
+  }
 `;
