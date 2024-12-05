@@ -3,7 +3,6 @@ import { PageContainer } from "../../common/PageContainer/page-container";
 import secondToolbarStore from "../../store/SecondToolbar/second-tollbar-store";
 import { Box, Card, CardContent, Grid2, Typography } from "@mui/material";
 import { SearchInput } from "../../common/Input/SearchInput";
-import { DataGrid } from "@mui/x-data-grid";
 
 export const JobStats = () => {
   const {
@@ -13,7 +12,7 @@ export const JobStats = () => {
   }: any = secondToolbarStore();
 
   useEffect(() => {
-    setSecontToolbarMessage("JOB");
+    setSecontToolbarMessage("JOB LEADS");
     setSecontToolbarPath("Stats");
 
     return () => {
@@ -29,7 +28,7 @@ export const JobStats = () => {
         container
         spacing={2}
         justifyContent="center"
-        sx={{ background: "#f2f2f7" }}
+        sx={{ background: "#f2f2f7", width: "100%" }}
       >
         {/* Card 1 */}
         <Grid2>
@@ -41,14 +40,14 @@ export const JobStats = () => {
                 boxShadow: "0px 8px 20px rgba(0, 0, 0, 0.2)",
                 transform: "translateY(-2px)",
               },
-              width: "380px",
-              height: "150px",
+              width: "335px",
+              height: "160px",
             }}
           >
             <CardContent>
-              <Typography variant="h5">Card 1</Typography>
+              <Typography variant="h5" sx={{ fontWeight: 'medium' }}>Total 10</Typography>
               <Typography variant="body2">
-                This is a simple card with a hover effect.
+                Total employee: 0
               </Typography>
             </CardContent>
           </Card>
@@ -64,12 +63,12 @@ export const JobStats = () => {
                 boxShadow: "0px 8px 20px rgba(0, 0, 0, 0.2)",
                 transform: "translateY(-2px)",
               },
-              width: "380px",
-              height: "150px",
+              width: "335px",
+              height: "160px",
             }}
           >
             <CardContent>
-              <Typography variant="h5">Card 2</Typography>
+              <Typography variant="h5" color={'#856404'} sx={{ fontWeight: 'medium' }}>Open</Typography>
               <Typography variant="body2">
                 This is another simple card with the same hover effect.
               </Typography>
@@ -86,12 +85,34 @@ export const JobStats = () => {
                 boxShadow: "0px 8px 20px rgba(0, 0, 0, 0.2)",
                 transform: "translateY(-2px)",
               },
-              width: "380px",
-              height: "150px",
+              width: "335px",
+              height: "160px",
             }}
           >
             <CardContent>
-              <Typography variant="h5">Card 2</Typography>
+              <Typography variant="h5" color={'#155724'} sx={{ fontWeight: 'medium' }}>Success</Typography>
+              <Typography variant="body2">
+                This is another simple card with the same hover effect.
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid2>
+
+        <Grid2>
+          <Card
+            sx={{
+              transition: "all 0.4s ",
+              boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+              "&:hover": {
+                boxShadow: "0px 8px 20px rgba(0, 0, 0, 0.2)",
+                transform: "translateY(-2px)",
+              },
+              width: "335px",
+              height: "160px",
+            }}
+          >
+            <CardContent>
+              <Typography variant="h5" color={'red'} sx={{ fontWeight: 'medium' }}>Close</Typography>
               <Typography variant="body2">
                 This is another simple card with the same hover effect.
               </Typography>

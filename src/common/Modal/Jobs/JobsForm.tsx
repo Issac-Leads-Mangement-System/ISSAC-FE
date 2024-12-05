@@ -60,7 +60,6 @@ export const JobsForm = ({ formProps, typeOfAdd, id }: any) => {
     { field: "created_date", headerName: "Created date", width: 350 },
   ];
 
-  console.log(formProps);
   return (
     <>
       <Grid2 size={6}>
@@ -119,7 +118,6 @@ export const JobsForm = ({ formProps, typeOfAdd, id }: any) => {
               checkboxSelection 
               disableRowSelectionOnClick
               onRowSelectionModelChange={(newRowSelectionModel: any) => {
-                console.log('zzzz new', newRowSelectionModel)
                 formProps.setFieldValue('leads', newRowSelectionModel)
               }} 
               initialState={{

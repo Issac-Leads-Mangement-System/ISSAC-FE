@@ -35,7 +35,6 @@ const jobsStore = create<IJobsState>((set) => ({
     const response = await api.get(
       `${process.env.REACT_APP_BASE_URL}/jobs/free_leads/${job.type_id}`
     );
-    console.log("zzz res", response);
     set((state) => ({
       job: {
         ...state.job,
@@ -56,7 +55,6 @@ const jobsStore = create<IJobsState>((set) => ({
       );
 
       set({ userTeam: response.data.users_response });
-      console.log("zzzzzz ", response.data);
     } catch (err) {
       console.log("zzz err", err);
     }

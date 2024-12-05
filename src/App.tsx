@@ -17,8 +17,10 @@ import useAuthStore from "./store/authStore/authStore";
 import SecondToolbar from "./components/SecondToolbar/SecondToolbar";
 import { Toaster } from "./common/Toaster/Toaster";
 import { Theme } from "./theme/Theme";
+import usersStore from "./store/Users/users-store";
 
 function App() {
+  const { setUserData } = usersStore();
   const [open, setOpen] = useState(true);
   const navigate = useNavigate();
   const { role } = useAuthStore((state) => state);
@@ -53,6 +55,7 @@ function App() {
           useAuthStore
             .getState()
             .setUser(response?.data?.id, response?.data?.user_role);
+            setUserData(response.data)
         }
       } catch (error) {
         setLoading(false);

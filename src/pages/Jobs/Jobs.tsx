@@ -27,7 +27,15 @@ const Jobs = ({ className }: any) => {
     resetSecondToolbar,
   }: any = secondToolbarStore();
   const { getTypes }: any = leadsTypesStore();
-  const { getAllJobs, jobs }: any = jobsStore();
+  const {
+    getAllJobs,
+    jobs,
+    counter_jobs,
+    pagination,
+    setRowsPerPage,
+    setPage,
+    setSearchedValue,
+  }: any = jobsStore();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -41,22 +49,51 @@ const Jobs = ({ className }: any) => {
     };
   }, []);
 
-  const handleSearchInputChange = (event: any) => {};
+  const handleSearchInputChange = (event: any) => {
+    setSearchedValue(event.target.value);
+    if (!event?.target.value) {
+      getAllJobs();
+    }
+  };
 
   const addNewJob = () => {
     navigate("/add-job");
   };
 
   const handleViewClick = (id: number) => {
-    console.log("iii id", id);
     navigate(`/job/${id}/stats`);
     // got to the job stats page based on the id
+  };
+
+  const handleChangeRowsPerPage = async (model: any) => {
+    try {
+      setRowsPerPage(model.pageSize);
+      setPage(model.page);
+      await getAllJobs();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleChangePage = async (model: any) => {
+    setPage(model.page);
+    await getAllJobs();
   };
 
   const columns: GridColDef<(typeof jobs)[number]>[] = [
     { field: "job_name", headerName: "Job name", width: 250 },
     { field: "created_time", headerName: "Created time", width: 150 },
-    { field: "job_status", headerName: "Job status", width: 150 },
+    {
+      field: "job_status",
+      headerName: "Job status",
+      width: 150,
+      cellClassName: (params) => {
+        if (params.value === "close") return "row-closed";
+        if (params.value === "open") return "row-open";
+        if (params.value === "in progress") return "row-in-progress";
+        return "";
+      },
+    },
     {
       field: "lead_type",
       headerName: "Lead type",
@@ -65,8 +102,14 @@ const Jobs = ({ className }: any) => {
         return `${row.lead_type.type_name}`;
       },
     },
+    {
+      field: "total_leads",
+      headerName: "Total leads",
+      width: 150,
+    },
     { field: "open_leads", headerName: "Open leads", width: 150 },
     { field: "success_leads", headerName: "Success leads", width: 150 },
+    { field: "closed_leads", headerName: "Closed leads", width: 150 },
     {
       field: "closed_leads_user",
       headerName: "Close leads user",
@@ -128,7 +171,7 @@ const Jobs = ({ className }: any) => {
       },
     },
   ];
-  console.log("zzz jobs", jobs);
+
   return (
     <PageContainer>
       <div className={`${className}`}>
@@ -149,6 +192,7 @@ const Jobs = ({ className }: any) => {
                 onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
                   if (event.key === "Enter") {
                     event.preventDefault();
+                    getAllJobs();
                   }
                 }}
               />
@@ -185,32 +229,19 @@ const Jobs = ({ className }: any) => {
                     },
                   },
                 }}
-                // onPaginationModelChange={(model: any) => {
-                //   if (model.pageSize !== pagination.pageSize) {
-                //     handleChangeRowsPerPage(model);
-                //   }
-                //   if (model.page !== pagination.page) {
-                //     handleChangePage(model);
-                //   }
-                // }}
-                // rowCount={count}
+                onPaginationModelChange={(model: any) => {
+                  if (model.pageSize !== pagination.pageSize) {
+                    handleChangeRowsPerPage(model);
+                  }
+                  if (model.page !== pagination.page) {
+                    handleChangePage(model);
+                  }
+                }}
+                rowCount={counter_jobs}
                 pageSizeOptions={[5, 10, 25, 50]}
                 disableRowSelectionOnClick
                 disableVirtualization
                 paginationMode="server"
-                getRowClassName={(params: GridRowClassNameParams) => {
-                  console.log("zzz params", params.row.job_status);
-                  switch (params.row.job_status) {
-                    case "close":
-                      return "row-closed";
-                    case "open":
-                      return "row-open";
-                    case "in progress":
-                      return "row-in-progress";
-                    default:
-                      return ""; // Default class if no match
-                  }
-                }}
               />
             )}
           </CardContent>
