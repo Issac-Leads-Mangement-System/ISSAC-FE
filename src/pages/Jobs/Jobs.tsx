@@ -19,6 +19,7 @@ import {
   GridRowClassNameParams,
 } from "@mui/x-data-grid";
 import { CustomDataGrid } from "../../common/CustomDataGrid/custom-data-grid";
+import jobStatsStore from "../../store/Jobs/job-stats-store";
 
 const Jobs = ({ className }: any) => {
   const {
@@ -27,6 +28,7 @@ const Jobs = ({ className }: any) => {
     resetSecondToolbar,
   }: any = secondToolbarStore();
   const { getTypes }: any = leadsTypesStore();
+  const { setKey }: any = jobStatsStore();
   const {
     getAllJobs,
     jobs,
@@ -61,6 +63,7 @@ const Jobs = ({ className }: any) => {
   };
 
   const handleViewClick = (id: number) => {
+    setKey("activeJob", id);
     navigate(`/job/${id}/stats`);
     // got to the job stats page based on the id
   };
