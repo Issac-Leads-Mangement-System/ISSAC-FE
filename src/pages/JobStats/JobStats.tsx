@@ -25,12 +25,15 @@ export const JobStats = () => {
     setKey,
     getJobLeadsById,
     jobLeadsById,
+    counter_job_leads,
+    setSearchValue,
+    pagination,
+    setRowsPerPage,
+    setPage,
+    isLoading,
   }: any = jobStatsStore();
 
   useEffect(() => {
-    setSecontToolbarMessage("JOB LEADS");
-    setSecontToolbarPath("Stats");
-    console.log("zzz activeJob", activeJob);
     if (!activeJob) {
       setKey("activeJob", location.pathname.split("/")[2]);
     }
@@ -39,19 +42,68 @@ export const JobStats = () => {
     };
   }, []);
 
+
+
   useEffect(() => {
     if (activeJob) {
       getJobById();
       getJobLeadsById();
     }
   }, [activeJob]);
+
+  useEffect(() => {
+    setSecontToolbarMessage(`JOB LEADS / ${jobLeadsById[0]?.job.job_name.toUpperCase() || ''}`);
+    setSecontToolbarPath("Stats");
+  }, [jobLeadsById, getJobLeadsById])
+
   const handleSearchInputChange = (event: any) => {
-    console.log("handle search fct");
+    setSearchValue(event.target.value)
+    if (!event?.target.value) {
+      getJobLeadsById();
+    }
+  };
+
+  const handleChangeRowsPerPage = async (model: any) => {
+    try {
+      setRowsPerPage(model.pageSize);
+      setPage(model.page);
+      await getJobLeadsById();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleChangePage = async (model: any) => {
+    setPage(model.page);
+    await getJobLeadsById();
   };
 
   const columns: GridColDef<(typeof jobById)[number]>[] = [
-    { field: "job_name", headerName: "Job name", width: 250 },
-    { field: "created_time", headerName: "Created time", width: 150 },
+    { field: "created_time", headerName: "Created time", width: 250 },
+    { field: "updated_time", headerName: "Updated time", width: 250 },
+    {
+      field: "user",
+      headerName: "User",
+      width: 250,
+      renderCell: (params: any) => {
+        const { row } = params;
+        return (
+          <Typography>
+            {row.user.first_name} - {row.user.last_name}
+          </Typography>
+        );
+      },
+    },
+    { field: "lead_id", headerName: "Lead", width: 200 },
+    {
+      field: "lead_status",
+      headerName: "Lead status",
+      width: 200,
+      renderCell: (params: any) => {
+        const { row } = params;
+        return <Typography>{row.lead_status.status_name}</Typography>;
+      },
+    },
   ];
   return (
     <PageContainer>
@@ -63,49 +115,6 @@ export const JobStats = () => {
           sx={{ background: "#f2f2f7", width: "100%" }}
         >
           {/* Card 1 */}
-
-          {/* <Grid2>
-            <Card
-              sx={{
-                transition: "all 0.4s",
-                boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
-                "&:hover": {
-                  boxShadow: "0px 8px 20px rgba(0, 0, 0, 0.2)",
-                  transform: "translateY(-2px)",
-                },
-                width: "335px",
-                height: "160px",
-                display: "flex",
-                flexDirection: "column",
-              }}
-            >
-              <CardContent>
-                
-                <SupervisedUserCircleIcon
-                  sx={{
-                    fontSize: 50,
-                    color: "#5a5a5a",
-                    marginBottom: 2,
-                  }}
-                />
-                
-                <Typography
-                  variant="h5"
-                  sx={{
-                    fontWeight: "bold",
-                    color: "#333",
-                  }}
-                >
-                  Total: {jobById.total_leads}{" "}
-                </Typography>
-                
-                <Typography variant="body2" sx={{ color: "#666" }}>
-                  Total employee {jobById.leads_user_info.total_leads_user}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid2> */}
-
           <Grid2>
             <Card
               sx={{
@@ -406,14 +415,15 @@ export const JobStats = () => {
                     ) => {
                       if (event.key === "Enter") {
                         event.preventDefault();
+                        getJobLeadsById();
                       }
                     }}
                   />
                 </Box>
 
                 <DataGrid
-                  // rows={jobLeadsById}
-                  rows={[]}
+                  rows={jobLeadsById}
+                  rowCount={counter_job_leads}
                   columns={columns}
                   initialState={{
                     pagination: {
@@ -426,13 +436,19 @@ export const JobStats = () => {
                   onPaginationModelChange={(model: any) => {
                     //   handleChangeRowsPerPage(model);
                     //   handleChangePage(model);
+                    if (model.pageSize !== pagination.pageSize) {
+                      handleChangeRowsPerPage(model);
+                    }
+                    if (model.page !== pagination.page) {
+                      handleChangePage(model);
+                    }
                   }}
                   // rowCount={count}
                   disableRowSelectionOnClick
                   disableVirtualization
                   paginationMode="server"
                   pagination
-                  // loading={isLoading}
+                  loading={isLoading}
                 />
               </CardContent>
             </Card>
