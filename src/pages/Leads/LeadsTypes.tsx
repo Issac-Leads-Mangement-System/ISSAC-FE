@@ -10,7 +10,7 @@ import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import CustomModal from "../../common/Modal/CustomModal/CustomModal";
 import { GenericAddEditForm } from "../../common/forms-generic-ad-edit/GenericAdEditForm";
 import { submitBtnStyle } from "../../common/constants";
-import { DeleteConfirmationModal } from "../../common/Modal/ConfirmationDialog/ConfirmationDialog";
+import { ConfirmationModal } from "../../common/Modal/ConfirmationDialog/ConfirmationDialog";
 import secondToolbarStore from "../../store/SecondToolbar/second-tollbar-store";
 import { LeadsStyle } from "./LeadsStyle";
 import leadsTypesStore from "../../store/Leads/types-store";
@@ -238,11 +238,12 @@ const LeadsTypes = () => {
       )}
 
       {isModalOpen && (
-        <DeleteConfirmationModal
+        <ConfirmationModal
           open={isModalOpen}
           onClose={handleCloseModal}
           onConfirm={handleConfirmDelete}
-          itemName="this type"
+          message=" Are you sure you want to delete this type? This action cannot be undone."
+          btnName="Delete"
         />
       )}
     </PageContainer>

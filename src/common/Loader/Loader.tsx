@@ -4,13 +4,18 @@ export const Loader = () => {
   return (
     <Box
       sx={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
         display: "flex",
         justifyContent: "center",
-        margin: 0,
-        position: "absolute",
-        top: "50%",
-        left: "50%",
-        transform: "translate(-50%, -50%)",
+        alignItems: "center",
+        backgroundColor: "rgba(255, 255, 255, 0.7)",
+        backdropFilter: "blur(5px)",
+        zIndex: 9999, // Asigură-te că overlay-ul este deasupra altor elemente
+        pointerEvents: "none", // Dezactivează interacțiunile pentru elementele de dedesubt
       }}
     >
       <CircularProgress sx={{ color: "#000000d4" }} />

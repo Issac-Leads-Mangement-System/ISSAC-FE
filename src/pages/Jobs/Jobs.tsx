@@ -20,6 +20,8 @@ import {
 } from "@mui/x-data-grid";
 import { CustomDataGrid } from "../../common/CustomDataGrid/custom-data-grid";
 import jobStatsStore from "../../store/Jobs/job-stats-store";
+import TaskAltIcon from "@mui/icons-material/TaskAlt";
+import { ConfirmationModal } from "../../common/Modal/ConfirmationDialog/ConfirmationDialog";
 
 const Jobs = ({ className }: any) => {
   const {
@@ -28,7 +30,7 @@ const Jobs = ({ className }: any) => {
     resetSecondToolbar,
   }: any = secondToolbarStore();
   const { getTypes }: any = leadsTypesStore();
-  const { setKey }: any = jobStatsStore();
+  const { setKey, activeJob }: any = jobStatsStore();
   const {
     getAllJobs,
     jobs,
@@ -37,8 +39,10 @@ const Jobs = ({ className }: any) => {
     setRowsPerPage,
     setPage,
     setSearchedValue,
+    updateJobStatus,
   }: any = jobsStore();
   const navigate = useNavigate();
+  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
 
   useEffect(() => {
     setSecontToolbarMessage("JOBS");
@@ -80,6 +84,22 @@ const Jobs = ({ className }: any) => {
 
   const handleChangePage = async (model: any) => {
     setPage(model.page);
+    await getAllJobs();
+  };
+
+  const handleChangeStatusJob = (id: any) => {
+    setIsConfirmationOpen(true);
+    setKey("activeJob", id);
+  };
+
+  const handleCloseModal = () => {
+    setIsConfirmationOpen(false);
+  };
+
+  const handleConfirmDelete = async () => {
+    await updateJobStatus(activeJob);
+    setIsConfirmationOpen(false);
+    setKey("activeJob", "");
     await getAllJobs();
   };
 
@@ -168,6 +188,16 @@ const Jobs = ({ className }: any) => {
               className="textPrimary"
               onClick={() => handleViewClick(id)}
             />,
+            <GridActionsCellItem
+              icon={<TaskAltIcon />}
+              label="Close"
+              key={id}
+              // sx={{
+              //   color: "black",
+              // }}
+              className="textPrimary"
+              onClick={() => handleChangeStatusJob(id)}
+            />,
           ];
         }
         return [];
@@ -250,6 +280,16 @@ const Jobs = ({ className }: any) => {
           </CardContent>
         </Card>
       </div>
+
+      {isConfirmationOpen && (
+        <ConfirmationModal
+          open={isConfirmationOpen}
+          onClose={handleCloseModal}
+          onConfirm={handleConfirmDelete}
+          message="Are you sure you want to close this job? Make sure you don't have open leads before"
+          btnName="Save"
+        />
+      )}
     </PageContainer>
   );
 };

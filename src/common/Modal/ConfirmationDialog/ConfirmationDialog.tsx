@@ -7,24 +7,25 @@ import {
   Button,
 } from "@mui/material";
 
-export const DeleteConfirmationModal = ({
+export const ConfirmationModal = ({
   open,
   onClose,
   onConfirm,
-  itemName,
+  message,
+  btnName,
 }: {
   open: boolean;
   onClose: () => void;
   onConfirm: any;
-  itemName: string;
+  message: string;
+  btnName: string;
 }) => {
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Confirm Deletion</DialogTitle>
+      <DialogTitle>Please confirm your changes</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Are you sure you want to delete {itemName}? This action cannot be
-          undone.
+          {message}
         </DialogContentText>
       </DialogContent>
       <DialogActions>
@@ -56,7 +57,7 @@ export const DeleteConfirmationModal = ({
             fontWeight: 700,
           }}
         >
-          Delete
+          {btnName}
         </Button>
       </DialogActions>
     </Dialog>
