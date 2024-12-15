@@ -17,7 +17,7 @@ import {
 import { UserForm } from "../../common/Modal/User/UserForm";
 import { filterBtnStyle, submitBtnStyle } from "../../common/constants";
 import teamsStore from "../../store/Teams/teams-store";
-import { DeleteConfirmationModal } from "../../common/Modal/ConfirmationDialog/ConfirmationDialog";
+import { ConfirmationModal } from "../../common/Modal/ConfirmationDialog/ConfirmationDialog";
 import { SearchInput } from "../../common/Input/SearchInput";
 import secondToolbarStore from "../../store/SecondToolbar/second-tollbar-store";
 import { addBtnStyle } from "../../common/utils";
@@ -316,11 +316,12 @@ export const Users = () => {
       )}
 
       {isModalOpen && (
-        <DeleteConfirmationModal
+        <ConfirmationModal
           open={isModalOpen}
           onClose={handleCloseModal}
           onConfirm={handleConfirmDelete}
-          itemName="this user"
+          message=" Are you sure you want to delete this user? This action cannot be undone."
+          btnName="Delete"
         />
       )}
 

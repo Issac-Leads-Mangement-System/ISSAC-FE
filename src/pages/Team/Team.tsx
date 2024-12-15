@@ -21,7 +21,7 @@ import {
   validationTeamSchema,
 } from "../../forms/teamModalSchema";
 import teamsStore from "../../store/Teams/teams-store";
-import { DeleteConfirmationModal } from "../../common/Modal/ConfirmationDialog/ConfirmationDialog";
+import { ConfirmationModal } from "../../common/Modal/ConfirmationDialog/ConfirmationDialog";
 import { SearchInput } from "../../common/Input/SearchInput";
 import secondToolbarStore from "../../store/SecondToolbar/second-tollbar-store";
 import { addBtnStyle } from "../../common/utils";
@@ -251,11 +251,12 @@ const Team = () => {
       )}
 
       {isModalOpen && (
-        <DeleteConfirmationModal
+        <ConfirmationModal
           open={isModalOpen}
           onClose={handleCloseModal}
           onConfirm={handleConfirmDelete}
-          itemName="this team"
+          message=" Are you sure you want to delete this team? This action cannot be undone."
+          btnName="Delete"
         />
       )}
     </PageContainer>

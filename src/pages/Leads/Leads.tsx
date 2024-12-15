@@ -18,7 +18,7 @@ import {
   validationLeadsSchema,
 } from "../../forms/leadsModalSchema";
 import { filterBtnStyle, submitBtnStyle } from "../../common/constants";
-import { DeleteConfirmationModal } from "../../common/Modal/ConfirmationDialog/ConfirmationDialog";
+import { ConfirmationModal } from "../../common/Modal/ConfirmationDialog/ConfirmationDialog";
 import { SearchInput } from "../../common/Input/SearchInput";
 import secondToolbarStore from "../../store/SecondToolbar/second-tollbar-store";
 import { LeadsStyle } from "./LeadsStyle";
@@ -382,11 +382,12 @@ const Leads = () => {
       )}
 
       {isModalOpen && (
-        <DeleteConfirmationModal
+        <ConfirmationModal
           open={isModalOpen}
           onClose={handleCloseModal}
           onConfirm={handleConfirmDelete}
-          itemName="this lead"
+          message=" Are you sure you want to delete this lead? This action cannot be undone."
+          btnName="Delete"
         />
       )}
 

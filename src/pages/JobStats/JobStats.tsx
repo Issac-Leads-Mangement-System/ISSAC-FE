@@ -10,6 +10,7 @@ import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import BlockIcon from "@mui/icons-material/Block";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import PhoneAndroidIcon from '@mui/icons-material/PhoneAndroid';
 
 export const JobStats = () => {
   const location = useLocation();
@@ -395,6 +396,77 @@ export const JobStats = () => {
             </Card>
           </Grid2>
 
+           {/* Card 5 */}
+
+           <Grid2>
+            <Card
+              sx={{
+                transition: "all 0.4s",
+                boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+                "&:hover": {
+                  boxShadow: "0px 8px 20px rgba(0, 0, 0, 0.2)",
+                  transform: "translateY(-2px)",
+                },
+                width: "335px",
+                height: "120px",
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                padding: "16px",
+              }}
+            >
+              {/* Conținutul din stânga */}
+              <Box>
+                <Typography
+                  variant="body1"
+                  color={"#856404"}
+                  sx={{
+                    fontWeight: "medium",
+                    color: "#1976d280",
+                    marginBottom: "8px",
+                  }}
+                >
+                  Mobile
+                </Typography>
+                <Typography
+                  variant="h4"
+                  sx={{
+                    fontWeight: "bold",
+                    color: "#333",
+                  }}
+                >
+                  {jobById.mobile_deals_success}
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: "#666",
+                  }}
+                >
+                  mobile: {jobById.leads_user_info.mobile_deals_success_user}
+                </Typography>
+              </Box>
+
+              {/* Iconul din dreapta */}
+              <Box
+                sx={{
+                  backgroundColor: "#d2e3f480", // Roz pal
+                  borderRadius: "8px",
+                  padding: "8px",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <PhoneAndroidIcon
+                  sx={{ fontSize: 30, fontWeight: "medium", color: "#1976d280" }}
+                />{" "}
+                {/* Icon roșu */}
+              </Box>
+            </Card>
+          </Grid2>
+
           <Grid2 size={12}>
             <Card sx={{ marginTop: "15px" }}>
               <CardContent>
@@ -453,6 +525,7 @@ export const JobStats = () => {
               </CardContent>
             </Card>
           </Grid2>
+          
         </Grid2>
       )}
     </PageContainer>

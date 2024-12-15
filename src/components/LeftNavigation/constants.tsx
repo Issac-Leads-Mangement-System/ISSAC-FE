@@ -49,13 +49,14 @@ const menus = [
   {
     name: "Jobs",
     icon: <WorkIcon />,
-    children: [
-      {
-        name: "List",
-        icon: <FeaturedPlayListIcon />,
-        route: "/jobs",
-      },
-    ],
+    route: "/jobs",
+    // children: [
+    //   {
+    //     name: "Job",
+    //     icon: <FeaturedPlayListIcon />,
+    //     route: "/jobs",
+    //   },
+    // ],
   },
 ];
 

@@ -2,6 +2,7 @@ import { create } from "zustand";
 import api from "../../api";
 import useNotificationStore from "../Notification/notification-store";
 import usersStore from "../Users/users-store";
+import jobStatsStore from "./job-stats-store";
 
 interface IJobsState {
   job: {
@@ -22,6 +23,8 @@ interface IJobsState {
     page: number;
   };
   searchValue: string;
+  userSelected: any;
+  isLoading: boolean;
 }
 
 const jobsStore = create<IJobsState>((set) => ({
@@ -43,6 +46,8 @@ const jobsStore = create<IJobsState>((set) => ({
     page: 0,
   },
   searchValue: "",
+  userSelected: [],
+  isLoading: false,
 
   setJob: (value: any, key: string) =>
     set((state) => ({
@@ -50,6 +55,11 @@ const jobsStore = create<IJobsState>((set) => ({
         ...state.job,
         [key]: value,
       },
+    })),
+
+  setUserSelected: (users: any) =>
+    set((state) => ({
+      userSelected: users,
     })),
   setLeadsPerEmployee: (id: string, value: number) =>
     set((state) => ({
@@ -63,17 +73,24 @@ const jobsStore = create<IJobsState>((set) => ({
   setSearchedValue: (value: string) => set({ searchValue: value }),
 
   getFreeLeads: async () => {
-    const { job } = jobsStore.getState();
-    const response = await api.get(
-      `${process.env.REACT_APP_BASE_URL}/jobs/free_leads/${job.type_id}`
-    );
-    set((state) => ({
-      job: {
-        ...state.job,
-        free_leads: response.data.total_amount_of_free_leads,
-      },
-      infoLeadsMessage: response.data.total_amount_of_free_leads,
-    }));
+    try {
+      const { job, isLoading } = jobsStore.getState();
+      set({ isLoading: true });
+      const response = await api.get(
+        `${process.env.REACT_APP_BASE_URL}/jobs/free_leads/${job.type_id}`
+      );
+      set((state) => ({
+        job: {
+          ...state.job,
+          free_leads: response.data.total_amount_of_free_leads,
+        },
+        infoLeadsMessage: response.data.total_amount_of_free_leads,
+      }));
+      set({ isLoading: false });
+    } catch (err) {
+      console.log(err);
+      set({ isLoading: false });
+    }
   },
 
   getUserTeam: async () => {
@@ -89,7 +106,10 @@ const jobsStore = create<IJobsState>((set) => ({
         }
       );
 
-      set({ userTeam: response.data.users_response });
+      set({
+        userTeam: response.data.users_response,
+        userSelected: response.data.users_response.map((user: any) => user.id),
+      });
       const arrLeadsPerEmployee = response.data.users_response.map(
         ({ id, first_name }: any) => {
           return {
@@ -113,8 +133,9 @@ const jobsStore = create<IJobsState>((set) => ({
 
   getAllJobs: async () => {
     try {
-      const { searchValue, pagination } = jobsStore.getState();
+      const { searchValue, pagination, isLoading } = jobsStore.getState();
       // ?page=${1}&limit=${50}
+      set({ isLoading: true });
       const response = await api.post(
         `${process.env.REACT_APP_BASE_URL}/jobs/?page=${
           pagination.page + 1
@@ -123,15 +144,18 @@ const jobsStore = create<IJobsState>((set) => ({
       set({
         jobs: response.data.jobs_response,
         counter_jobs: response.data.counter_jobs,
+        isLoading: false,
       });
     } catch (err) {
+      set({ isLoading: false });
       console.log("err", err);
     }
   },
 
   createLeadsJob: async () => {
     try {
-      const { job } = jobsStore.getState();
+      const { job, isLoading } = jobsStore.getState();
+      set({ isLoading: true });
       for (let i = 0; i < job.leads_per_employee.length; i++) {
         delete job.leads_per_employee[i].id;
         delete job.leads_per_employee[i].first_name;
@@ -146,14 +170,17 @@ const jobsStore = create<IJobsState>((set) => ({
           leads_per_employee: job.leads_per_employee,
         }
       );
+      set({ isLoading: false });
     } catch (err) {
       console.log("err", err);
+      set({ isLoading: false });
     }
   },
 
   createInProgressJob: async () => {
     try {
-      const { job } = jobsStore.getState();
+      const { job, isLoading } = jobsStore.getState();
+      set({ isLoading: true });
       if (job.free_leads) {
         const response = await api.post(
           `${process.env.REACT_APP_BASE_URL}/jobs/create_in_progress_job`,
@@ -172,6 +199,18 @@ const jobsStore = create<IJobsState>((set) => ({
           }));
         }
       }
+      set({ isLoading: false });
+    } catch (err) {
+      console.log("err", err);
+      set({ isLoading: false });
+    }
+  },
+
+  updateJobStatus: async (id: number) => {
+    try {
+      const response = await api.put(
+        `${process.env.REACT_APP_BASE_URL}/jobs/${id}?job_status=close`
+      );
     } catch (err) {
       console.log("err", err);
     }

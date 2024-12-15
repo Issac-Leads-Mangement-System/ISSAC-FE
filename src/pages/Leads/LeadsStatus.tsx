@@ -10,7 +10,7 @@ import styled from "styled-components";
 import CustomModal from "../../common/Modal/CustomModal/CustomModal";
 import { GenericAddEditForm } from "../../common/forms-generic-ad-edit/GenericAdEditForm";
 import { submitBtnStyle } from "../../common/constants";
-import { DeleteConfirmationModal } from "../../common/Modal/ConfirmationDialog/ConfirmationDialog";
+import { ConfirmationModal } from "../../common/Modal/ConfirmationDialog/ConfirmationDialog";
 import secondToolbarStore from "../../store/SecondToolbar/second-tollbar-store";
 import { LeadsStyle } from "./LeadsStyle";
 import {
@@ -257,11 +257,12 @@ const LeadsStatus = () => {
       )}
 
       {isModalOpen && (
-        <DeleteConfirmationModal
+        <ConfirmationModal
           open={isModalOpen}
           onClose={handleCloseModal}
           onConfirm={handleConfirmDelete}
-          itemName="this status"
+          message=" Are you sure you want to delete this status? This action cannot be undone."
+          btnName="Delete"
         />
       )}
 
