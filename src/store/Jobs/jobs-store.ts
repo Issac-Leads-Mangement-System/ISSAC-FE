@@ -61,6 +61,7 @@ const jobsStore = create<IJobsState>((set) => ({
     set((state) => ({
       userSelected: users,
     })),
+
   setLeadsPerEmployee: (id: string, value: number) =>
     set((state) => ({
       job: {
@@ -113,7 +114,7 @@ const jobsStore = create<IJobsState>((set) => ({
       const arrLeadsPerEmployee = response.data.users_response.map(
         ({ id, first_name }: any) => {
           return {
-            id: crypto.randomUUID(),
+            id: id,
             user_id: id,
             first_name,
             value: 0,
