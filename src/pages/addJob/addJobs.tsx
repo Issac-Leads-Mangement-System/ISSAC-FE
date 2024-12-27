@@ -73,7 +73,7 @@ const AddJobs = () => {
       } else {
         setActiveStep((prev) => prev + 1);
 
-        // await createInProgressJob();
+        await createInProgressJob();
       }
     }
     if (step === 1) {
@@ -89,7 +89,6 @@ const AddJobs = () => {
       } else {
         setActiveStep((prev) => prev + 1);
       }
-      // await createInProgressJob();
     }
   };
   const handleBack = () => setActiveStep((prev) => prev - 1);
@@ -186,10 +185,8 @@ const AddJobs = () => {
         const newUserSelected = userSelected.filter(
           (user: any) => user !== deleteJob?.id
         );
-        if(newUserSelected.length > 0){
-          setUserSelected(newUserSelected || []);
-          distributeValues(job.free_leads, job.leads_per_employee);
-        }
+        setUserSelected(newUserSelected || []);
+        distributeValues(job.free_leads, job.leads_per_employee);
       }
     }
   };
@@ -233,8 +230,8 @@ const AddJobs = () => {
           }}
           className="textPrimary"
           onClick={() => handleDeleteClick(params.id)}
-        />
-        ]
+        />,
+      ],
     },
   ];
 
@@ -367,7 +364,7 @@ const AddJobs = () => {
                         </Box>
                         <Typography
                           sx={{
-                            color: "#388e3c",
+                          color: "#388e3c",
                             fontWeight: "bold",
                             fontSize: "1rem",
                           }}
@@ -422,18 +419,17 @@ const AddJobs = () => {
                     ></Box>
                   </>
                 )}
+                <Box sx={{ textAlign: "right", marginTop: 3 }}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => handleNext(0)}
+                    disabled={!job.type_id}
+                  >
+                    Next
+                  </Button>
+                </Box>
               </CardContent>
-
-              <Box sx={{ textAlign: "right", marginTop: 3 }}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => handleNext(0)}
-                  disabled={!job.type_id}
-                >
-                  Next
-                </Button>
-              </Box>
             </Card>
           )}
 
