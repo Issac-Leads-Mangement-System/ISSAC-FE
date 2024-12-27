@@ -1,27 +1,29 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Box, Button, Card, CardContent } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import styled from "styled-components";
+import AddIcon from "@mui/icons-material/Add";
+import FilterListIcon from "@mui/icons-material/FilterList";
+import { GridActionsCellItem, GridColDef } from "@mui/x-data-grid";
+import { CustomDataGrid } from "../../common/CustomDataGrid/custom-data-grid";
+import TaskAltIcon from "@mui/icons-material/TaskAlt";
 
 import { SearchInput } from "../../common/Input/SearchInput";
-import secondToolbarStore from "../../store/SecondToolbar/second-tollbar-store";
-import { JobsStyle } from "./JobsStyle";
-import leadsStore from "../../store/Leads/leads-store";
 import { addBtnStyle } from "../../common/utils";
 import { PageContainer } from "../../common/PageContainer/page-container";
-import AddIcon from "@mui/icons-material/Add";
-import { useNavigate } from "react-router-dom";
+import { ConfirmationModal } from "../../common/Modal/ConfirmationDialog/ConfirmationDialog";
+import { filterBtnStyle } from "../../common/constants";
+import Filters from "../../components/Filters/filters";
+import { FilterJobs } from "../../common/forms-filters/FilterJobs";
+
+import styled from "styled-components";
+import { JobsStyle } from "./JobsStyle";
+
+import secondToolbarStore from "../../store/SecondToolbar/second-tollbar-store";
 import leadsTypesStore from "../../store/Leads/types-store";
 import jobsStore from "../../store/Jobs/jobs-store";
-import {
-  GridActionsCellItem,
-  GridColDef,
-  GridRowClassNameParams,
-} from "@mui/x-data-grid";
-import { CustomDataGrid } from "../../common/CustomDataGrid/custom-data-grid";
 import jobStatsStore from "../../store/Jobs/job-stats-store";
-import TaskAltIcon from "@mui/icons-material/TaskAlt";
-import { ConfirmationModal } from "../../common/Modal/ConfirmationDialog/ConfirmationDialog";
+import teamsStore from "../../store/Teams/teams-store";
 
 const Jobs = ({ className }: any) => {
   const {
@@ -30,6 +32,7 @@ const Jobs = ({ className }: any) => {
     resetSecondToolbar,
   }: any = secondToolbarStore();
   const { getTypes }: any = leadsTypesStore();
+  const { getAllTeams }: any = teamsStore();
   const { setKey, activeJob }: any = jobStatsStore();
   const {
     getAllJobs,
@@ -40,15 +43,18 @@ const Jobs = ({ className }: any) => {
     setPage,
     setSearchedValue,
     updateJobStatus,
+    resetFilters,
   }: any = jobsStore();
   const navigate = useNavigate();
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   useEffect(() => {
     setSecontToolbarMessage("JOBS");
     setSecontToolbarPath("List");
     getTypes(0, 50);
     getAllJobs();
+    getAllTeams();
 
     return () => {
       resetSecondToolbar();
@@ -103,6 +109,15 @@ const Jobs = ({ className }: any) => {
     await getAllJobs();
   };
 
+  const handleFilter = () => {
+    getAllJobs();
+    setIsFilterOpen(false);
+  };
+  const handleResetFilter = () => {
+    resetFilters();
+    getAllJobs();
+  };
+
   const columns: GridColDef<(typeof jobs)[number]>[] = [
     { field: "job_name", headerName: "Job name", width: 250 },
     { field: "created_time", headerName: "Created time", width: 150 },
@@ -134,11 +149,16 @@ const Jobs = ({ className }: any) => {
     { field: "success_leads", headerName: "Success leads", width: 150 },
     { field: "closed_leads", headerName: "Closed leads", width: 150 },
     {
-      field: "closed_leads_user",
-      headerName: "Close leads user",
+      field: "mobile_deals_success",
+      headerName: "Mobile deals success",
+      width: 150,
+    },
+    {
+      field: "total_leads_user",
+      headerName: "Total leads user",
       width: 150,
       valueGetter: (_, row: any) => {
-        return `${row.leads_user_info.closed_leads_user}`;
+        return `${row.leads_user_info.total_leads_user}`;
       },
     },
     {
@@ -158,13 +178,22 @@ const Jobs = ({ className }: any) => {
       },
     },
     {
-      field: "total_leads_user",
-      headerName: "Total leads user",
+      field: "closed_leads_user",
+      headerName: "Close leads user",
       width: 150,
       valueGetter: (_, row: any) => {
-        return `${row.leads_user_info.total_leads_user}`;
+        return `${row.leads_user_info.closed_leads_user}`;
       },
     },
+    {
+      field: "mobile_deals_success_user",
+      headerName: "Mobile deals success user",
+      width: 150,
+      valueGetter: (_, row: any) => {
+        return `${row.leads_user_info.mobile_deals_success_user}`;
+      },
+    },
+
     {
       field: "actions",
       type: "actions",
@@ -175,7 +204,7 @@ const Jobs = ({ className }: any) => {
       cellClassName: "pinned-column",
       headerClassName: "MuiDataGrid-columnHeader--pinned",
       getActions: (params: any) => {
-        const { id } = params;
+        const { id, row } = params;
         if (id) {
           return [
             <GridActionsCellItem
@@ -192,6 +221,7 @@ const Jobs = ({ className }: any) => {
               icon={<TaskAltIcon />}
               label="Close"
               key={id}
+              disabled={row.job_status === "close"}
               // sx={{
               //   color: "black",
               // }}
@@ -204,7 +234,6 @@ const Jobs = ({ className }: any) => {
       },
     },
   ];
-
   return (
     <PageContainer>
       <div className={`${className}`}>
@@ -230,15 +259,15 @@ const Jobs = ({ className }: any) => {
                 }}
               />
               <Box sx={{ display: "flex", alignItems: "center" }}>
-                {/* <Button
-                variant="outlined"
-                onClick={() => setIsFilterOpen(true)}
-                startIcon={<FilterListIcon />}
-                size="small"
-                sx={filterBtnStyle}
-              >
-                Filters
-              </Button> */}
+                <Button
+                  variant="outlined"
+                  onClick={() => setIsFilterOpen(true)}
+                  startIcon={<FilterListIcon />}
+                  size="small"
+                  sx={filterBtnStyle}
+                >
+                  Filters
+                </Button>
 
                 <Button
                   variant="outlined"
@@ -289,6 +318,17 @@ const Jobs = ({ className }: any) => {
           message="Are you sure you want to close this job? Make sure you don't have open leads before"
           btnName="Save"
         />
+      )}
+
+      {isFilterOpen && (
+        <Filters
+          open={isFilterOpen}
+          onClose={() => setIsFilterOpen(false)}
+          handleFilter={handleFilter}
+          resetFilter={handleResetFilter}
+        >
+          <FilterJobs />
+        </Filters>
       )}
     </PageContainer>
   );
