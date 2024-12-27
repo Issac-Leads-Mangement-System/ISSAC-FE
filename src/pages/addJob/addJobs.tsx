@@ -23,7 +23,7 @@ import {
 } from "@mui/material";
 import leadsTypesStore from "../../store/Leads/types-store";
 import jobsStore from "../../store/Jobs/jobs-store";
-import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
+import { DataGrid, GridActionsCellItem, useGridApiRef } from "@mui/x-data-grid";
 import { useNavigate } from "react-router-dom";
 import useNotificationStore from "../../store/Notification/notification-store";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
@@ -49,12 +49,32 @@ const AddJobs = () => {
     setUserSelected,
     isLoading,
   }: any = jobsStore();
+  const apiRef = useGridApiRef();
   const { showNotification }: any = useNotificationStore();
   const steps = ["Choose Job Type", "Add Job Details", "Confirm and Create"];
   const [activeStep, setActiveStep] = useState(0);
   const handleNext = async (step: number) => {
     if (step === 0) {
-      setActiveStep((prev) => prev + 1);
+      const total = job.leads_per_employee.reduce(
+        (sum: any, item: any) => sum + item.value,
+        0
+      );
+      if (job.free_leads === 0) {
+        showNotification({
+          message: "An error occurred: No leads available!",
+        });
+        return;
+      }
+      if (total !== job.free_leads) {
+        showNotification({
+          message: `An error occurred: The total number of leads exceeds the configured limit. Please review the configuration settings.`,
+        });
+        return;
+      } else {
+        setActiveStep((prev) => prev + 1);
+
+        await createInProgressJob();
+      }
     }
     if (step === 1) {
       const total = job.leads_per_employee.reduce(
@@ -65,9 +85,9 @@ const AddJobs = () => {
         showNotification({
           message: `An error occurred: The total number of leads exceeds the configured limit. Please review the configuration settings.`,
         });
+        return;
       } else {
         setActiveStep((prev) => prev + 1);
-        await createInProgressJob();
       }
     }
   };
@@ -114,12 +134,15 @@ const AddJobs = () => {
   };
 
   const changeUser = (e: any) => {
-    const findUser = userTeam.filter((lead: any) =>
-      e?.target.value.includes(lead.id)
-    );
-    setUserSelected(e.target.value);
-    setJob(findUser, "leads_per_employee");
-    distributeValues(job.free_leads, findUser);
+    if (e.target.value) {
+      const findUser = userTeam.filter((lead: any) =>
+        e?.target.value.includes(lead.id)
+      );
+      console.log("zzzz findUser", findUser);
+      setUserSelected(e.target.value);
+      setJob(findUser, "leads_per_employee");
+      distributeValues(job.free_leads, findUser);
+    }
   };
 
   const handleInputChange = (value: any, id: any) => {
@@ -131,7 +154,11 @@ const AddJobs = () => {
 
   const handleChangeLeads = (event: any) => {
     const inputValue = event.target.value;
-    const numericValue = inputValue.replace(/\D/g, "");
+    let numericValue = inputValue.replace(/\D/g, "");
+    if (!numericValue) {
+      numericValue = 0;
+    }
+
     if (/^\d*$/.test(inputValue)) {
       if (numericValue <= infoLeadsMessage) {
         setJob(parseInt(numericValue), "free_leads");
@@ -144,17 +171,23 @@ const AddJobs = () => {
   };
 
   const handleDeleteClick = (id: number) => {
-    const deleteJob = job.leads_per_employee.find((job: any) => job.id === id);
-    if (deleteJob) {
-      job.leads_per_employee = job.leads_per_employee.filter(
-        (job: any) => job.id !== deleteJob.id
+    if (job.leads_per_employee.length === 0) return;
+    if (id) {
+      const deleteJob = job.leads_per_employee.find(
+        (job: any) => job.id === id
       );
-      setJob(job.leads_per_employee, "leads_per_employee");
-      const newUserSelected = userSelected.filter(
-        (user: any) => user !== deleteJob.user_id
-      );
-      setUserSelected(newUserSelected);
-      distributeValues(job.free_leads, job.leads_per_employee);
+
+      if (deleteJob) {
+        job.leads_per_employee = job.leads_per_employee.filter(
+          (job: any) => job?.id !== deleteJob?.id
+        );
+        setJob(job.leads_per_employee, "leads_per_employee");
+        const newUserSelected = userSelected.filter(
+          (user: any) => user !== deleteJob?.id
+        );
+        setUserSelected(newUserSelected || []);
+        distributeValues(job.free_leads, job.leads_per_employee);
+      }
     }
   };
 
@@ -165,6 +198,7 @@ const AddJobs = () => {
       headerName: "Value",
       width: 200,
       renderCell: (params: any) => {
+        if (!params.id) return null;
         return (
           <TextField
             type="text"
@@ -186,24 +220,18 @@ const AddJobs = () => {
       filterable: false,
       cellClassName: "pinned-column",
       headerClassName: "MuiDataGrid-columnHeader--pinned",
-      getActions: (params: any) => {
-        const { id } = params;
-        if (id) {
-          return [
-            <GridActionsCellItem
-              icon={<DeleteForeverIcon />}
-              label="Previw"
-              key={id}
-              sx={{
-                color: "red",
-              }}
-              className="textPrimary"
-              onClick={() => handleDeleteClick(id)}
-            />,
-          ];
-        }
-        return [];
-      },
+      getActions: (params: any) => [
+        <GridActionsCellItem
+          icon={<DeleteForeverIcon />}
+          label="Previw"
+          key={params.id}
+          sx={{
+            color: "red",
+          }}
+          className="textPrimary"
+          onClick={() => handleDeleteClick(params.id)}
+        />,
+      ],
     },
   ];
 
@@ -336,7 +364,7 @@ const AddJobs = () => {
                         </Box>
                         <Typography
                           sx={{
-                            color: "#388e3c",
+                          color: "#388e3c",
                             fontWeight: "bold",
                             fontSize: "1rem",
                           }}
@@ -391,18 +419,17 @@ const AddJobs = () => {
                     ></Box>
                   </>
                 )}
+                <Box sx={{ textAlign: "right", marginTop: 3 }}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => handleNext(0)}
+                    disabled={!job.type_id}
+                  >
+                    Next
+                  </Button>
+                </Box>
               </CardContent>
-
-              <Box sx={{ textAlign: "right", marginTop: 3 }}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => handleNext(0)}
-                  disabled={!job.type_id}
-                >
-                  Next
-                </Button>
-              </Box>
             </Card>
           )}
 
@@ -457,7 +484,7 @@ const AddJobs = () => {
                       textAlign: "center",
                     }}
                   >
-                    Select a user
+                    Select a lead
                   </InputLabel>
                   <Select
                     labelId="type"
@@ -488,6 +515,18 @@ const AddJobs = () => {
                       </MenuItem>
                     ))}
                   </Select>
+                  <Typography
+                    sx={{
+                      fontWeight: "bold",
+                      color: "#555",
+                      marginBottom: "8px",
+                      display: "block",
+                      textAlign: "center",
+                      marginTop: "10px",
+                    }}
+                  >
+                    Total leads selected: {job.free_leads}
+                  </Typography>
                 </Box>
                 <Box
                   sx={{
@@ -499,22 +538,29 @@ const AddJobs = () => {
                   }}
                 >
                   <DataGrid
-                    autoHeight
+                    apiRef={apiRef}
                     sx={{
                       "& .MuiDataGrid-root": {
                         border: "none",
                       },
                       "& .MuiDataGrid-cell": {
-                        borderBottom: "1px solid #f0f0f0",
+                        borderBottom: "1px solidrgb(90, 67, 67)",
                       },
                       "& .MuiDataGrid-columnHeaders": {
                         backgroundColor: "#f5f5f5",
                         borderBottom: "2px solid #ddd",
                         fontWeight: "bold",
                       },
+                      "&.MuiDataGrid-root .MuiDataGrid-cell:focus-within": {
+                        outline: "none !important",
+                      },
                     }}
-                    rows={job.leads_per_employee}
-                    columns={columns}
+                    slots={{
+                      noRowsOverlay: () => <div>No data available</div>,
+                    }}
+                    columns={columns || []}
+                    rows={job.leads_per_employee || []}
+                    disableColumnFilter // Previne focusul pe coloane
                   />
                 </Box>
               </CardContent>
@@ -525,7 +571,6 @@ const AddJobs = () => {
                   marginTop: 3,
                 }}
               >
-                <Button onClick={handleBack}>Back</Button>
                 <Button
                   variant="contained"
                   color="primary"
@@ -582,6 +627,8 @@ const AddJobs = () => {
                 }}
               >
                 {/* <Button onClick={handleBack}>Back</Button> */}
+                <Button onClick={handleBack}>Back</Button>
+
                 <Button variant="contained" color="success" onClick={createJob}>
                   Create Job
                 </Button>
