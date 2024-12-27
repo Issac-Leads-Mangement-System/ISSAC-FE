@@ -9,14 +9,20 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import OutlinedInput from "@mui/material/OutlinedInput";
-import leadsTypesStore from "../../store/Leads/types-store";
-import leadsStore from "../../store/Leads/leads-store";
-import leadsStatusesStore from "../../store/Leads/statuses-store";
 
-export const FilterLeads = () => {
-  const { activate_filters, setActiveFilters }: any = leadsStore();
+import leadsTypesStore from "../../store/Leads/types-store";
+import jobsStore from "../../store/Jobs/jobs-store";
+import teamsStore from "../../store/Teams/teams-store";
+
+export const FilterJobs = () => {
+  const { activate_filters, setActiveFilters }: any = jobsStore();
   const { types }: any = leadsTypesStore();
-  const { statuses }: any = leadsStatusesStore();
+  const { teamsOptions }: any = teamsStore();
+  const statuses = [
+    { id: "close", name: "close" },
+    { id: "in progress", name: "in progress" },
+    { id: "open", name: "open" },
+  ];
 
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
@@ -47,8 +53,8 @@ export const FilterLeads = () => {
           labelId="demo-multiple-checkbox-label"
           id="demo-multiple-checkbox"
           multiple
-          value={activate_filters.lead_type_id}
-          onChange={(e) => handleChange(e, "lead_type_id")}
+          value={activate_filters.type_id}
+          onChange={(e) => handleChange(e, "type_id")}
           input={<OutlinedInput label="Type" />}
           renderValue={(selected: any) => {
             const count = selected.length;
@@ -62,9 +68,7 @@ export const FilterLeads = () => {
         >
           {types.map((type: any) => (
             <MenuItem key={type.id} value={type.id}>
-              <Checkbox
-                checked={activate_filters.lead_type_id.includes(type.id)}
-              />
+              <Checkbox checked={activate_filters.type_id.includes(type.id)} />
               <ListItemText primary={type.type_name} />
             </MenuItem>
           ))}
@@ -77,8 +81,8 @@ export const FilterLeads = () => {
           labelId="demo-multiple-checkbox-label"
           id="demo-multiple-checkbox"
           multiple
-          value={activate_filters.lead_status_id}
-          onChange={(e) => handleChange(e, "lead_status_id")}
+          value={activate_filters.job_status}
+          onChange={(e) => handleChange(e, "job_status")}
           input={<OutlinedInput label="Type" />}
           renderValue={(selected: any) => {
             const count = selected.length;
@@ -93,13 +97,42 @@ export const FilterLeads = () => {
           {statuses.map((status: any) => (
             <MenuItem key={status.id} value={status.id}>
               <Checkbox
-                checked={activate_filters.lead_status_id.includes(status.id)}
+                checked={activate_filters.job_status.includes(status.id)}
               />
-              <ListItemText primary={status.status_name} />
+              <ListItemText primary={status.name} />
             </MenuItem>
           ))}
         </Select>
       </FormControl>
+
+      <FormControl sx={{ m: 1, width: 300 }}>
+        <InputLabel id="demo-multiple-checkbox-label">Team</InputLabel>
+        <Select
+          labelId="demo-multiple-checkbox-label"
+          id="demo-multiple-checkbox"
+          multiple
+          value={activate_filters.team_id}
+          onChange={(e) => handleChange(e, "team_id")}
+          input={<OutlinedInput label="Type" />}
+          renderValue={(selected: any) => {
+            const count = selected.length;
+            return count === 0
+              ? "No elements selected"
+              : count === 1
+              ? `${count} element selected`
+              : `${count} elements selected`;
+          }}
+          MenuProps={MenuProps}
+        >
+          {teamsOptions.map((team: any) => (
+            <MenuItem key={team.id} value={team.id}>
+              <Checkbox checked={activate_filters.team_id.includes(team.id)} />
+              <ListItemText primary={team.team_name} />
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+      {/* please display this conditionally based on the user role */}
     </Box>
   );
 };
