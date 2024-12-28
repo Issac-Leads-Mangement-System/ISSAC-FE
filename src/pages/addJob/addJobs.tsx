@@ -244,6 +244,7 @@ const AddJobs = () => {
     navigate("/jobs");
   };
 
+  const accumulateJobLeads = job.leads_per_employee.reduce((sum: any, item: any) => sum + item.value, 0)
   return (
     <PageContainer>
       <Box
@@ -533,14 +534,14 @@ const AddJobs = () => {
                   <Typography
                     sx={{
                       fontWeight: "bold",
-                      color: "#555",
+                      color: accumulateJobLeads === job.free_leads ? "green" : "red",
                       marginBottom: "8px",
                       display: "block",
                       textAlign: "center",
                       marginTop: "10px",
                     }}
                   >
-                    Accumulate leads: {job.leads_per_employee.reduce((sum: any, item: any) => sum + item.value, 0)}
+                    Accumulate leads: {accumulateJobLeads}
                   </Typography>
                 </Box>
                 <Box
@@ -620,12 +621,9 @@ const AddJobs = () => {
                 </Typography>
                 <ul>
                   {job.leads_per_employee?.map((emp: any) => {
-                    const user = userTeam.find(
-                      (u: any) => u.id === emp.user_id
-                    );
                     return (
                       <li key={emp.id}>
-                        {user?.first_name || "Unknown User"} - {emp.value} leads
+                        {emp?.first_name || "Unknown User"} - {emp.value} leads
                       </li>
                     );
                   })}

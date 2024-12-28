@@ -235,11 +235,19 @@ const jobsStore = create<IJobsState>((set) => ({
       }
       
     } catch (error: any) {
-      showNotification({
-        message: "Error for create in progress job",
-        status: error.status,
-        severity: error.severity,
-      });
+      if(error.response.data.detail.includes('duplicate key value')) {
+        showNotification({
+          message: "Error for create in progress job! The job name already exists!",
+          status: error.status,
+          severity: error.severity,
+        });
+      } else {
+        showNotification({
+          message: "Error for create in progress job",
+          status: error.status,
+          severity: error.severity,
+        });
+      }
       set({ isLoading: false });
       throw error;
     }

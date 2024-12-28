@@ -26,6 +26,7 @@ import CustomModal from "../../common/Modal/CustomModal/CustomModal";
 import { JobStatsModal } from "./JobStatsModal";
 import leadsStatusesStore from "../../store/Leads/statuses-store";
 import { CustomDataGrid } from "../../common/CustomDataGrid/custom-data-grid";
+import { ConfirmationModal } from "../../common/Modal/ConfirmationDialog/ConfirmationDialog";
 
 export const JobStats = () => {
   const location = useLocation();
@@ -56,6 +57,8 @@ export const JobStats = () => {
   const [ idLeadJob, setIdLeadJob ]: any = useState(undefined);
   const [value, setValue] = useState("1");
   const [isOpen, setIsOpen] = useState(false);
+  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
+  const [idLeadJobConfirmation, setIdLeadJobConfirmation]: any = useState(undefined);
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
@@ -114,8 +117,10 @@ export const JobStats = () => {
   };
 
   const handleDeleteClick = async (id: number) => {
-    await deleteJobLead(activeJob, id);
-    await getJobLeadsById();
+    setIdLeadJobConfirmation(id);
+    setIsConfirmationOpen(true);
+    // await deleteJobLead(activeJob, id);
+    // await getJobLeadsById();
   };
 
   const createOrder = (id: number) => {};
@@ -129,6 +134,7 @@ export const JobStats = () => {
   const updateStatus = async () => {
     await updateJobLead(activeJob, idLeadJob, new_status)
     setIsOpen(false);
+    await getJobById();
     await getJobLeadsById();
   }
 
@@ -150,6 +156,16 @@ export const JobStats = () => {
     }
   
     return '';
+  }
+
+  const handleCloseConfirmationModal = () => {
+    setIsConfirmationOpen(false);
+  }
+
+  const handleSaveConfirmationModal = async () => {
+    await deleteJobLead(activeJob, idLeadJobConfirmation);
+    await getJobLeadsById();
+    setIsConfirmationOpen(false);
   }
 
   const columns: GridColDef<(typeof jobById)[number]>[] = [
@@ -356,6 +372,16 @@ export const JobStats = () => {
           <JobStatsModal updateStatus={updateStatus}/>
         </CustomModal>
       )}
+
+       {isConfirmationOpen && (
+          <ConfirmationModal
+            open={isConfirmationOpen}
+            onClose={handleCloseConfirmationModal}
+            onConfirm={handleSaveConfirmationModal}
+            message="Are you sure you want to delete this job?"
+            btnName="Save"
+          />
+        )}
     </PageContainer>
   );
 };
