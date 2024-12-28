@@ -8,6 +8,9 @@ export const CustomDataGrid: any = styledMaterial(DataGrid)(() => ({
   "& .row-red": {
     backgroundColor: "#f2dede !important",
   },
+  "& .row-gray" : {
+    backgroundColor: "#f2f2f7 !important",
+  },
   "& .bold": {
     fontWeight: "bold",
   },

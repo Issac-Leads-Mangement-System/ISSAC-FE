@@ -39,7 +39,7 @@ const ToolbarComponent = ({
       style={{
         borderBottom: "1px solid #908f8f40",
         minHeight: "39px",
-        background: "white"
+        background: "white",
       }}
     >
       <Box sx={{ flexGrow: 1, display: { xs: "flex", marginLeft: "0px" } }}>
@@ -49,14 +49,13 @@ const ToolbarComponent = ({
           onClick={handleDrawerOpen}
           edge="start"
           sx={{
-            marginLeft: '5px',
+            marginLeft: "5px",
           }}
         >
           {open ? <MenuOpenIcon /> : <ArrowRightAltIcon />}
         </IconButton>
       </Box>
 
-      
       <Box sx={{ flexGrow: 0 }}>
         <MenuItem>
           <IconButton

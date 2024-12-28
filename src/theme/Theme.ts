@@ -62,9 +62,7 @@ export const Theme = createTheme({
       '"Segoe UI Symbol"',
     ].join(","),
   },
-  // palette: {
-  //   custom: Color,
-  // },
+
   components: {
     MuiButton: {
       defaultProps: {
@@ -74,6 +72,14 @@ export const Theme = createTheme({
     MuiTextField: {
       defaultProps: {
         size: "medium",
+      },
+    },
+
+    MuiAppBar: {
+      styleOverrides: {
+        root: {
+          boxShadow: "none",
+        },
       },
     },
   },

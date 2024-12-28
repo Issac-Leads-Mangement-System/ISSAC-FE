@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { SecondToolbarStyle } from "./SecondToolbarStyle";
 import secondToolbarStore from "../../store/SecondToolbar/second-tollbar-store";
 
-
 const SecondToolbarComponent = ({ className }: any) => {
   const { name, path } = secondToolbarStore();
   return (
@@ -18,8 +17,20 @@ const SecondToolbarComponent = ({ className }: any) => {
             background: "white",
           }}
         >
-          <Typography variant="subtitle1" component="div" sx={{ flexGrow: 1, color: 'black', ml:2, fontWeight: "bold" }}>{name}</Typography>
-          <Typography variant="subtitle1" component="div" sx={{ color: '#878a99', mr: 2 }}>{path}</Typography>
+          <Typography
+            variant="subtitle1"
+            component="div"
+            sx={{ flexGrow: 1, color: "black", ml: 2, fontWeight: "bold" }}
+          >
+            {name}
+          </Typography>
+          <Typography
+            variant="subtitle1"
+            component="div"
+            sx={{ color: "#878a99", mr: 2 }}
+          >
+            {path}
+          </Typography>
         </Toolbar>
       </AppBar>
     </Box>
