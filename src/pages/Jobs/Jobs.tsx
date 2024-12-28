@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Box, Button, Card, CardContent } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import AssignmentIcon from "@mui/icons-material/Assignment";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+
 import styled from "styled-components";
 
 import { SearchInput } from "../../common/Input/SearchInput";
@@ -103,6 +106,14 @@ const Jobs = ({ className }: any) => {
     await getAllJobs();
   };
 
+  const handleUpdateJobStatusClick = (id: number) => {
+    console.log("click here", id);
+  };
+
+  const handleDeleteClick = (id: number) => {
+    console.log("delete", id);
+  };
+
   const columns: GridColDef<(typeof jobs)[number]>[] = [
     { field: "job_name", headerName: "Job name", width: 250 },
     { field: "created_time", headerName: "Created time", width: 150 },
@@ -188,6 +199,20 @@ const Jobs = ({ className }: any) => {
               className="textPrimary"
               onClick={() => handleViewClick(id)}
             />,
+
+            <GridActionsCellItem
+              icon={<AssignmentIcon />}
+              label="Update Lead Job Status"
+              title="Update Lead Job Status"
+              key={id}
+              // sx={{
+              //   color: "black",
+              // }}
+              className="textPrimary"
+              onClick={() => handleUpdateJobStatusClick(id)}
+            />,
+            // confirm this with Marcel
+
             <GridActionsCellItem
               icon={<TaskAltIcon />}
               label="Close"
@@ -197,6 +222,18 @@ const Jobs = ({ className }: any) => {
               // }}
               className="textPrimary"
               onClick={() => handleChangeStatusJob(id)}
+            />,
+
+            <GridActionsCellItem
+              icon={<DeleteForeverIcon />}
+              label="Delete"
+              title="Delete"
+              key={id}
+              sx={{
+                color: "red",
+              }}
+              className="textPrimary"
+              onClick={() => handleDeleteClick(id)}
             />,
           ];
         }
