@@ -175,12 +175,24 @@ const jobsStore = create<IJobsState>((set) => ({
       const { job, isLoading } = jobsStore.getState();
       set({ isLoading: true });
       for (let i = 0; i < job.leads_per_employee.length; i++) {
+        if(!job.leads_per_employee[i].user_id) {
+          job.leads_per_employee[i].user_id = job.leads_per_employee[i].id;
+        }
         delete job.leads_per_employee[i].id;
         delete job.leads_per_employee[i].first_name;
+        delete job.leads_per_employee[i].last_name;
+        delete job.leads_per_employee[i].email;
+        delete job.leads_per_employee[i].created_date;
+        delete job.leads_per_employee[i].phone_number;
+        delete job.leads_per_employee[i].team_id;
+        delete job.leads_per_employee[i].team_name;
+        delete job.leads_per_employee[i].user_role;
+        delete job.leads_per_employee[i].user_status;
         job.leads_per_employee[i].total_associated_leads =
           job.leads_per_employee[i].value;
         delete job.leads_per_employee[i].value;
       }
+
       const response = await api.post(
         `${process.env.REACT_APP_BASE_URL}/jobs/create_leads_job`,
         {
