@@ -55,7 +55,7 @@ function App() {
           useAuthStore
             .getState()
             .setUser(response?.data?.id, response?.data?.user_role);
-            setUserData(response.data)
+          setUserData(response.data);
         }
       } catch (error) {
         setLoading(false);

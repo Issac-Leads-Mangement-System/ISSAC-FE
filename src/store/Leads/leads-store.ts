@@ -199,7 +199,7 @@ const leadsStore = create<ILeadsState>((set) => ({
     try {
       const response = await api.delete(
         `${process.env.REACT_APP_BASE_URL}/leads/delete_leads/`,
-        { data: [id] }
+        { data: id }
       );
       if (response.status === 200) {
         showNotification({

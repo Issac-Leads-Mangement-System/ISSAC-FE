@@ -7,6 +7,10 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import { GridActionsCellItem, GridColDef } from "@mui/x-data-grid";
 import { CustomDataGrid } from "../../common/CustomDataGrid/custom-data-grid";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
+import AssignmentIcon from "@mui/icons-material/Assignment";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+
+import styled from "styled-components";
 
 import { SearchInput } from "../../common/Input/SearchInput";
 import { addBtnStyle } from "../../common/utils";
@@ -16,7 +20,6 @@ import { filterBtnStyle } from "../../common/constants";
 import Filters from "../../components/Filters/filters";
 import { FilterJobs } from "../../common/forms-filters/FilterJobs";
 
-import styled from "styled-components";
 import { JobsStyle } from "./JobsStyle";
 
 import secondToolbarStore from "../../store/SecondToolbar/second-tollbar-store";
@@ -93,10 +96,10 @@ const Jobs = ({ className }: any) => {
     await getAllJobs();
   };
 
-  const handleChangeStatusJob = (id: any) => {
-    setIsConfirmationOpen(true);
-    setKey("activeJob", id);
-  };
+  // const handleChangeStatusJob = (id: any) => {
+  //   setIsConfirmationOpen(true);
+  //   setKey("activeJob", id);
+  // };
 
   const handleCloseModal = () => {
     setIsConfirmationOpen(false);
@@ -117,6 +120,16 @@ const Jobs = ({ className }: any) => {
     resetFilters();
     getAllJobs();
   };
+
+  const handleUpdateJobStatusClick = (id: number) => {
+    // console.log("click here", id);
+    setIsConfirmationOpen(true);
+    setKey("activeJob", id);
+  };
+
+  // const handleDeleteClick = (id: number) => {
+  //   console.log("delete", id);
+  // };
 
   const columns: GridColDef<(typeof jobs)[number]>[] = [
     { field: "job_name", headerName: "Job name", width: 250 },
@@ -217,17 +230,44 @@ const Jobs = ({ className }: any) => {
               className="textPrimary"
               onClick={() => handleViewClick(id)}
             />,
+
             <GridActionsCellItem
               icon={<TaskAltIcon />}
-              label="Close"
+              label="Close job"
+              title="Close job"
               key={id}
               disabled={row.job_status === "close"}
               // sx={{
               //   color: "black",
               // }}
               className="textPrimary"
-              onClick={() => handleChangeStatusJob(id)}
+              onClick={() => handleUpdateJobStatusClick(id)}
             />,
+            // confirm this with Marcel
+
+            // <GridActionsCellItem
+            //   icon={<TaskAltIcon />}
+            //   label="Close"
+            //   key={id}
+            //   disabled={row.job_status === "close"}
+            //   // sx={{
+            //   //   color: "black",
+            //   // }}
+            //   className="textPrimary"
+            //   onClick={() => handleChangeStatusJob(id)}
+            // />,
+
+            // <GridActionsCellItem
+            //   icon={<DeleteForeverIcon />}
+            //   label="Delete"
+            //   title="Delete"
+            //   key={id}
+            //   sx={{
+            //     color: "red",
+            //   }}
+            //   className="textPrimary"
+            //   onClick={() => handleDeleteClick(id)}
+            // />,
           ];
         }
         return [];

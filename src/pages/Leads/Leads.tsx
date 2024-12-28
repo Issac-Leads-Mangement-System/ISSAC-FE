@@ -76,7 +76,12 @@ const Leads = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [typeOfAdd, setTypeOfAdd] = useState(false);
   const [idHistory, setIdHistory] = useState(null);
+  const [checkboxSelection, setCheckboxSelection] = useState(true);
+  const [disableMultipleRowSelection, setDisableMultipleRowSelection] =
+    useState(false);
+  const [idsRowSelection, setIdsRowSelection] = useState([]);
   const openOption = Boolean(anchorEl);
+
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -90,7 +95,7 @@ const Leads = () => {
   };
 
   const handleConfirmDelete = async () => {
-    await deleteLeads(id);
+    await deleteLeads([id]);
     await getLeads();
     setIsModalOpen(false);
   };
@@ -109,7 +114,6 @@ const Leads = () => {
         lead.type_id = lead.lead_type.lead_type_id;
         lead.lead_status_id = lead.lead_status.lead_status_id;
         setInitialFormValues(lead);
-        // Wait for the team data to be updated in the store
         await new Promise((resolve) => setTimeout(resolve, 0));
         setId(id);
         setOpen(true);
@@ -188,6 +192,16 @@ const Leads = () => {
     setIsHistoryOpen(true);
   };
 
+  // Handle delete
+  const handleDelete = async () => {
+    await deleteLeads(idsRowSelection);
+    await getLeads();
+  };
+
+  const handleRowSelection = (rows: any) => {
+    setIdsRowSelection(rows);
+  };
+
   const columns: GridColDef<(typeof leads)[number]>[] = [
     { field: "id", headerName: "Id", width: 150 },
     { field: "lead_message", headerName: "Lead message", width: 250 },
@@ -244,6 +258,7 @@ const Leads = () => {
               className="textPrimary"
               onClick={() => handleEditClick(id)}
             />,
+
             <GridActionsCellItem
               icon={<DeleteForeverIcon />}
               label="Delete"
@@ -285,7 +300,24 @@ const Leads = () => {
                 }
               }}
             />
+
             <Box sx={{ display: "flex", alignItems: "center" }}>
+              {idsRowSelection.length > 0 && (
+                <Button
+                  variant="contained"
+                  color="error"
+                  onClick={handleDelete}
+                  // disabled={selectedRows.length === 0}
+                  style={{
+                    marginRight: "5px",
+                    textTransform: "capitalize",
+                    height: "32px",
+                  }}
+                >
+                  Delete Selected Items
+                </Button>
+              )}
+
               <Button
                 variant="outlined"
                 onClick={() => setIsFilterOpen(true)}
@@ -353,6 +385,11 @@ const Leads = () => {
               disableRowSelectionOnClick
               disableVirtualization
               paginationMode="server"
+              checkboxSelection={checkboxSelection}
+              disableMultipleRowSelection={disableMultipleRowSelection}
+              onRowSelectionModelChange={(selectionModel: any) => {
+                handleRowSelection(selectionModel);
+              }}
             />
           )}
         </CardContent>

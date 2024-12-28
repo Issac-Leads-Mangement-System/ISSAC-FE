@@ -71,9 +71,13 @@ const AddJobs = () => {
         });
         return;
       } else {
-        setActiveStep((prev) => prev + 1);
-
-        await createInProgressJob();
+         try {
+          await createInProgressJob();
+          setActiveStep((prev) => prev + 1);
+         } catch (err ) {
+          console.log(err)
+         } 
+        
       }
     }
     if (step === 1) {
@@ -113,7 +117,7 @@ const AddJobs = () => {
     setSecontToolbarMessage("CREATE JOB");
     setSecontToolbarPath("Add");
     getTypes(0, 50);
-    getUserTeam();
+    getUserTeam(false);
 
     return () => {
       resetStore();
@@ -138,7 +142,6 @@ const AddJobs = () => {
       const findUser = userTeam.filter((lead: any) =>
         e?.target.value.includes(lead.id)
       );
-      console.log("zzzz findUser", findUser);
       setUserSelected(e.target.value);
       setJob(findUser, "leads_per_employee");
       distributeValues(job.free_leads, findUser);
@@ -151,7 +154,7 @@ const AddJobs = () => {
       setLeadsPerEmployee(id, value);
     }
   };
-
+  
   const handleChangeLeads = (event: any) => {
     const inputValue = event.target.value;
     let numericValue = inputValue.replace(/\D/g, "");
@@ -526,6 +529,18 @@ const AddJobs = () => {
                     }}
                   >
                     Total leads selected: {job.free_leads}
+                  </Typography>
+                  <Typography
+                    sx={{
+                      fontWeight: "bold",
+                      color: "#555",
+                      marginBottom: "8px",
+                      display: "block",
+                      textAlign: "center",
+                      marginTop: "10px",
+                    }}
+                  >
+                    Accumulate leads: {job.leads_per_employee.reduce((sum: any, item: any) => sum + item.value, 0)}
                   </Typography>
                 </Box>
                 <Box

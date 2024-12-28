@@ -101,17 +101,24 @@ const jobsStore = create<IJobsState>((set) => ({
     }
   },
 
-  getUserTeam: async () => {
+  getUserTeam: async (isFilter: boolean = true) => {
     try {
       const { searchValue, pagination } = jobsStore.getState();
       const { user } = usersStore.getState();
-      const response = await api.post(
-        `${process.env.REACT_APP_BASE_URL}/users/?page=${1}&limit=${50}`,
-        {
-          user_role: ["employee"],
+      let filterData: any = {
+        user_role: ["employee"],
+        user_status: ["active"],
+        team_id: [user.team_id],
+      }
+      if(!isFilter) {
+        filterData = {
           user_status: ["active"],
           team_id: [user.team_id],
-        }
+        };
+      }
+      const response = await api.post(
+        `${process.env.REACT_APP_BASE_URL}/users/?page=${1}&limit=${50}`,
+        filterData
       );
 
       set({
@@ -163,6 +170,7 @@ const jobsStore = create<IJobsState>((set) => ({
   },
 
   createLeadsJob: async () => {
+    const { showNotification } = useNotificationStore.getState();
     try {
       const { job, isLoading } = jobsStore.getState();
       set({ isLoading: true });
@@ -180,14 +188,24 @@ const jobsStore = create<IJobsState>((set) => ({
           leads_per_employee: job.leads_per_employee,
         }
       );
+      showNotification({
+        message: "Job in progress successfully created!",
+        status: response.statusText,
+        severity: response.status,
+      });
       set({ isLoading: false });
-    } catch (err) {
-      console.log("err", err);
+    } catch (error: any) {
+      showNotification({
+        message: "Error to create a job",
+        status: error.status,
+        severity: error.severity,
+      });
       set({ isLoading: false });
     }
   },
 
   createInProgressJob: async () => {
+    const { showNotification } = useNotificationStore.getState();
     try {
       const { job, isLoading } = jobsStore.getState();
       set({ isLoading: true });
@@ -208,21 +226,42 @@ const jobsStore = create<IJobsState>((set) => ({
             },
           }));
         }
+        showNotification({
+          message: "Job successfully created!",
+          status: response.statusText,
+          severity: response.status,
+        });
+        set({ isLoading: false });
       }
+      
+    } catch (error: any) {
+      showNotification({
+        message: "Error for create in progress job",
+        status: error.status,
+        severity: error.severity,
+      });
       set({ isLoading: false });
-    } catch (err) {
-      console.log("err", err);
-      set({ isLoading: false });
+      throw error;
     }
   },
 
   updateJobStatus: async (id: number) => {
+    const { showNotification } = useNotificationStore.getState();
     try {
       const response = await api.put(
         `${process.env.REACT_APP_BASE_URL}/jobs/${id}?job_status=close`
       );
-    } catch (err) {
-      console.log("err", err);
+      showNotification({
+        message: "Job closed successfully!",
+        status: response.statusText,
+        severity: response.status,
+      });
+    } catch (error: any) {
+      showNotification({
+        message: "Error to update the status job!",
+        status: error.status,
+        severity: error.severity,
+      });
     }
   },
 

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { PageContainer } from "../../common/PageContainer/page-container";
 import secondToolbarStore from "../../store/SecondToolbar/second-tollbar-store";
 import { Box, Card, CardContent, Grid2, Typography } from "@mui/material";
@@ -9,8 +9,23 @@ import SupervisedUserCircleIcon from "@mui/icons-material/SupervisedUserCircle";
 import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import BlockIcon from "@mui/icons-material/Block";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import PhoneAndroidIcon from '@mui/icons-material/PhoneAndroid';
+import { DataGrid, GridActionsCellItem, GridColDef } from "@mui/x-data-grid";
+import PhoneAndroidIcon from "@mui/icons-material/PhoneAndroid";
+import Tab from "@mui/material/Tab";
+import TabContext from "@mui/lab/TabContext";
+import TabList from "@mui/lab/TabList";
+import TabPanel from "@mui/lab/TabPanel";
+import { JobStatsCard } from "./JobStatsCards";
+import AssignmentIcon from "@mui/icons-material/Assignment";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import ThumbDownIcon from "@mui/icons-material/ThumbDown";
+import PostAddIcon from "@mui/icons-material/PostAdd";
+import MobileFriendlyIcon from "@mui/icons-material/MobileFriendly";
+import CustomModal from "../../common/Modal/CustomModal/CustomModal";
+import { JobStatsModal } from "./JobStatsModal";
+import leadsStatusesStore from "../../store/Leads/statuses-store";
+import { CustomDataGrid } from "../../common/CustomDataGrid/custom-data-grid";
 
 export const JobStats = () => {
   const location = useLocation();
@@ -32,7 +47,18 @@ export const JobStats = () => {
     setRowsPerPage,
     setPage,
     isLoading,
+    deleteJobLead,
+    new_status,
+    updateJobLead,
   }: any = jobStatsStore();
+
+  const { getStatus }: any = leadsStatusesStore();
+  const [ idLeadJob, setIdLeadJob ]: any = useState(undefined);
+  const [value, setValue] = useState("1");
+  const [isOpen, setIsOpen] = useState(false);
+  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+    setValue(newValue);
+  };
 
   useEffect(() => {
     if (!activeJob) {
@@ -43,22 +69,23 @@ export const JobStats = () => {
     };
   }, []);
 
-
-
   useEffect(() => {
     if (activeJob) {
       getJobById();
       getJobLeadsById();
+      getStatus(0, 50);
     }
   }, [activeJob]);
 
   useEffect(() => {
-    setSecontToolbarMessage(`JOB LEADS / ${jobLeadsById[0]?.job.job_name.toUpperCase() || ''}`);
+    setSecontToolbarMessage(
+      `JOB LEADS / ${jobLeadsById[0]?.job.job_name.toUpperCase() || ""}`
+    );
     setSecontToolbarPath("Stats");
-  }, [jobLeadsById, getJobLeadsById])
+  }, [jobLeadsById, getJobLeadsById]);
 
   const handleSearchInputChange = (event: any) => {
-    setSearchValue(event.target.value)
+    setSearchValue(event.target.value);
     if (!event?.target.value) {
       getJobLeadsById();
     }
@@ -79,6 +106,52 @@ export const JobStats = () => {
     await getJobLeadsById();
   };
 
+  const handleUpdateJobStatusClick = (id: number, row: any) => {
+    setIdLeadJob(id);
+    setKey("new_status", row.lead_status.lead_status_id);
+    setIsOpen(true);
+
+  };
+
+  const handleDeleteClick = async (id: number) => {
+    await deleteJobLead(activeJob, id);
+    await getJobLeadsById();
+  };
+
+  const createOrder = (id: number) => {};
+
+  const createMobileOrder = (id: number) => {};
+
+  const onCloseFct = () => {
+    setIsOpen(false);
+  };
+
+  const updateStatus = async () => {
+    await updateJobLead(activeJob, idLeadJob, new_status)
+    setIsOpen(false);
+    await getJobLeadsById();
+  }
+
+  const getCellClassName = (params: any) => {
+  }
+
+  const getRowClassName = (params: any) => {
+    const { lead_status_id } = params.row.lead_status;
+
+    const greenStatuses = [4, 5];
+  
+    if (greenStatuses.includes(lead_status_id)) {
+      return "row-green";
+    }
+  
+    const grayStatuses = [1, 4, 5];
+    if (!grayStatuses.includes(lead_status_id)) {
+      return "row-gray";
+    }
+  
+    return '';
+  }
+
   const columns: GridColDef<(typeof jobById)[number]>[] = [
     { field: "created_time", headerName: "Created time", width: 250 },
     { field: "updated_time", headerName: "Updated time", width: 250 },
@@ -97,6 +170,19 @@ export const JobStats = () => {
     },
     { field: "lead_id", headerName: "Lead", width: 200 },
     {
+      field: "mobile_deal_success",
+      headerName: "Mobile deal success",
+      width: 100,
+      renderCell: (params: any) => {
+        const { row } = params;
+        return row.mobile_deal_success ? (
+          <ThumbUpIcon fontSize="small" />
+        ) : (
+          <ThumbDownIcon fontSize="small" />
+        );
+      },
+    },
+    {
       field: "lead_status",
       headerName: "Lead status",
       width: 200,
@@ -105,7 +191,75 @@ export const JobStats = () => {
         return <Typography>{row.lead_status.status_name}</Typography>;
       },
     },
+    {
+      field: "actions",
+      type: "actions",
+      width: 150,
+      editable: false,
+      renderHeader: (params: any) => <strong>{"Actions "}</strong>,
+      filterable: false,
+      cellClassName: "pinned-column",
+      headerClassName: "MuiDataGrid-columnHeader--pinned",
+      getActions: (params: any) => {
+        const { id, row } = params;
+        if (id) {
+          return [
+            <GridActionsCellItem
+              icon={<AssignmentIcon />}
+              label="Update Lead Job Status"
+              title="Update Lead Job Status"
+              key={id}
+              disabled={jobById.job_status === "close"}
+              // sx={{
+              //   color: "black",
+              // }}
+              className="textPrimary"
+              onClick={() => handleUpdateJobStatusClick(id, row)}
+            />,
+            <GridActionsCellItem
+              icon={<PostAddIcon />}
+              label="Create order"
+              title="Create order"
+              key={id}
+              disabled
+              sx={{
+                color: "blue",
+              }}
+              className="textPrimary"
+              onClick={() => createOrder(id)}
+            />,
+            <GridActionsCellItem
+              icon={<MobileFriendlyIcon />}
+              label="Create mobile order"
+              title="Create mobile order"
+              key={id}
+              disabled
+              sx={{
+                color: "green",
+              }}
+              className="textPrimary"
+              onClick={() => createMobileOrder(id)}
+            />,
+
+            <GridActionsCellItem
+              icon={<DeleteForeverIcon />}
+              label="Delete"
+              title="Delete"
+              key={id}
+              sx={{
+                color: "red",
+              }}
+              className="textPrimary"
+              onClick={() => handleDeleteClick(id)}
+              disabled={jobById.job_status === "close"}
+            />,
+          ];
+        }
+        return [];
+      },
+    },
   ];
+
   return (
     <PageContainer>
       {jobById && jobById.leads_user_info && (
@@ -115,418 +269,92 @@ export const JobStats = () => {
           justifyContent="center"
           sx={{ background: "#f2f2f7", width: "100%" }}
         >
-          {/* Card 1 */}
-          <Grid2>
-            <Card
-              sx={{
-                transition: "all 0.4s",
-                boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
-                "&:hover": {
-                  boxShadow: "0px 8px 20px rgba(0, 0, 0, 0.2)",
-                  transform: "translateY(-2px)",
-                },
-                width: "335px",
-                height: "120px",
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                padding: "16px",
-              }}
-            >
-              {/* Conținutul din stânga */}
-              <Box>
-                <Typography
-                  variant="body1"
-                  sx={{
-                    fontWeight: "medium",
-                    color: "#333",
-                    marginBottom: "8px",
-                  }}
-                >
-                  Total
-                </Typography>
-                <Typography
-                  variant="h4"
-                  sx={{
-                    fontWeight: "bold",
-                    color: "#333",
-                  }}
-                >
-                  {jobById.total_leads}
-                </Typography>
-                <Typography
-                  variant="body2"
-                  sx={{
-                    color: "#666",
-                  }}
-                >
-                  employee: {jobById.leads_user_info.total_leads_user}
-                </Typography>
-              </Box>
-
-              {/* Iconul din dreapta */}
-              <Box
-                sx={{
-                  backgroundColor: "#eaeafd8a", // Roz pal
-                  borderRadius: "8px",
-                  padding: "8px",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <SupervisedUserCircleIcon
-                  sx={{ fontSize: 30, fontWeight: "medium" }}
-                />{" "}
-                {/* Icon roșu */}
-              </Box>
-            </Card>
-          </Grid2>
-
-          {/* Card 2 */}
-
-          <Grid2>
-            <Card
-              sx={{
-                transition: "all 0.4s",
-                boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
-                "&:hover": {
-                  boxShadow: "0px 8px 20px rgba(0, 0, 0, 0.2)",
-                  transform: "translateY(-2px)",
-                },
-                width: "335px",
-                height: "120px",
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                padding: "16px",
-              }}
-            >
-              {/* Conținutul din stânga */}
-              <Box>
-                <Typography
-                  variant="body1"
-                  color={"#856404"}
-                  sx={{
-                    fontWeight: "medium",
-                    color: "#5a5a5a",
-                    marginBottom: "8px",
-                  }}
-                >
-                  Open
-                </Typography>
-                <Typography
-                  variant="h4"
-                  sx={{
-                    fontWeight: "bold",
-                    color: "#333",
-                  }}
-                >
-                  {jobById.open_leads}
-                </Typography>
-                <Typography
-                  variant="body2"
-                  sx={{
-                    color: "#666",
-                  }}
-                >
-                  employee: {jobById.leads_user_info.open_leads_user}
-                </Typography>
-              </Box>
-
-              {/* Iconul din dreapta */}
-              <Box
-                sx={{
-                  backgroundColor: "#eaf1fd", // Roz pal
-                  borderRadius: "8px",
-                  padding: "8px",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <PlayCircleOutlineIcon
-                  sx={{ fontSize: 30, fontWeight: "medium", color: "#5a5a5a" }}
-                />{" "}
-                {/* Icon roșu */}
-              </Box>
-            </Card>
-          </Grid2>
-
-          {/* Card 3 */}
-          <Grid2>
-            <Card
-              sx={{
-                transition: "all 0.4s",
-                boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
-                "&:hover": {
-                  boxShadow: "0px 8px 20px rgba(0, 0, 0, 0.2)",
-                  transform: "translateY(-2px)",
-                },
-                width: "335px",
-                height: "120px",
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                padding: "16px",
-              }}
-            >
-              {/* Conținutul din stânga */}
-              <Box>
-                <Typography
-                  variant="body1"
-                  color={"#856404"}
-                  sx={{
-                    fontWeight: "medium",
-                    color: "#155724",
-                    marginBottom: "8px",
-                  }}
-                >
-                  Success
-                </Typography>
-                <Typography
-                  variant="h4"
-                  sx={{
-                    fontWeight: "bold",
-                    color: "#155724",
-                  }}
-                >
-                  {jobById.success_leads}
-                </Typography>
-                <Typography
-                  variant="body2"
-                  sx={{
-                    color: "#666",
-                  }}
-                >
-                  employee: {jobById.leads_user_info.success_leads_user}
-                </Typography>
-              </Box>
-
-              {/* Iconul din dreapta */}
-              <Box
-                sx={{
-                  backgroundColor: "#e5f9df", // Roz pal
-                  borderRadius: "8px",
-                  padding: "8px",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <CheckCircleOutlineIcon
-                  sx={{ fontSize: 30, fontWeight: "medium", color: "#155724" }}
-                />{" "}
-                {/* Icon roșu */}
-              </Box>
-            </Card>
-          </Grid2>
-
-          {/* Card 4 */}
-
-          <Grid2>
-            <Card
-              sx={{
-                transition: "all 0.4s",
-                boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
-                "&:hover": {
-                  boxShadow: "0px 8px 20px rgba(0, 0, 0, 0.2)",
-                  transform: "translateY(-2px)",
-                },
-                width: "335px",
-                height: "120px",
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                padding: "16px",
-              }}
-            >
-              {/* Conținutul din stânga */}
-              <Box>
-                <Typography
-                  variant="body1"
-                  color={"#856404"}
-                  sx={{
-                    fontWeight: "medium",
-                    color: "red",
-                    marginBottom: "8px",
-                  }}
-                >
-                  Closed
-                </Typography>
-                <Typography
-                  variant="h4"
-                  sx={{
-                    fontWeight: "bold",
-                    color: "#333",
-                  }}
-                >
-                  {jobById.closed_leads}
-                </Typography>
-                <Typography
-                  variant="body2"
-                  sx={{
-                    color: "#666",
-                  }}
-                >
-                  employee: {jobById.leads_user_info.closed_leads_user}
-                </Typography>
-              </Box>
-
-              {/* Iconul din dreapta */}
-              <Box
-                sx={{
-                  backgroundColor: "#fdecea", // Roz pal
-                  borderRadius: "8px",
-                  padding: "8px",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <BlockIcon
-                  sx={{ fontSize: 30, fontWeight: "medium", color: "red" }}
-                />{" "}
-                {/* Icon roșu */}
-              </Box>
-            </Card>
-          </Grid2>
-
-           {/* Card 5 */}
-
-           <Grid2>
-            <Card
-              sx={{
-                transition: "all 0.4s",
-                boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
-                "&:hover": {
-                  boxShadow: "0px 8px 20px rgba(0, 0, 0, 0.2)",
-                  transform: "translateY(-2px)",
-                },
-                width: "335px",
-                height: "120px",
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                padding: "16px",
-              }}
-            >
-              {/* Conținutul din stânga */}
-              <Box>
-                <Typography
-                  variant="body1"
-                  color={"#856404"}
-                  sx={{
-                    fontWeight: "medium",
-                    color: "#1976d280",
-                    marginBottom: "8px",
-                  }}
-                >
-                  Mobile
-                </Typography>
-                <Typography
-                  variant="h4"
-                  sx={{
-                    fontWeight: "bold",
-                    color: "#333",
-                  }}
-                >
-                  {jobById.mobile_deals_success}
-                </Typography>
-                <Typography
-                  variant="body2"
-                  sx={{
-                    color: "#666",
-                  }}
-                >
-                  mobile: {jobById.leads_user_info.mobile_deals_success_user}
-                </Typography>
-              </Box>
-
-              {/* Iconul din dreapta */}
-              <Box
-                sx={{
-                  backgroundColor: "#d2e3f480", // Roz pal
-                  borderRadius: "8px",
-                  padding: "8px",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <PhoneAndroidIcon
-                  sx={{ fontSize: 30, fontWeight: "medium", color: "#1976d280" }}
-                />{" "}
-                {/* Icon roșu */}
-              </Box>
-            </Card>
-          </Grid2>
+          <JobStatsCard />
 
           <Grid2 size={12}>
             <Card sx={{ marginTop: "15px" }}>
               <CardContent>
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    paddingBottom: 2,
-                  }}
-                >
-                  <SearchInput
-                    onChange={(event: any) => {
-                      handleSearchInputChange(event);
-                    }}
-                    onKeyDown={(
-                      event: React.KeyboardEvent<HTMLInputElement>
-                    ) => {
-                      if (event.key === "Enter") {
-                        event.preventDefault();
-                        getJobLeadsById();
-                      }
-                    }}
-                  />
-                </Box>
+                <TabContext value={value}>
+                  <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                    <TabList
+                      onChange={handleChange}
+                      aria-label="lab API tabs example"
+                    >
+                      <Tab label="List" value="1" />
+                      <Tab label="Play" value="2" />
+                    </TabList>
+                  </Box>
+                  <TabPanel value="1">
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        paddingBottom: 2,
+                      }}
+                    >
+                      <SearchInput
+                        onChange={(event: any) => {
+                          handleSearchInputChange(event);
+                        }}
+                        onKeyDown={(
+                          event: React.KeyboardEvent<HTMLInputElement>
+                        ) => {
+                          if (event.key === "Enter") {
+                            event.preventDefault();
+                            getJobLeadsById();
+                          }
+                        }}
+                      />
+                    </Box>
 
-                <DataGrid
-                  rows={jobLeadsById}
-                  rowCount={counter_job_leads}
-                  columns={columns}
-                  initialState={{
-                    pagination: {
-                      paginationModel: {
-                        pageSize: 10,
-                      },
-                    },
-                  }}
-                  pageSizeOptions={[5, 10, 25, 50]}
-                  onPaginationModelChange={(model: any) => {
-                    //   handleChangeRowsPerPage(model);
-                    //   handleChangePage(model);
-                    if (model.pageSize !== pagination.pageSize) {
-                      handleChangeRowsPerPage(model);
-                    }
-                    if (model.page !== pagination.page) {
-                      handleChangePage(model);
-                    }
-                  }}
-                  // rowCount={count}
-                  disableRowSelectionOnClick
-                  disableVirtualization
-                  paginationMode="server"
-                  pagination
-                  loading={isLoading}
-                />
+                    <CustomDataGrid
+                      rows={jobLeadsById}
+                      rowCount={counter_job_leads}
+                      columns={columns}
+                      initialState={{
+                        pagination: {
+                          paginationModel: {
+                            pageSize: 10,
+                          },
+                        },
+                      }}
+                      pageSizeOptions={[5, 10, 25, 50]}
+                      onPaginationModelChange={(model: any) => {
+                        //   handleChangeRowsPerPage(model);
+                        //   handleChangePage(model);
+                        if (model.pageSize !== pagination.pageSize) {
+                          handleChangeRowsPerPage(model);
+                        }
+                        if (model.page !== pagination.page) {
+                          handleChangePage(model);
+                        }
+                      }}
+                      // rowCount={count}
+                      disableRowSelectionOnClick
+                      disableVirtualization
+                      paginationMode="server"
+                      pagination
+                      loading={isLoading}
+                      getCellClassName={getCellClassName}
+                      getRowClassName={getRowClassName}
+                    />
+                  </TabPanel>
+                  <TabPanel value="2">PlayScreen</TabPanel>
+                </TabContext>
               </CardContent>
             </Card>
           </Grid2>
-          
         </Grid2>
+      )}
+      {isOpen && (
+        <CustomModal
+          isOpen={isOpen}
+          onClose={onCloseFct}
+          title="Change status lead job"
+        >
+          <JobStatsModal updateStatus={updateStatus}/>
+        </CustomModal>
       )}
     </PageContainer>
   );
