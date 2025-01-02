@@ -27,6 +27,8 @@ import { JobStatsModal } from "./JobStatsModal";
 import leadsStatusesStore from "../../store/Leads/statuses-store";
 import { CustomDataGrid } from "../../common/CustomDataGrid/custom-data-grid";
 import { ConfirmationModal } from "../../common/Modal/ConfirmationDialog/ConfirmationDialog";
+import ScreenNavigation from "./JobScreenNavigation";
+import ScreenNavigationWithGrid from "./JobScreenNavigation";
 
 export const JobStats = () => {
   const location = useLocation();
@@ -54,11 +56,12 @@ export const JobStats = () => {
   }: any = jobStatsStore();
 
   const { getStatus }: any = leadsStatusesStore();
-  const [ idLeadJob, setIdLeadJob ]: any = useState(undefined);
+  const [idLeadJob, setIdLeadJob]: any = useState(undefined);
   const [value, setValue] = useState("1");
   const [isOpen, setIsOpen] = useState(false);
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
-  const [idLeadJobConfirmation, setIdLeadJobConfirmation]: any = useState(undefined);
+  const [idLeadJobConfirmation, setIdLeadJobConfirmation]: any =
+    useState(undefined);
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
@@ -113,7 +116,6 @@ export const JobStats = () => {
     setIdLeadJob(id);
     setKey("new_status", row.lead_status.lead_status_id);
     setIsOpen(true);
-
   };
 
   const handleDeleteClick = async (id: number) => {
@@ -132,41 +134,40 @@ export const JobStats = () => {
   };
 
   const updateStatus = async () => {
-    await updateJobLead(activeJob, idLeadJob, new_status)
+    await updateJobLead(activeJob, idLeadJob, new_status);
     setIsOpen(false);
     await getJobById();
     await getJobLeadsById();
-  }
+  };
 
-  const getCellClassName = (params: any) => {
-  }
+  const getCellClassName = (params: any) => {};
 
   const getRowClassName = (params: any) => {
     const { lead_status_id } = params.row.lead_status;
 
     const greenStatuses = [4, 5];
-  
+
     if (greenStatuses.includes(lead_status_id)) {
       return "row-green";
     }
-  
+
     const grayStatuses = [1, 4, 5];
     if (!grayStatuses.includes(lead_status_id)) {
       return "row-gray";
     }
-  
-    return '';
-  }
+
+    return "";
+  };
 
   const handleCloseConfirmationModal = () => {
     setIsConfirmationOpen(false);
-  }
+  };
 
   const handleSaveConfirmationModal = async () => {
     await deleteJobLead(activeJob, idLeadJobConfirmation);
     await getJobLeadsById();
     setIsConfirmationOpen(false);
-  }
+  };
 
   const columns: GridColDef<(typeof jobById)[number]>[] = [
     { field: "created_time", headerName: "Created time", width: 250 },
@@ -276,6 +277,25 @@ export const JobStats = () => {
     },
   ];
 
+  const [currentId, setCurrentId] = useState(1);
+  const totalButtons = 9;
+
+  const handleNext = () => {
+    if (currentId < totalButtons) {
+      setCurrentId(currentId + 1);
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentId > 1) {
+      setCurrentId(currentId - 1);
+    }
+  };
+
+  const handleButtonClick = (id: any) => {
+    setCurrentId(id);
+  };
+
   return (
     <PageContainer>
       {jobById && jobById.leads_user_info && (
@@ -356,7 +376,17 @@ export const JobStats = () => {
                       getRowClassName={getRowClassName}
                     />
                   </TabPanel>
-                  <TabPanel value="2">PlayScreen</TabPanel>
+
+                  {/* play screen */}
+                  <TabPanel value="2">
+                    <ScreenNavigationWithGrid
+                      currentId={currentId}
+                      totalButtons={totalButtons}
+                      onNext={handleNext}
+                      onPrevious={handlePrevious}
+                      onButtonClick={handleButtonClick}
+                    />
+                  </TabPanel>
                 </TabContext>
               </CardContent>
             </Card>
@@ -369,19 +399,19 @@ export const JobStats = () => {
           onClose={onCloseFct}
           title="Change status lead job"
         >
-          <JobStatsModal updateStatus={updateStatus}/>
+          <JobStatsModal updateStatus={updateStatus} />
         </CustomModal>
       )}
 
-       {isConfirmationOpen && (
-          <ConfirmationModal
-            open={isConfirmationOpen}
-            onClose={handleCloseConfirmationModal}
-            onConfirm={handleSaveConfirmationModal}
-            message="Are you sure you want to delete this job?"
-            btnName="Save"
-          />
-        )}
+      {isConfirmationOpen && (
+        <ConfirmationModal
+          open={isConfirmationOpen}
+          onClose={handleCloseConfirmationModal}
+          onConfirm={handleSaveConfirmationModal}
+          message="Are you sure you want to delete this job?"
+          btnName="Save"
+        />
+      )}
     </PageContainer>
   );
 };
