@@ -76,7 +76,7 @@ export const JobStats = () => {
     if (activeJob) {
       getJobById();
       getJobLeadsById();
-      getStatus(0, 50);
+      getStatus(0, 50, true);
     }
   }, [activeJob]);
 

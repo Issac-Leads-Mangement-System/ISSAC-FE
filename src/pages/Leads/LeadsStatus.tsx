@@ -144,7 +144,7 @@ const LeadsStatus = () => {
       cellClassName: "pinned-column",
       headerClassName: "MuiDataGrid-columnHeader--pinned",
       getActions: (params: any) => {
-        const { id } = params;
+        const { id, row } = params;
         if (id) {
           return [
             <GridActionsCellItem
@@ -155,6 +155,7 @@ const LeadsStatus = () => {
                 color: "black",
               }}
               className="textPrimary"
+              disabled={!row.status_is_editable}
               onClick={() => handleEditClick(id)}
             />,
             <GridActionsCellItem
@@ -166,6 +167,7 @@ const LeadsStatus = () => {
               }}
               className="textPrimary"
               onClick={() => handleDeleteClick(id)}
+              disabled={!row.status_is_editable}
             />,
           ];
         }

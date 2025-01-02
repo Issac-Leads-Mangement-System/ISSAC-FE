@@ -28,19 +28,22 @@ const leadsStatusesStore = create<LeadsTypesState>((set) => ({
   setSearchValue: (value: string) => set({ searchValue: value }),
   setActiveFilters: (value: string, key: string) =>
     set({ activate_filters: { [key]: value } }),
-  getStatus: async (page: number, limit: number) => {
+  getStatus: async (page: number, limit: number, isFilter: boolean = false) => {
     const { searchValue, activate_filters } = leadsStatusesStore.getState();
     const { showNotification } = useNotificationStore.getState();
 
     set({ isLoading: true });
 
     try {
-      const response = await api.get(
+      const response = await api.post(
         `${process.env.REACT_APP_BASE_URL}/leads/statuses?page=${
           page + 1
         }&limit=${limit}&search=${searchValue}&status_name=${
           activate_filters.status_name
-        }`
+        }`,
+        {
+          status_is_editable: isFilter ? [true] : [],
+        }
       );
       set({ statuses: response.data });
       set({ count: response.data.length });

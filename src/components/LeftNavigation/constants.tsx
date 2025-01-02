@@ -7,24 +7,23 @@ import SignalWifiStatusbar4BarIcon from "@mui/icons-material/SignalWifiStatusbar
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import WorkIcon from "@mui/icons-material/Work";
 import FeaturedPlayListIcon from "@mui/icons-material/FeaturedPlayList";
+import GradingIcon from "@mui/icons-material/Grading";
+import InventoryIcon from "@mui/icons-material/Inventory";
+import HomeIcon from "@mui/icons-material/Home";
 
 const menus = [
   {
-    name: "Users",
-    icon: <Groups3Icon />,
-    children: [
-      {
-        name: "List",
-        icon: <ManageAccountsIcon />,
-        route: "/users",
-      },
-      {
-        name: "Teams",
-        icon: <GroupWorkIcon />,
-        route: "/team",
-      },
-    ],
+    name: "Home",
+    icon: <HomeIcon />,
+    router: "/home",
   },
+
+  {
+    name: "Jobs",
+    icon: <WorkIcon />,
+    route: "/jobs",
+  },
+
   {
     name: "Leads",
     icon: <InterpreterModeIcon />,
@@ -46,17 +45,39 @@ const menus = [
       },
     ],
   },
+
   {
-    name: "Jobs",
-    icon: <WorkIcon />,
-    route: "/jobs",
-    // children: [
-    //   {
-    //     name: "Job",
-    //     icon: <FeaturedPlayListIcon />,
-    //     route: "/jobs",
-    //   },
-    // ],
+    name: "Orders",
+    icon: <GradingIcon />,
+    children: [
+      {
+        name: "List",
+        icon: <ListAltIcon />,
+        route: "/orders/list",
+      },
+      {
+        name: "Types",
+        icon: <InventoryIcon />,
+        route: "/orders/package-type",
+      },
+    ],
+  },
+
+  {
+    name: "Users",
+    icon: <Groups3Icon />,
+    children: [
+      {
+        name: "List",
+        icon: <ManageAccountsIcon />,
+        route: "/users",
+      },
+      {
+        name: "Teams",
+        icon: <GroupWorkIcon />,
+        route: "/team",
+      },
+    ],
   },
 ];
 
