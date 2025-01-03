@@ -1,5 +1,7 @@
-import React from "react";
-import { Box, Button, Typography, Grid } from "@mui/material";
+import React, { useState } from "react";
+import { Box, Button, Typography, Grid, IconButton, Tooltip } from "@mui/material";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import UserChipsExample from "./JobScreenNavigationUserInfo";
 
 const ScreenNavigationWithGrid = ({
   currentId,
@@ -7,7 +9,18 @@ const ScreenNavigationWithGrid = ({
   onNext,
   onPrevious,
   onButtonClick,
+  isPreviousButtonDisabled,
+  isNextButtonDisabled,
 }: any) => {
+  const [tooltipText, setTooltipText] = useState("Copy to clipboard");
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(currentId).then(() => {
+      setTooltipText("Copied!");
+      setTimeout(() => setTooltipText("Copy to clipboard"), 2000);
+    });
+  };
+
   return (
     <Box
       sx={{
@@ -20,6 +33,7 @@ const ScreenNavigationWithGrid = ({
         backgroundColor: "#f9fafc",
       }}
     >
+      <UserChipsExample/>
       {/* Header cu butoanele Previous și Next */}
       <Box
         sx={{
@@ -35,12 +49,12 @@ const ScreenNavigationWithGrid = ({
           variant="outlined"
           color="primary"
           onClick={onPrevious}
-          disabled={currentId === 1}
+          disabled={isPreviousButtonDisabled}
           sx={{ minWidth: "120px" }}
         >
           Previous
         </Button>
-        <Typography
+        {/* <Typography
           variant="h6"
           sx={{
             textAlign: "center",
@@ -49,12 +63,46 @@ const ScreenNavigationWithGrid = ({
           }}
         >
           ID: {currentId}
-        </Typography>
+        </Typography> */}
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "8px 12px",
+            border: "1px solid #ddd",
+            borderRadius: "8px",
+            backgroundColor: "#f9f9f9",
+            width: "fit-content",
+          }}
+        >
+          <Typography
+            variant="body1"
+            sx={{
+              fontWeight: "bold",
+              color: "#333",
+            }}
+          >
+            {currentId}
+          </Typography>
+          <Tooltip title={tooltipText} arrow>
+            <IconButton
+              onClick={handleCopy}
+              size="small"
+              sx={{
+                marginLeft: "8px",
+                color: "#555",
+              }}
+            >
+              <ContentCopyIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+        </Box>
         <Button
           variant="outlined"
           color="primary"
           onClick={onNext}
-          disabled={currentId === totalButtons}
+          disabled={isNextButtonDisabled}
           sx={{ minWidth: "120px" }}
         >
           Next
@@ -84,7 +132,21 @@ const ScreenNavigationWithGrid = ({
           Select an Option
         </Typography>
         <Grid container spacing={2}>
-          {Array.from({ length: totalButtons }).map((_, index) => (
+          <Grid item xs={4}>
+            <Button
+              variant="contained"
+              color={"primary"}
+              fullWidth
+              onClick={() => onButtonClick()}
+              sx={{
+                fontWeight: "bold",
+                borderRadius: "8px",
+              }}
+            >
+              Button
+            </Button>
+          </Grid>
+          {/* {Array.from({ length: totalButtons }).map((_, index) => (
             <Grid item xs={4} key={index}>
               <Button
                 variant="contained"
@@ -99,7 +161,7 @@ const ScreenNavigationWithGrid = ({
                 Button {index + 1}
               </Button>
             </Grid>
-          ))}
+          ))} */}
         </Grid>
       </Box>
     </Box>

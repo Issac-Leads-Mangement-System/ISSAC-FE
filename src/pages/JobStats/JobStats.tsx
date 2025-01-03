@@ -40,6 +40,7 @@ import { filterBtnStyle } from "../../common/constants";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import Filters from "../../components/Filters/filters";
 import { FilterJobStats } from "../../common/forms-filters/FilterJobStats";
+import ListAltIcon from "@mui/icons-material/ListAlt";
 
 export const JobStats = () => {
   const location = useLocation();
@@ -73,9 +74,17 @@ export const JobStats = () => {
   const [value, setValue] = useState("1");
   const [isOpen, setIsOpen] = useState(false);
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
+  // playscreen
   const [idLeadJobConfirmation, setIdLeadJobConfirmation]: any =
     useState(undefined);
+  const [currentId, setCurrentId] = useState(undefined);
+  const [disabledPreviousButton, setDisabledPreviousButton] = useState(true);
+  const [disabledNextButton, setIsDisabledNextButton] = useState(false);
+
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+    if (newValue === "2") {
+      setIdLeadJobConfirmation(jobLeadsById[0].lead_id);
+    }
     setValue(newValue);
   };
 
@@ -241,7 +250,7 @@ export const JobStats = () => {
     {
       field: "actions",
       type: "actions",
-      width: 150,
+      width: 200,
       editable: false,
       renderHeader: (params: any) => <strong>{"Actions "}</strong>,
       filterable: false,
@@ -251,6 +260,19 @@ export const JobStats = () => {
         const { id, row } = params;
         if (id) {
           return [
+            <GridActionsCellItem
+              icon={<PlayCircleOutlineIcon />}
+              label="Delete"
+              title="Delete"
+              key={id}
+              sx={{
+                color: "green",
+              }}
+              className="textPrimary"
+              onClick={() => playScreen(row.lead_id)}
+              disabled={jobById.job_status === "close"}
+            />,
+
             <GridActionsCellItem
               icon={<AssignmentIcon />}
               label="Update Lead Job Status"
@@ -306,24 +328,57 @@ export const JobStats = () => {
       },
     },
   ];
-
-  const [currentId, setCurrentId] = useState(1);
   const totalButtons = 9;
 
   const handleNext = () => {
-    if (currentId < totalButtons) {
-      setCurrentId(currentId + 1);
+    const findIndexCurrentJob = jobLeadsById.findIndex(
+      (job: any) => job.lead_id === idLeadJobConfirmation
+    );
+    if (jobLeadsById[findIndexCurrentJob + 1]) {
+      setIdLeadJobConfirmation(jobLeadsById[findIndexCurrentJob + 1].lead_id);
     }
   };
 
-  const handlePrevious = () => {
-    if (currentId > 1) {
-      setCurrentId(currentId - 1);
+  const isPreviousButtonDisabled = (() => {
+    const findIndexCurrentJob = jobLeadsById.findIndex(
+      (job: any) => job.lead_id === idLeadJobConfirmation
+    );
+    if (jobLeadsById[findIndexCurrentJob - 1]) {
+      return false;
+    } else {
+      return true;
     }
+  })();
+
+  const isNextButtonDisabled = (() => {
+    const findIndexCurrentJob = jobLeadsById.findIndex(
+      (job: any) => job.lead_id === idLeadJobConfirmation
+    );
+    if (jobLeadsById[findIndexCurrentJob + 1]) {
+      return false;
+    } else {
+      return true;
+    }
+  })();
+
+  const handlePrevious = () => {
+    const findIndexCurrentJob = jobLeadsById.findIndex(
+      (job: any) => job.lead_id === idLeadJobConfirmation
+    );
+    if (jobLeadsById[findIndexCurrentJob - 1]) {
+      setIdLeadJobConfirmation(jobLeadsById[findIndexCurrentJob - 1].lead_id);
+    }
+  };
+
+  const playScreen = (lead_id: any) => {
+    console.log("zzz lead", lead_id);
+    setIdLeadJobConfirmation(lead_id);
+    setValue("2");
   };
 
   const handleButtonClick = (id: any) => {
-    setCurrentId(id);
+    // setCurrentId(id);
+    console.log("zzz id", id);
   };
 
   return (
@@ -346,8 +401,28 @@ export const JobStats = () => {
                       onChange={handleChange}
                       aria-label="lab API tabs example"
                     >
-                      <Tab label="List" value="1" />
-                      <Tab label="Play" value="2" />
+                      <Tab
+                        label="List"
+                        value="1"
+                        icon={<ListAltIcon fontSize="small" />}
+                        iconPosition="start"
+                        sx={{
+                          minHeight: 40,
+                          padding: "0 8px",
+                          gap: "4px", 
+                        }}
+                      />
+                      <Tab
+                        label="Play"
+                        value="2"
+                        icon={<PlayCircleOutlineIcon fontSize="small" />}
+                        iconPosition="start"
+                        sx={{
+                          minHeight: 40, 
+                          padding: "0 8px",
+                          gap: "4px", 
+                        }}
+                      />
                     </TabList>
                   </Box>
                   <TabPanel value="1">
@@ -422,11 +497,13 @@ export const JobStats = () => {
                   {/* play screen */}
                   <TabPanel value="2">
                     <ScreenNavigationWithGrid
-                      currentId={currentId}
+                      currentId={idLeadJobConfirmation}
                       totalButtons={totalButtons}
                       onNext={handleNext}
                       onPrevious={handlePrevious}
                       onButtonClick={handleButtonClick}
+                      isPreviousButtonDisabled={isPreviousButtonDisabled}
+                      isNextButtonDisabled={isNextButtonDisabled}
                     />
                   </TabPanel>
                 </TabContext>
