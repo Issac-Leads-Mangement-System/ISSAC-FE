@@ -11,6 +11,11 @@ interface IJobsState {
   pagination: any;
   isLoading: boolean;
   new_status: any;
+  filters: {
+    lead_status_id: number[];
+    user_id: number[];
+    mobile_deal_success: boolean[];
+  }
 }
 
 const jobStatsStore = create<IJobsState>((set) => ({
@@ -22,6 +27,11 @@ const jobStatsStore = create<IJobsState>((set) => ({
   pagination: {
     pageSize: 10,
     page: 0,
+  },
+  filters: {
+    lead_status_id: [],
+    user_id: [],
+    mobile_deal_success: []
   },
   isLoading: false,
   new_status: "",
@@ -47,11 +57,12 @@ const jobStatsStore = create<IJobsState>((set) => ({
   getJobLeadsById: async () => {
     try {
       set({ isLoading: true });
-      const { activeJob, searchValue, pagination } = jobStatsStore.getState();
+      const { activeJob, searchValue, pagination, filters } = jobStatsStore.getState();
       const response = await api.post(
         `${process.env.REACT_APP_BASE_URL}/jobs/${activeJob}/leads?page=${
           pagination.page + 1
-        }&limit=${pagination.pageSize}&search=${searchValue}`
+        }&limit=${pagination.pageSize}&search=${searchValue}`,
+        filters
       );
       set({
         jobLeadsById: response.data.job_leads_response,
@@ -127,6 +138,21 @@ const jobStatsStore = create<IJobsState>((set) => ({
       set({ isLoading: false });
     }
   },
+
+  setActiveFilters: (ids: any, key: string) =>
+    set((state) => ({
+      filters: {
+        ...state.filters,
+        [key]: Array.from(new Set(ids)), // Elimină duplicatele
+      },
+    })),
+  resetFilters: () => {
+    set({filters: {
+      lead_status_id: [],
+      user_id: [],
+      mobile_deal_success: []
+    }})
+  }
 }));
 
 export default jobStatsStore;
