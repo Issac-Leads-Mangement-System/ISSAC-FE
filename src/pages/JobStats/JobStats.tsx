@@ -1,7 +1,14 @@
 import { useEffect, useState } from "react";
 import { PageContainer } from "../../common/PageContainer/page-container";
 import secondToolbarStore from "../../store/SecondToolbar/second-tollbar-store";
-import { Box, Card, CardContent, Grid2, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Grid2,
+  Typography,
+} from "@mui/material";
 import { SearchInput } from "../../common/Input/SearchInput";
 import jobStatsStore from "../../store/Jobs/job-stats-store";
 import { useLocation } from "react-router-dom";
@@ -29,6 +36,10 @@ import { CustomDataGrid } from "../../common/CustomDataGrid/custom-data-grid";
 import { ConfirmationModal } from "../../common/Modal/ConfirmationDialog/ConfirmationDialog";
 import ScreenNavigation from "./JobScreenNavigation";
 import ScreenNavigationWithGrid from "./JobScreenNavigation";
+import { filterBtnStyle } from "../../common/constants";
+import FilterListIcon from "@mui/icons-material/FilterList";
+import Filters from "../../components/Filters/filters";
+import { FilterJobStats } from "../../common/forms-filters/FilterJobStats";
 
 export const JobStats = () => {
   const location = useLocation();
@@ -53,10 +64,12 @@ export const JobStats = () => {
     deleteJobLead,
     new_status,
     updateJobLead,
+    resetFilters,
   }: any = jobStatsStore();
 
   const { getStatus }: any = leadsStatusesStore();
   const [idLeadJob, setIdLeadJob]: any = useState(undefined);
+  const [isFilterOpen, setIsFilterOpen]: any = useState(false);
   const [value, setValue] = useState("1");
   const [isOpen, setIsOpen] = useState(false);
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
@@ -79,7 +92,7 @@ export const JobStats = () => {
     if (activeJob) {
       getJobById();
       getJobLeadsById();
-      getStatus(0, 50);
+      getStatus(0, 50, true);
     }
   }, [activeJob]);
 
@@ -121,8 +134,6 @@ export const JobStats = () => {
   const handleDeleteClick = async (id: number) => {
     setIdLeadJobConfirmation(id);
     setIsConfirmationOpen(true);
-    // await deleteJobLead(activeJob, id);
-    // await getJobLeadsById();
   };
 
   const createOrder = (id: number) => {};
@@ -167,6 +178,25 @@ export const JobStats = () => {
     await deleteJobLead(activeJob, idLeadJobConfirmation);
     await getJobLeadsById();
     setIsConfirmationOpen(false);
+  };
+
+  const setIsFilterOpenFct = () => {
+    setIsFilterOpen(true);
+  };
+
+  const handleFiltersClose = () => {
+    setIsFilterOpen(false);
+  };
+
+  const resetFilter = async () => {
+    resetFilters();
+    await getJobLeadsById();
+    setIsFilterOpen(false);
+  };
+
+  const handleFilter = async () => {
+    await getJobLeadsById();
+    setIsFilterOpen(false);
   };
 
   const columns: GridColDef<(typeof jobById)[number]>[] = [
@@ -342,6 +372,18 @@ export const JobStats = () => {
                           }
                         }}
                       />
+
+                      <Box sx={{ display: "flex", alignItems: "center" }}>
+                        <Button
+                          variant="outlined"
+                          onClick={() => setIsFilterOpenFct()}
+                          startIcon={<FilterListIcon />}
+                          size="small"
+                          sx={filterBtnStyle}
+                        >
+                          Filters
+                        </Button>
+                      </Box>
                     </Box>
 
                     <CustomDataGrid
@@ -411,6 +453,17 @@ export const JobStats = () => {
           message="Are you sure you want to delete this job?"
           btnName="Save"
         />
+      )}
+
+      {isFilterOpen && (
+        <Filters
+          open={isFilterOpen}
+          onClose={handleFiltersClose}
+          handleFilter={handleFilter}
+          resetFilter={resetFilter}
+        >
+          <FilterJobStats />
+        </Filters>
       )}
     </PageContainer>
   );

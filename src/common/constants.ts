@@ -73,3 +73,5 @@ export const submitBtnStyle = {
   border: "none",
   textTransform: "uppercase",
 };
+
+export const ORDERS_TYPE = ['TV', 'mobile']
