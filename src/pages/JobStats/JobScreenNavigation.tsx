@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Box, Button, Typography, Grid, IconButton, Tooltip } from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import UserChipsExample from "./JobScreenNavigationUserInfo";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 const ScreenNavigationWithGrid = ({
   currentId,
@@ -52,7 +54,7 @@ const ScreenNavigationWithGrid = ({
           disabled={isPreviousButtonDisabled}
           sx={{ minWidth: "120px" }}
         >
-          Previous
+          <ArrowBackIcon/>
         </Button>
         {/* <Typography
           variant="h6"
@@ -105,7 +107,7 @@ const ScreenNavigationWithGrid = ({
           disabled={isNextButtonDisabled}
           sx={{ minWidth: "120px" }}
         >
-          Next
+          <ArrowForwardIcon/>
         </Button>
       </Box>
 

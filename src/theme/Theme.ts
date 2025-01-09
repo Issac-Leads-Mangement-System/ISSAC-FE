@@ -1,4 +1,5 @@
 import { createTheme } from "@mui/material/styles";
+import { heIL } from '@mui/material/locale';
 
 export const Color = {
   MainColor: "#ff2f5b",
@@ -45,8 +46,15 @@ const Size = {
   normalSize: "1rem",
   smallSize: "0.8rem",
 };
-
-export const Theme = createTheme({
+// const Theme = createTheme(
+//   {
+//     palette: {
+//       primary: { main: '#1976d2' },
+//     },
+//   },
+//   zhCN,
+// );
+export const Theme: any = createTheme({
   typography: {
     fontFamily: [
       "Montserrat",
@@ -62,7 +70,6 @@ export const Theme = createTheme({
       '"Segoe UI Symbol"',
     ].join(","),
   },
-
   components: {
     MuiButton: {
       defaultProps: {
@@ -83,4 +90,7 @@ export const Theme = createTheme({
       },
     },
   },
-});
+
+}
+// , heIL
+);

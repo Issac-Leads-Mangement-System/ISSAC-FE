@@ -28,7 +28,7 @@ const ordersStore = create<IOrdarsState>((set) => ({
     page: 0,
   },
 
-  getOrders: async (page: number = 0, limit: number = 50) => {
+  getOrders: async (type: string) => {
     const { showNotification } = useNotificationStore.getState();
     try {
       set({ isLoading: true });
@@ -36,7 +36,11 @@ const ordersStore = create<IOrdarsState>((set) => ({
       const response = await api.post(
         `${process.env.REACT_APP_BASE_URL}/orders/package_types?page=${
           pagination.page + 1
-        }&limit=${pagination.pageSize}&search=${searchValue}`
+        }&limit=${pagination.pageSize}&search=${searchValue}`,
+        {
+          order_type: type
+          
+        }
       );
       set({
         orders: response.data.orders_packages_types_resposne,
