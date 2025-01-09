@@ -144,7 +144,7 @@ function Input({
         e.target.value = trim(e.target.value);
         handleChangeInput(e);
       }}
-      size={size || "small"}
+      size={size || "large"}
       helperText={error && error}
       type={
         inputType && inputType === InputType.Float

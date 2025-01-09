@@ -6,11 +6,13 @@ const CustomModal = ({
   onClose,
   title,
   children,
+  minWidth,
 }: {
   isOpen: boolean;
   onClose: () => void;
   title: string;
-  children?: any;
+  children: any;
+  minWidth?: string;
 }) => {
   const style = {
     position: "absolute",
@@ -23,7 +25,7 @@ const CustomModal = ({
     boxShadow: 24,
     borderRadius: "3px",
     padding: "32px 32px 16px 32px",
-    minWidth: "400px",
+    minWidth: minWidth || "400px",
   };
 
   return (
@@ -44,7 +46,7 @@ const CustomModal = ({
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            padding: 2,
+            // padding: 2,
             bgcolor: "#fffff",
           }}
         >
@@ -65,7 +67,7 @@ const CustomModal = ({
         </Box>
         <Divider />
 
-        <Box mt={4}>{children}</Box>
+        <Box>{children}</Box>
       </Box>
     </Modal>
   );

@@ -17,19 +17,12 @@ export const generateFormikInputFieldProps = (
     return currentObj;
   };
 
-  return {
-    ...(path === "file"
-      ? {}
-      : { value: getValueFromObj(formikProps.values, path) || "" }), // Nu setăm `value` pentru input-ul `file`
+  const fieldProps: any = {
+    // Aceasta este logica de schimbare pentru input-uri
     onChange: (event: any) => {
-      if (event.target.files?.length && event.target?.files !== undefined) {
-        const files = Array.from(event.target.files);
-        const existingFiles = formikProps.values[path] || [];
-        const updatedFiles = [...existingFiles, ...files];
-        formikProps.setFieldValue(path, updatedFiles);
-      } else if (event.target?.value !== undefined) {
-        formikProps.setFieldValue(path, event.target.value);
-      }
+      const newValue =
+        event.target.type === "checkbox" ? event.target.checked : event.target.value;
+      formikProps.setFieldValue(path, newValue);
     },
     error:
       getValueFromObj(formikProps.touched, path) &&
@@ -38,4 +31,16 @@ export const generateFormikInputFieldProps = (
         : undefined,
     disabled: formikProps.isSubmitting,
   };
+
+  // Dacă nu este un input de tip "file", adăugăm `value` pentru input-uri de text
+  if (path !== "file") {
+    fieldProps.value = getValueFromObj(formikProps.values, path) || "";
+  }
+
+  // Dacă este un checkbox, adăugăm `checked`
+  if (path.includes("mobility")) { // Ajustează această condiție pentru a se aplica doar pentru checkbox-uri
+    fieldProps.checked = getValueFromObj(formikProps.values, path) || false;
+  }
+
+  return fieldProps;
 };

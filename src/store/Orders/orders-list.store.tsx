@@ -2,7 +2,7 @@ import { create } from "zustand";
 import api from "../../api";
 import useNotificationStore from "../Notification/notification-store";
 
-interface IOrdarsState {
+interface IOrdersListState {
   orders: any[];
   orderCount: number;
   isLoading: boolean;
@@ -14,7 +14,7 @@ interface IOrdarsState {
   pagination: any;
 }
 
-const ordersStore = create<IOrdarsState>((set) => ({
+const ordersListStore = create<IOrdersListState>((set) => ({
   orders: [],
   isLoading: false,
   searchValue: "",
@@ -32,18 +32,17 @@ const ordersStore = create<IOrdarsState>((set) => ({
     const { showNotification } = useNotificationStore.getState();
     try {
       set({ isLoading: true });
-      const { searchValue, pagination } = ordersStore.getState();
+      const { searchValue, pagination } = ordersListStore.getState();
       const response = await api.post(
-        `${process.env.REACT_APP_BASE_URL}/orders/package_types?page=${
+        `${process.env.REACT_APP_BASE_URL}/orders/?page=${
           pagination.page + 1
-        }&limit=${pagination.pageSize}&search=${searchValue}`,
-        {
-          order_type: type ? [type] : ['TV', 'mobile']
-        }
+        }&limit=${pagination.pageSize}${
+          searchValue ? `&search=${searchValue}` : ""
+        }`
       );
       set({
-        orders: response.data.orders_packages_types_resposne,
-        orderCount: response.data.counter_orders_packages,
+        orders: response.data.orders_response,
+        orderCount: response.data.counter_orders,
       });
     } catch (error: any) {
       showNotification({
@@ -84,41 +83,12 @@ const ordersStore = create<IOrdarsState>((set) => ({
     }));
   },
 
-  addOrderType: async () => {
-    const { showNotification } = useNotificationStore.getState();
-    try {
-      set({ isLoading: true });
-      const { order } = ordersStore.getState();
-      const response = await api.post(
-        `
-        ${process.env.REACT_APP_BASE_URL}/orders/package_types/add_type
-        `,
-        order
-      );
-      if (response.status === 200) {
-        showNotification({
-          message: "Create order successfully!",
-          status: response.statusText,
-          severity: response.status,
-        });
-      }
-    } catch (error: any) {
-      showNotification({
-        message: error.response?.data?.detail || "An error occurred.",
-        status: error.response?.status || 500,
-        severity: error.severity,
-      });
-    } finally {
-      set({ isLoading: false });
-    }
-  },
-
-  getOrderById: async (id: number) => {
+  getOrderById: async (orderId: number) => {
     const { showNotification } = useNotificationStore.getState();
     try {
       set({ isLoading: true });
       const response = await api.get(
-        `${process.env.REACT_APP_BASE_URL}/orders/package_types/${id}`
+        `${process.env.REACT_APP_BASE_URL}/orders/${orderId}`
       );
       const { order_type, package_name } = response.data;
 
@@ -140,14 +110,14 @@ const ordersStore = create<IOrdarsState>((set) => ({
     }
   },
 
-  updateOrder: async (id: number) => {
+  updateOrder: async (orderId: number) => {
     const { showNotification } = useNotificationStore.getState();
     try {
       set({ isLoading: true });
-      const { order } = ordersStore.getState();
+      const { order } = ordersListStore.getState();
       const response = await api.put(
         `
-        ${process.env.REACT_APP_BASE_URL}/orders/package_types/edit_type/${id}
+        ${process.env.REACT_APP_BASE_URL}/orders/edit_order/${orderId}
         `,
         order
       );
@@ -169,12 +139,12 @@ const ordersStore = create<IOrdarsState>((set) => ({
     }
   },
 
-  deleteOrder: async (id: number) => {
+  deleteOrder: async (orderId: number) => {
     const { showNotification } = useNotificationStore.getState();
     try {
       set({ isLoading: true });
       const response = await api.delete(`
-        ${process.env.REACT_APP_BASE_URL}/orders/package_types/delete_type/${id}
+        ${process.env.REACT_APP_BASE_URL}/orders/close_order/${orderId}
         `);
 
       if (response.status === 200) {
@@ -196,4 +166,4 @@ const ordersStore = create<IOrdarsState>((set) => ({
   },
 }));
 
-export default ordersStore;
+export default ordersListStore;

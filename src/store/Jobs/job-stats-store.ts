@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import api from "../../api";
 import useNotificationStore from "../Notification/notification-store";
+import usersStore from "../Users/users-store";
 
 interface IJobsState {
   activeJob: string;
@@ -15,7 +16,9 @@ interface IJobsState {
     lead_status_id: number[];
     user_id: number[];
     mobile_deal_success: boolean[];
-  }
+  };
+  create_order: any;
+  getOrderBasicInfo: any;
 }
 
 const jobStatsStore = create<IJobsState>((set) => ({
@@ -31,16 +34,36 @@ const jobStatsStore = create<IJobsState>((set) => ({
   filters: {
     lead_status_id: [],
     user_id: [],
-    mobile_deal_success: []
+    mobile_deal_success: [],
   },
   isLoading: false,
   new_status: "",
+  create_order: {
+    order_basic_info: {
+      former_company: "",
+      mobility: false,
+    },
+  },
 
   setKey: (key: string, value: string) => {
     set({ [key]: value });
   },
 
   setSearchValue: (value: string) => set({ searchValue: value }),
+
+  setCreateOrder: (value: any, key: string, section: string) => {
+    set((state) => ({
+      create_order: {
+        ...state.create_order,
+        [section]: {
+          ...state.create_order[section],
+          [key]: value,
+        },
+      },
+    }))
+  },
+
+  getOrderBasicInfo: (state: any) => state.create_order.order_basic_info,
 
   getJobById: async () => {
     try {
@@ -56,14 +79,24 @@ const jobStatsStore = create<IJobsState>((set) => ({
 
   getJobLeadsById: async () => {
     try {
+      const { user }: any = usersStore.getState();
       set({ isLoading: true });
-      const { activeJob, searchValue, pagination, filters } = jobStatsStore.getState();
+      const { activeJob, searchValue, pagination, filters } =
+        jobStatsStore.getState();
       const response = await api.post(
         `${process.env.REACT_APP_BASE_URL}/jobs/${activeJob}/leads?page=${
           pagination.page + 1
         }&limit=${pagination.pageSize}&search=${searchValue}`,
         filters
       );
+      response.data.job_leads_response.forEach((jobLead: any) => {
+        if (jobLead.user.user_id === user.id) {
+          jobLead.isCurrentUser = true;
+        } else {
+          jobLead.isCurrentUser = false;
+        }
+        return jobLead;
+      });
       set({
         jobLeadsById: response.data.job_leads_response,
         counter_job_leads: response.data.counter_job_leads,
@@ -139,6 +172,14 @@ const jobStatsStore = create<IJobsState>((set) => ({
     }
   },
 
+  submitCreateOrder: async (values: any) => {
+    const response = await api.post(
+      `${process.env.REACT_APP_BASE_URL}/orders/create_order`, values,
+    );
+
+    console.log(response)
+  },
+
   setActiveFilters: (ids: any, key: string) =>
     set((state) => ({
       filters: {
@@ -147,12 +188,16 @@ const jobStatsStore = create<IJobsState>((set) => ({
       },
     })),
   resetFilters: () => {
-    set({filters: {
-      lead_status_id: [],
-      user_id: [],
-      mobile_deal_success: []
-    }})
-  }
+    set({
+      filters: {
+        lead_status_id: [],
+        user_id: [],
+        mobile_deal_success: [],
+      },
+    });
+  },
+
+  
 }));
 
 export default jobStatsStore;

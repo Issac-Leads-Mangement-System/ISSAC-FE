@@ -34,12 +34,28 @@ import { JobStatsModal } from "./JobStatsModal";
 import leadsStatusesStore from "../../store/Leads/statuses-store";
 import { CustomDataGrid } from "../../common/CustomDataGrid/custom-data-grid";
 import { ConfirmationModal } from "../../common/Modal/ConfirmationDialog/ConfirmationDialog";
-import { filterBtnStyle } from "../../common/constants";
+import ScreenNavigation from "./JobScreenNavigation";
+import ScreenNavigationWithGrid from "./JobScreenNavigation";
+import { filterBtnStyle, submitBtnStyle } from "../../common/constants";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import Filters from "../../components/Filters/filters";
 import { FilterJobStats } from "../../common/forms-filters/FilterJobStats";
+import ListAltIcon from "@mui/icons-material/ListAlt";
+import usersStore from "../../store/Users/users-store";
+import { JobStatsCreateOrderModal } from "./JobStatsCreateOrderModal";
+import { GenericAddEditForm } from "../../common/forms-generic-ad-edit/GenericAdEditForm";
+import {
+  ICreateOrderModalSchema,
+  initialValues,
+  validationCreateOrderSchema,
+} from "../../forms/createOrderSchema";
+import ordersStore from "../../store/Orders/orders-store";
 
 export const JobStats = () => {
+  const [initialFormValues, setInitialFormValues] =
+    useState<ICreateOrderModalSchema>({
+      ...initialValues,
+    });
   const location = useLocation();
   const {
     setSecontToolbarMessage,
@@ -63,17 +79,31 @@ export const JobStats = () => {
     new_status,
     updateJobLead,
     resetFilters,
+    submitCreateOrder,
   }: any = jobStatsStore();
 
+  const { getOrders }: any = ordersStore();
+
   const { getStatus }: any = leadsStatusesStore();
+  const { user }: any = usersStore();
   const [idLeadJob, setIdLeadJob]: any = useState(undefined);
   const [isFilterOpen, setIsFilterOpen]: any = useState(false);
   const [value, setValue] = useState("1");
   const [isOpen, setIsOpen] = useState(false);
+  const [isCreateOrderOpen, setIsCreateOrderOpen] = useState(false);
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
+  // playscreen
   const [idLeadJobConfirmation, setIdLeadJobConfirmation]: any =
     useState(undefined);
+  const [lead, setLead]: any = useState(null);
+  const [createOrderType, setCreateOrderType]: any = useState("TV");
+  
+  
+
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+    if (newValue === "2") {
+      setIdLeadJobConfirmation(jobLeadsById[0].lead_id);
+    }
     setValue(newValue);
   };
 
@@ -81,6 +111,7 @@ export const JobStats = () => {
     if (!activeJob) {
       setKey("activeJob", location.pathname.split("/")[2]);
     }
+    
     return () => {
       resetSecondToolbar();
     };
@@ -134,12 +165,21 @@ export const JobStats = () => {
     setIsConfirmationOpen(true);
   };
 
-  const createOrder = (id: number) => {};
+  const createOrder = (id: number, lead_id: string, order_type: string) => {
+    setIdLeadJob(lead_id);
+    setLead(id);
+    setCreateOrderType(order_type);
+    setIsCreateOrderOpen(true);
+  };
 
   const createMobileOrder = (id: number) => {};
 
   const onCloseFct = () => {
     setIsOpen(false);
+  };
+
+  const onCloseCreateOrder = () => {
+    setIsCreateOrderOpen(false);
   };
 
   const updateStatus = async () => {
@@ -184,22 +224,21 @@ export const JobStats = () => {
 
   const handleFiltersClose = () => {
     setIsFilterOpen(false);
-  }
+  };
 
   const resetFilter = async () => {
     resetFilters();
     await getJobLeadsById();
     setIsFilterOpen(false);
-  }
+  };
 
   const handleFilter = async () => {
     await getJobLeadsById();
     setIsFilterOpen(false);
-  }
+  };
 
   const columns: GridColDef<(typeof jobById)[number]>[] = [
-    { field: "created_time", headerName: "Created time", width: 250 },
-    { field: "updated_time", headerName: "Updated time", width: 250 },
+    { field: "lead_id", headerName: "Lead", width: 200 },
     {
       field: "user",
       headerName: "User",
@@ -213,20 +252,6 @@ export const JobStats = () => {
         );
       },
     },
-    { field: "lead_id", headerName: "Lead", width: 200 },
-    {
-      field: "mobile_deal_success",
-      headerName: "Mobile deal success",
-      width: 100,
-      renderCell: (params: any) => {
-        const { row } = params;
-        return row.mobile_deal_success ? (
-          <ThumbUpIcon fontSize="small" />
-        ) : (
-          <ThumbDownIcon fontSize="small" />
-        );
-      },
-    },
     {
       field: "lead_status",
       headerName: "Lead status",
@@ -237,9 +262,27 @@ export const JobStats = () => {
       },
     },
     {
+      field: "mobile_deal_success",
+      headerName: "Mobile deal",
+      width: 200,
+      renderCell: (params: any) => {
+        const { row } = params;
+        return row.mobile_deal_success ? (
+          <ThumbUpIcon fontSize="small" />
+        ) : (
+          <ThumbDownIcon fontSize="small" />
+        );
+      },
+    },
+    { field: "created_time", headerName: "Created", width: 250 },
+    { field: "updated_time", headerName: "Updated", width: 250 },
+    
+    
+    
+    {
       field: "actions",
       type: "actions",
-      width: 150,
+      width: 200,
       editable: false,
       renderHeader: (params: any) => <strong>{"Actions "}</strong>,
       filterable: false,
@@ -249,6 +292,19 @@ export const JobStats = () => {
         const { id, row } = params;
         if (id) {
           return [
+            <GridActionsCellItem
+              icon={<PlayCircleOutlineIcon />}
+              label="Play screen"
+              title="Play screen"
+              key={id}
+              sx={{
+                color: "green",
+              }}
+              className="textPrimary"
+              onClick={() => playScreen(row.lead_id)}
+              disabled={!row.isCurrentUser}
+            />,
+
             <GridActionsCellItem
               icon={<AssignmentIcon />}
               label="Update Lead Job Status"
@@ -266,24 +322,23 @@ export const JobStats = () => {
               label="Create order"
               title="Create order"
               key={id}
-              disabled
+              // disabled
               sx={{
                 color: "blue",
               }}
               className="textPrimary"
-              onClick={() => createOrder(id)}
+              onClick={() => createOrder(id, row.lead_id, 'TV')}
             />,
             <GridActionsCellItem
               icon={<MobileFriendlyIcon />}
               label="Create mobile order"
               title="Create mobile order"
               key={id}
-              disabled
               sx={{
                 color: "green",
               }}
               className="textPrimary"
-              onClick={() => createMobileOrder(id)}
+              onClick={() => createOrder(id, row.lead_id, 'mobile')}
             />,
 
             <GridActionsCellItem
@@ -304,6 +359,67 @@ export const JobStats = () => {
       },
     },
   ];
+  const totalButtons = 9;
+
+  const handleNext = () => {
+    const filteredJobs = jobLeadsById.filter((job: any) => job.isCurrentUser);
+
+    const findIndexCurrentJob = filteredJobs.findIndex(
+      (job: any) => job.lead_id === idLeadJobConfirmation
+    );
+    if (filteredJobs[findIndexCurrentJob + 1]) {
+      setIdLeadJobConfirmation(filteredJobs[findIndexCurrentJob + 1].lead_id);
+    }
+  };
+
+  const isPreviousButtonDisabled = (() => {
+    const findIndexCurrentJob = jobLeadsById.findIndex(
+      (job: any) => job.lead_id === idLeadJobConfirmation
+    );
+    if (jobLeadsById[findIndexCurrentJob - 1]) {
+      return false;
+    } else {
+      return true;
+    }
+  })();
+
+  const isNextButtonDisabled = (() => {
+    const findIndexCurrentJob = jobLeadsById.findIndex(
+      (job: any) => job.lead_id === idLeadJobConfirmation
+    );
+    if (jobLeadsById[findIndexCurrentJob + 1]) {
+      return false;
+    } else {
+      return true;
+    }
+  })();
+
+  const handlePrevious = () => {
+    const findIndexCurrentJob = jobLeadsById.findIndex(
+      (job: any) => job.lead_id === idLeadJobConfirmation
+    );
+    if (jobLeadsById[findIndexCurrentJob - 1]) {
+      setIdLeadJobConfirmation(jobLeadsById[findIndexCurrentJob - 1].lead_id);
+    }
+  };
+
+  const playScreen = (lead_id: any) => {
+    setIdLeadJobConfirmation(lead_id);
+    setValue("2");
+  };
+
+  const handleButtonClick = (id: any) => {
+    // setCurrentId(id);
+  };
+
+  const handleSubmitModal = async (values: any) => {
+    values.job_id = parseInt(activeJob);
+    values.order_basic_info.lead_job_id = idLeadJob;
+    values.order_basic_info.lead_id = lead.toString();
+    values.order_basic_info.order_type = createOrderType;
+    await submitCreateOrder(values);
+    setIsCreateOrderOpen(false);
+  };
 
   return (
     <PageContainer>
@@ -325,8 +441,28 @@ export const JobStats = () => {
                       onChange={handleChange}
                       aria-label="lab API tabs example"
                     >
-                      <Tab label="List" value="1" />
-                      <Tab label="Play" value="2" />
+                      <Tab
+                        label="List"
+                        value="1"
+                        icon={<ListAltIcon fontSize="small" />}
+                        iconPosition="start"
+                        sx={{
+                          minHeight: 40,
+                          padding: "0 8px",
+                          gap: "4px",
+                        }}
+                      />
+                      <Tab
+                        label="Play"
+                        value="2"
+                        icon={<PlayCircleOutlineIcon fontSize="small" />}
+                        iconPosition="start"
+                        sx={{
+                          minHeight: 40,
+                          padding: "0 8px",
+                          gap: "4px",
+                        }}
+                      />
                     </TabList>
                   </Box>
                   <TabPanel value="1">
@@ -397,7 +533,19 @@ export const JobStats = () => {
                       getRowClassName={getRowClassName}
                     />
                   </TabPanel>
-                  <TabPanel value="2">PlayScreen</TabPanel>
+
+                  {/* play screen */}
+                  <TabPanel value="2">
+                    <ScreenNavigationWithGrid
+                      currentId={idLeadJobConfirmation}
+                      totalButtons={totalButtons}
+                      onNext={handleNext}
+                      onPrevious={handlePrevious}
+                      onButtonClick={handleButtonClick}
+                      isPreviousButtonDisabled={isPreviousButtonDisabled}
+                      isNextButtonDisabled={isNextButtonDisabled}
+                    />
+                  </TabPanel>
                 </TabContext>
               </CardContent>
             </Card>
@@ -414,26 +562,47 @@ export const JobStats = () => {
         </CustomModal>
       )}
 
+      {isCreateOrderOpen && (
+        <CustomModal
+          isOpen={isCreateOrderOpen}
+          onClose={onCloseCreateOrder}
+          title={`Create order ${createOrderType}`}
+          minWidth="1200px"
+        >
+          <GenericAddEditForm
+            initialValues={initialFormValues}
+            validationSchema={validationCreateOrderSchema}
+            apiRequest={handleSubmitModal}
+            hasSubmitButton={true}
+            submitBtnName={"save"}
+            form={(formProps: any) => (
+              <JobStatsCreateOrderModal formProps={formProps} createOrderType={createOrderType}/>
+            )}
+            btnStyle={submitBtnStyle}
+          />
+        </CustomModal>
+      )}
+
       {isConfirmationOpen && (
         <ConfirmationModal
           open={isConfirmationOpen}
           onClose={handleCloseConfirmationModal}
           onConfirm={handleSaveConfirmationModal}
-          message="Are you sure you want to delete this job?"
+          message="Are you sure you want to delete this lead?"
           btnName="Save"
         />
       )}
 
       {isFilterOpen && (
-              <Filters
-                open={isFilterOpen}
-                onClose={handleFiltersClose}
-                handleFilter={handleFilter}
-                resetFilter={resetFilter}
-              >
-                <FilterJobStats/>
-              </Filters>
-            )}
+        <Filters
+          open={isFilterOpen}
+          onClose={handleFiltersClose}
+          handleFilter={handleFilter}
+          resetFilter={resetFilter}
+        >
+          <FilterJobStats />
+        </Filters>
+      )}
     </PageContainer>
   );
 };
