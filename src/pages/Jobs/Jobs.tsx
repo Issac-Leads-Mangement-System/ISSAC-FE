@@ -96,11 +96,6 @@ const Jobs = ({ className }: any) => {
     await getAllJobs();
   };
 
-  // const handleChangeStatusJob = (id: any) => {
-  //   setIsConfirmationOpen(true);
-  //   setKey("activeJob", id);
-  // };
-
   const handleCloseModal = () => {
     setIsConfirmationOpen(false);
   };
@@ -122,7 +117,6 @@ const Jobs = ({ className }: any) => {
   };
 
   const handleUpdateJobStatusClick = (id: number) => {
-    // console.log("click here", id);
     setIsConfirmationOpen(true);
     setKey("activeJob", id);
   };

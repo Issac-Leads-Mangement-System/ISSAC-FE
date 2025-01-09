@@ -13,6 +13,7 @@ import Jobs from "./pages/Jobs/Jobs";
 import AddJobs from "./pages/addJob/addJobs";
 import { JobStats } from "./pages/JobStats/JobStats";
 import PackageType from "./pages/Orders/PackageType/PackageType";
+import OrdersList from "./pages/Orders/List/List";
 
 export const PrivateRoute = () => {
   const { role } = useAuthStore((state) => state);
@@ -98,6 +99,14 @@ export const PrivateRoute = () => {
         element={
           <ProtectedRoute isAllowed={!!role} user={role}>
             <PackageType />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/orders/list"
+        element={
+          <ProtectedRoute isAllowed={!!role} user={role}>
+            <OrdersList />
           </ProtectedRoute>
         }
       />

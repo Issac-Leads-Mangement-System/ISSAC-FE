@@ -43,8 +43,8 @@ const PackageType = () => {
   const [isAddOpenModal, setIsAddOpenModal] = useState(false);
 
   useEffect(() => {
-    setSecontToolbarMessage("PACKAGE TYPES");
-    setSecontToolbarPath("ORDERS");
+    setSecontToolbarMessage("ORDERS");
+    setSecontToolbarPath("PACKAGE TYPES");
     getOrders();
 
     return () => {
@@ -90,13 +90,13 @@ const PackageType = () => {
 
   const handleCloseConfirmationModal = () => {
     setIsConfirmationOpen(false);
-  }
+  };
 
   const handleSubmitConfirmationModal = async () => {
     await deleteOrder(idOrder);
     await getOrders(0, 10);
     setIsConfirmationOpen(false);
-  }
+  };
 
   const handleChangeRowsPerPage = async (model: any) => {
     try {
