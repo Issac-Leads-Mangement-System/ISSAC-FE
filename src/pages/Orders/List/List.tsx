@@ -103,7 +103,6 @@ const OrdersList = ({ className }: any) => {
       headerName: "Order Status",
       width: 150,
       cellClassName: (params) => {
-        console.log("params", params);
         if (params.value === "close") return "row-closed";
         if (params.value === "open") return "row-open";
         if (params.value === "in progress") return "row-in-progress";

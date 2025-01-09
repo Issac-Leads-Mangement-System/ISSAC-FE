@@ -31,6 +31,7 @@ export type ICreateOrderModalSchema = {
     tv_users: number | null,
     wifi_extenders: number | null,
     orders_tv_properties_comment: string,
+    order_phone_numbers: [string],
   }
   
   
@@ -68,6 +69,7 @@ export const initialValues: ICreateOrderModalSchema = {
     tv_users: null,
     wifi_extenders: null,
     orders_tv_properties_comment: "",
+    order_phone_numbers: [''],
   }
   
 };

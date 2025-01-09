@@ -38,8 +38,7 @@ const ordersStore = create<IOrdarsState>((set) => ({
           pagination.page + 1
         }&limit=${pagination.pageSize}&search=${searchValue}`,
         {
-          order_type: type
-          
+          order_type: type ? [type] : ['TV', 'mobile']
         }
       );
       set({

@@ -89,7 +89,6 @@ const jobStatsStore = create<IJobsState>((set) => ({
         }&limit=${pagination.pageSize}&search=${searchValue}`,
         filters
       );
-      console.log(user);
       response.data.job_leads_response.forEach((jobLead: any) => {
         if (jobLead.user.user_id === user.id) {
           jobLead.isCurrentUser = true;
@@ -171,6 +170,14 @@ const jobStatsStore = create<IJobsState>((set) => ({
       });
       set({ isLoading: false });
     }
+  },
+
+  submitCreateOrder: async (values: any) => {
+    const response = await api.post(
+      `${process.env.REACT_APP_BASE_URL}/orders/create_order`, values,
+    );
+
+    console.log(response)
   },
 
   setActiveFilters: (ids: any, key: string) =>

@@ -79,7 +79,7 @@ export const JobStats = () => {
     new_status,
     updateJobLead,
     resetFilters,
-    create_order,
+    submitCreateOrder,
   }: any = jobStatsStore();
 
   const { getOrders }: any = ordersStore();
@@ -96,6 +96,7 @@ export const JobStats = () => {
   const [idLeadJobConfirmation, setIdLeadJobConfirmation]: any =
     useState(undefined);
   const [lead, setLead]: any = useState(null);
+  const [createOrderType, setCreateOrderType]: any = useState("TV");
   
   
 
@@ -110,7 +111,7 @@ export const JobStats = () => {
     if (!activeJob) {
       setKey("activeJob", location.pathname.split("/")[2]);
     }
-    getOrders('TV')
+    
     return () => {
       resetSecondToolbar();
     };
@@ -164,9 +165,10 @@ export const JobStats = () => {
     setIsConfirmationOpen(true);
   };
 
-  const createOrder = (id: number, lead_id: string) => {
+  const createOrder = (id: number, lead_id: string, order_type: string) => {
     setIdLeadJob(lead_id);
     setLead(id);
+    setCreateOrderType(order_type);
     setIsCreateOrderOpen(true);
   };
 
@@ -325,19 +327,18 @@ export const JobStats = () => {
                 color: "blue",
               }}
               className="textPrimary"
-              onClick={() => createOrder(id, row.lead_id)}
+              onClick={() => createOrder(id, row.lead_id, 'TV')}
             />,
             <GridActionsCellItem
               icon={<MobileFriendlyIcon />}
               label="Create mobile order"
               title="Create mobile order"
               key={id}
-              disabled
               sx={{
                 color: "green",
               }}
               className="textPrimary"
-              onClick={() => createMobileOrder(id)}
+              onClick={() => createOrder(id, row.lead_id, 'mobile')}
             />,
 
             <GridActionsCellItem
@@ -363,7 +364,6 @@ export const JobStats = () => {
   const handleNext = () => {
     const filteredJobs = jobLeadsById.filter((job: any) => job.isCurrentUser);
 
-    console.log("filteredJobs ", filteredJobs);
     const findIndexCurrentJob = filteredJobs.findIndex(
       (job: any) => job.lead_id === idLeadJobConfirmation
     );
@@ -410,16 +410,15 @@ export const JobStats = () => {
 
   const handleButtonClick = (id: any) => {
     // setCurrentId(id);
-    console.log("zzz id", id);
   };
 
   const handleSubmitModal = async (values: any) => {
     values.job_id = parseInt(activeJob);
     values.order_basic_info.lead_job_id = idLeadJob;
-    values.order_basic_info.lead_id = lead;
-    values.order_basic_info.order_type = 'TV';
-    console.log("save val ", values);
-
+    values.order_basic_info.lead_id = lead.toString();
+    values.order_basic_info.order_type = createOrderType;
+    await submitCreateOrder(values);
+    setIsCreateOrderOpen(false);
   };
 
   return (
@@ -567,7 +566,7 @@ export const JobStats = () => {
         <CustomModal
           isOpen={isCreateOrderOpen}
           onClose={onCloseCreateOrder}
-          title="Create order"
+          title={`Create order ${createOrderType}`}
           minWidth="1200px"
         >
           <GenericAddEditForm
@@ -577,7 +576,7 @@ export const JobStats = () => {
             hasSubmitButton={true}
             submitBtnName={"save"}
             form={(formProps: any) => (
-              <JobStatsCreateOrderModal formProps={formProps} />
+              <JobStatsCreateOrderModal formProps={formProps} createOrderType={createOrderType}/>
             )}
             btnStyle={submitBtnStyle}
           />

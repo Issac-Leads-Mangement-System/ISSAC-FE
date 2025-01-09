@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Box,
   Button,
@@ -18,10 +18,15 @@ import { PaymentSection } from "./Sections/Payment";
 import { PropertiesSection } from "./Sections/Properties";
 import jobStatsStore from "../../store/Jobs/job-stats-store";
 import { debounce } from "lodash";
+import ordersStore from "../../store/Orders/orders-store";
 
-export const JobStatsCreateOrderModal = ({formProps}: any) => {
+export const JobStatsCreateOrderModal = ({formProps, createOrderType}: any) => {
   const { setCreateOrder }: any = jobStatsStore();
+  const { getOrders }: any = ordersStore();
 
+  useEffect(() => {
+    getOrders(createOrderType);
+  }, [])
 
 
   return (
@@ -40,7 +45,7 @@ export const JobStatsCreateOrderModal = ({formProps}: any) => {
         <PaymentSection formProps={formProps}/>
 
         {/* Properties */}
-        <PropertiesSection formProps={formProps}/>
+        <PropertiesSection formProps={formProps} createOrderType={createOrderType}/>
       </Box>
     </>
   );

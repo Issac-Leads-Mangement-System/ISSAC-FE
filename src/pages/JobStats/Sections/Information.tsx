@@ -16,7 +16,6 @@ export const InformationSection = ({ formProps }: any) => {
         <Box display="flex" flexDirection="column" gap={2}>
           <Grid2 container spacing={1.5}>
             <Grid2 size={6}>
-              {/* <TextField label="Customer ID" variant="outlined" fullWidth /> */}
               <Input
                 {...generateFormikInputFieldProps(
                   formProps,
@@ -28,11 +27,6 @@ export const InformationSection = ({ formProps }: any) => {
             </Grid2>
 
             <Grid2 size={6}>
-              {/* <TextField
-                label="Customer Full Name"
-                variant="outlined"
-                fullWidth
-              /> */}
               <Input
                 {...generateFormikInputFieldProps(
                   formProps,
@@ -55,7 +49,6 @@ export const InformationSection = ({ formProps }: any) => {
             </Grid2>
 
             <Grid2 size={4}>
-              {/* <TextField label="Phone 2" variant="outlined" fullWidth /> */}
               <Input
                 {...generateFormikInputFieldProps(
                   formProps,
@@ -67,7 +60,6 @@ export const InformationSection = ({ formProps }: any) => {
             </Grid2>
 
             <Grid2 size={4}>
-              {/* <TextField label="Home Phone" variant="outlined" fullWidth /> */}
               <Input
                 {...generateFormikInputFieldProps(
                   formProps,
@@ -78,7 +70,6 @@ export const InformationSection = ({ formProps }: any) => {
               />
             </Grid2>
             <Grid2 size={4}>
-              {/* <TextField label="City" variant="outlined" fullWidth /> */}
               <Input
                 {...generateFormikInputFieldProps(
                   formProps,
@@ -89,7 +80,6 @@ export const InformationSection = ({ formProps }: any) => {
               />
             </Grid2>
             <Grid2 size={4}>
-              {/* <TextField label="Street" variant="outlined" fullWidth /> */}
               <Input
                 {...generateFormikInputFieldProps(
                   formProps,
@@ -100,7 +90,6 @@ export const InformationSection = ({ formProps }: any) => {
               />
             </Grid2>
             <Grid2 size={2}>
-              {/* <TextField label="Home Number" variant="outlined" fullWidth /> */}
               <Input
                 {...generateFormikInputFieldProps(
                   formProps,
@@ -111,11 +100,6 @@ export const InformationSection = ({ formProps }: any) => {
               />
             </Grid2>
             <Grid2 size={2}>
-              {/* <TextField
-                label="Apartment Number"
-                variant="outlined"
-                fullWidth
-              /> */}
               <Input
                 {...generateFormikInputFieldProps(
                   formProps,
