@@ -414,10 +414,21 @@ export const JobStats = () => {
 
   const handleSubmitModal = async (values: any) => {
     values.job_id = parseInt(activeJob);
-    values.order_basic_info.lead_job_id = idLeadJob;
-    values.order_basic_info.lead_id = lead.toString();
+    values.order_basic_info.lead_job_id = lead.toString();
+    values.order_basic_info.lead_id = idLeadJob;
     values.order_basic_info.order_type = createOrderType;
+    if(createOrderType === 'TV'){
+      values.order_properties.order_monthly_price = parseFloat(values.order_properties.order_monthly_price).toFixed(2);
+      values.order_properties.order_installation_price = parseFloat(values.order_properties.order_installation_price).toFixed(2);
+      values.order_properties.order_installation_payments = parseInt(values.order_properties.order_installation_payments);
+      values.order_properties.tv_streamers = parseInt(values.order_properties.tv_streamers);
+      values.order_properties.tv_users = parseInt(values.order_properties.tv_users);
+      values.order_properties.wifi_extenders = parseInt(values.order_properties.wifi_extenders);
+      
+      delete values.order_properties.order_phone_numbers;
+    }
     await submitCreateOrder(values);
+    await getJobLeadsById();
     setIsCreateOrderOpen(false);
   };
 

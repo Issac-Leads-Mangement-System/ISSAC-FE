@@ -35,6 +35,8 @@ export interface IInputProps {
   allowZero?: boolean;
   versionClassName?: string;
   size?: any;
+  regex?:any;
+  inputTypeRegex?: any;
 }
 
 export enum ButtonTypes {

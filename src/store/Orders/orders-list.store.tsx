@@ -1,16 +1,14 @@
 import { create } from "zustand";
 import api from "../../api";
 import useNotificationStore from "../Notification/notification-store";
+import dayjs from "dayjs";
 
 interface IOrdersListState {
   orders: any[];
   orderCount: number;
   isLoading: boolean;
   searchValue: string;
-  order: {
-    order_type: string;
-    package_name: string;
-  };
+  order: any;
   pagination: any;
 }
 
@@ -19,10 +17,7 @@ const ordersListStore = create<IOrdersListState>((set) => ({
   isLoading: false,
   searchValue: "",
   orderCount: 0,
-  order: {
-    order_type: "",
-    package_name: "",
-  },
+  order: {},
   pagination: {
     pageSize: 10,
     page: 0,
@@ -90,14 +85,14 @@ const ordersListStore = create<IOrdersListState>((set) => ({
       const response = await api.get(
         `${process.env.REACT_APP_BASE_URL}/orders/${orderId}`
       );
-      const { order_type, package_name } = response.data;
-
+      response.data.order_basic_info = {
+        former_company: response.data.former_company,
+        mobility: response.data.mobility,
+      };
+      response.data.order_schedule.order_supply_date = dayjs(response.data.order_schedule.order_supply_date)
+      response.data.order_customer_payment.order_card_expired_date = dayjs(response.data.order_customer_payment.order_card_expired_date)
       set((state) => ({
-        order: {
-          ...state.order,
-          order_type,
-          package_name,
-        },
+        order: response.data
       }));
     } catch (error: any) {
       showNotification({
@@ -110,11 +105,10 @@ const ordersListStore = create<IOrdersListState>((set) => ({
     }
   },
 
-  updateOrder: async (orderId: number) => {
+  updateOrder: async (orderId: number, order: any) => {
     const { showNotification } = useNotificationStore.getState();
     try {
       set({ isLoading: true });
-      const { order } = ordersListStore.getState();
       const response = await api.put(
         `
         ${process.env.REACT_APP_BASE_URL}/orders/edit_order/${orderId}
@@ -139,17 +133,17 @@ const ordersListStore = create<IOrdersListState>((set) => ({
     }
   },
 
-  deleteOrder: async (orderId: number) => {
+  closeOrder: async (orderId: number) => {
     const { showNotification } = useNotificationStore.getState();
     try {
       set({ isLoading: true });
-      const response = await api.delete(`
+      const response = await api.put(`
         ${process.env.REACT_APP_BASE_URL}/orders/close_order/${orderId}
         `);
 
       if (response.status === 200) {
         showNotification({
-          message: "Delete order successfully!",
+          message: "Close order successfully!",
           status: response.statusText,
           severity: response.status,
         });

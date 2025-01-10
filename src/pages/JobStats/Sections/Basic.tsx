@@ -12,7 +12,6 @@ import Input from "../../../common/Input/Input";
 import { generateFormikInputFieldProps } from "../../../forms/formikHelper";
 
 export const BasicInfoSection = React.memo(({ formProps }: any) => {
-
   return (
     <Box>
       <Paper elevation={4} sx={{ p: 3, m: 2, borderRadius: 2 }}>

@@ -38,6 +38,8 @@ function Input({
   allowZero,
   versionClassName,
   size,
+  regex,
+  inputTypeRegex
 }: IInputProps) {
   const getValue = () => {
     if (inputType === InputType.Number && !allowZero) {
@@ -158,6 +160,24 @@ function Input({
         endAdornment: icon ? renderIcon(icon) : null,
         name: (name as string) || "",
         startAdornment: getStartAdornment(hasEmailIcon, hasPasswordIcon),
+        
+        inputMode: inputTypeRegex || "text", // Oferă tastaturi numerice pe dispozitive mobile
+        // pattern: "\\d*\\.?\\d*", // Regex pentru validare în HTML
+        onInput: (e: any) => {
+          if(inputTypeRegex === 'decimal'){
+            const inputValue: any = e.target.value;
+            if (!/^\d*\.?\d*$/.test(inputValue)) {
+              e.target.value = value || ""; // Resetează valoarea la ultima validă
+            }
+          }
+
+          if(inputTypeRegex === 'numeric'){
+            const inputValue: any = e.target.value;
+            if (!/^\d*$/.test(inputValue)) {
+              e.target.value = value || ""; // Resetează valoarea la ultima validă
+            }
+          }
+        },
       }}
     />
     // </div>
