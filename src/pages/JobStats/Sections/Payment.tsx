@@ -52,6 +52,9 @@ export const PaymentSection = ({ formProps }: any) => {
                       formattedValue
                     );
                   }}
+                  value={formProps.values.order_customer_payment.order_card_expired_date
+                      ? dayjs(formProps.values.order_customer_payment.order_card_expired_date, "MM/YY") 
+                      : null}
                 />
               </LocalizationProvider>
             </Grid2>

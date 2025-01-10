@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Box, Card, CardContent } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import CheckIcon from "@mui/icons-material/Check";
@@ -19,6 +19,17 @@ import secondToolbarStore from "../../../store/SecondToolbar/second-tollbar-stor
 import ordersListStore from "../../../store/Orders/orders-list.store";
 
 import { ListStyle } from "./ListStyle";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import { ConfirmationModal } from "../../../common/Modal/ConfirmationDialog/ConfirmationDialog";
+import { JobStatsCreateOrderModal } from "../../JobStats/JobStatsCreateOrderModal";
+import { GenericAddEditForm } from "../../../common/forms-generic-ad-edit/GenericAdEditForm";
+import {
+  ICreateOrderModalSchema,
+  initialValues,
+  validationCreateOrderSchema,
+} from "../../../forms/createOrderSchema";
+import { submitBtnStyle } from "../../../common/constants";
+import dayjs from "dayjs";
 
 const OrdersList = ({ className }: any) => {
   const {
@@ -26,10 +37,9 @@ const OrdersList = ({ className }: any) => {
     orders,
     orderCount,
     setSearchValue,
-    order,
     getOrderById,
     updateOrder,
-    deleteOrder,
+    closeOrder,
     isLoading,
     pagination,
     setRowsPerPage,
@@ -42,6 +52,12 @@ const OrdersList = ({ className }: any) => {
   }: any = secondToolbarStore();
 
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
+  const [idOrder, setIdOrder] = useState<number | null>(null);
+  const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [initialFormValues, setInitialFormValues] =
+    useState<ICreateOrderModalSchema>({
+      ...initialValues,
+    });
 
   useEffect(() => {
     setSecontToolbarMessage("ORDERS");
@@ -72,14 +88,26 @@ const OrdersList = ({ className }: any) => {
 
   const handleDeleteClick = (id: number) => {
     // setIdOrder(id);
-    // setIsConfirmationOpen(true);
   };
 
-  const handleEditClick = async (id: number) => {
-    await getOrderById(id);
-    // setIdOrder(id);
-    // setIsAddOpenModal(true);
-  };
+  const handleEditClick = useCallback(
+    async (id: number) => {
+      // Fetch user data by ID
+      setIsEdit(true);
+      await getOrderById(id);
+      const order = ordersListStore.getState().order;
+      setInitialFormValues(order);
+    },
+    [getOrderById]
+  );
+
+  // const handleEditClick = async (id: number) => {
+  //   setIsEdit(true);
+  //   await getOrderById(id);
+  //   setInitialFormValues(order);
+  //   // setIdOrder(id);
+  //   // setIsAddOpenModal(true);
+  // };
 
   const handleChangePage = async (model: any) => {
     setPage(model.page);
@@ -87,9 +115,42 @@ const OrdersList = ({ className }: any) => {
   };
 
   const handleUpdateOrderStatusClick = (id: number) => {
-    // console.log("click here", id);
     setIsConfirmationOpen(true);
-    // setKey("activeJob", id);
+    setIdOrder(id);
+  };
+
+  const handleCloseConfirmationModal = () => {
+    setIsConfirmationOpen(false);
+  };
+
+  const handleSubmitConfirmationModal = async () => {
+    await closeOrder(idOrder);
+    await getOrders();
+    setIsConfirmationOpen(false);
+  };
+
+  const onCloseFct = () => {
+    setIsEdit(false);
+  };
+
+  const handleSubmitModal = async (values: any) => {
+    // delete unecessarly values
+    delete values.created_time;
+    delete values.former_company;
+    delete values.lead_id;
+    delete values.lead_job_id;
+    delete values.mobility;
+    delete values.order_status;
+    delete values.order_type;
+    delete values.user_id;
+    delete values.user_name;
+    const idOrder = values.id;
+    delete values.id;
+    values.order_customer_payment.order_card_expired_date =  dayjs(values.order_customer_payment.order_card_expired_date).format("MM/YY");
+    values.order_schedule.order_supply_date = dayjs(values.order_schedule.order_supply_date).format("DD-MM-YYYY");
+    await updateOrder(idOrder, values)
+    await getOrders();
+    setIsEdit(false);
   };
 
   const columns: GridColDef<(typeof orders)[number]>[] = [
@@ -162,6 +223,7 @@ const OrdersList = ({ className }: any) => {
               }}
               className="textPrimary"
               onClick={() => handleEditClick(id)}
+              disabled={row.order_status === "close"}
             />,
 
             <GridActionsCellItem
@@ -169,9 +231,9 @@ const OrdersList = ({ className }: any) => {
               label="Close job"
               title="Close job"
               key={id}
-              disabled={row.job_status === "close"}
               className="textPrimary"
               onClick={() => handleUpdateOrderStatusClick(id)}
+              disabled={row.order_status === "close"}
             />,
           ];
         }
@@ -179,6 +241,7 @@ const OrdersList = ({ className }: any) => {
       },
     },
   ];
+
   return (
     <PageContainer>
       <div className={`${className}`}>
@@ -233,25 +296,34 @@ const OrdersList = ({ className }: any) => {
         </Card>
       </div>
 
-      {/* {isAddOpenModal && (
-        <CustomModal
-          isOpen={isAddOpenModal}
-          onClose={onCloseFct}
-          title="Package type"
-        >
-          <PackageTypeModal savePackage={savePackage} />
+      {isEdit && (
+        <CustomModal isOpen={isEdit} onClose={onCloseFct} title="Edit order">
+          <GenericAddEditForm
+            initialValues={initialFormValues}
+            validationSchema={validationCreateOrderSchema}
+            apiRequest={handleSubmitModal}
+            hasSubmitButton={true}
+            submitBtnName={"save"}
+            form={(formProps: any) => (
+              <JobStatsCreateOrderModal
+                formProps={formProps}
+                createOrderType={"TV"}
+              />
+            )}
+            btnStyle={submitBtnStyle}
+          />
         </CustomModal>
-      )} */}
+      )}
 
-      {/* {isConfirmationOpen && (
+      {isConfirmationOpen && (
         <ConfirmationModal
           open={isConfirmationOpen}
           onClose={handleCloseConfirmationModal}
           onConfirm={handleSubmitConfirmationModal}
-          message="Are you sure you want to delete this package?"
+          message="Are you sure you want to close this order?"
           btnName="Yes"
         />
-      )} */}
+      )}
 
       {isLoading && <Loader />}
     </PageContainer>

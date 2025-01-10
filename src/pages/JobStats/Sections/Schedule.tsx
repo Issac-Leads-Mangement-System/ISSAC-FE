@@ -44,14 +44,18 @@ export const ScheduleSection = ({ formProps }: any) => {
                 <DemoContainer components={["DatePicker"]} sx={{ p: 0, m: 0 }}>
                   <DatePicker
                     label="Supply date"
+                    value={formProps.values.order_schedule.order_supply_date 
+                      ? dayjs(formProps.values.order_schedule.order_supply_date, "DD-MM-YYYY") 
+                      : null}
                     onChange={(newValue) => {
                       const formattedValue =
-                        dayjs(newValue).format("DD-MM-YYYY");
+                      dayjs(newValue).format("DD-MM-YYYY");
                       formProps.setFieldValue(
                         "order_schedule.order_supply_date",
                         formattedValue
                       );
                     }}
+                    format="DD-MM-YYYY"
                     sx={{ width: "100%" }}
                   />
                 </DemoContainer>

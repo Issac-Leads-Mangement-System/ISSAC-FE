@@ -22,7 +22,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 export const PropertiesSection = ({ formProps, createOrderType }: any) => {
   const { orders } = ordersStore();
-
+  const orderInstallationPayments = [1, 12, 36];
   return (
     <Box display="flex" flexDirection="column" gap={2}>
       <Box>
@@ -66,6 +66,8 @@ export const PropertiesSection = ({ formProps, createOrderType }: any) => {
                       )}
                       label="Price"
                       style={{ display: "flex" }}
+                      regex={/^\d*\.?\d*$/}
+                      inputTypeRegex={"decimal"}
                     />
                   </Grid2>
 
@@ -77,18 +79,30 @@ export const PropertiesSection = ({ formProps, createOrderType }: any) => {
                       )}
                       label="Installation price"
                       style={{ display: "flex" }}
+                      regex={/^\d*\.?\d*$/}
+                      inputTypeRegex={"decimal"}
                     />
                   </Grid2>
 
                   <Grid2 size={4}>
-                    <Input
-                      {...generateFormikInputFieldProps(
-                        formProps,
-                        "order_properties.order_installation_payments"
-                      )}
-                      label="Payments"
-                      style={{ display: "flex" }}
-                    />
+                    <FormControl fullWidth>
+                      <InputLabel id="payments">Payments</InputLabel>
+                      <Select
+                        labelId="payments"
+                        id="payments"
+                        label="Payments"
+                        {...generateFormikInputFieldProps(
+                          formProps,
+                          "order_properties.order_installation_payments"
+                        )}
+                      >
+                        {orderInstallationPayments?.map((order: any) => (
+                          <MenuItem key={crypto.randomUUID()} value={order}>
+                            {order}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
                   </Grid2>
 
                   <Grid2 size={4}>
@@ -99,6 +113,8 @@ export const PropertiesSection = ({ formProps, createOrderType }: any) => {
                       )}
                       label="Streamers"
                       style={{ display: "flex" }}
+                      regex={/^\d*$/}
+                      inputTypeRegex={"numeric"}
                     />
                   </Grid2>
 
@@ -110,6 +126,8 @@ export const PropertiesSection = ({ formProps, createOrderType }: any) => {
                       )}
                       label="Users"
                       style={{ display: "flex" }}
+                      regex={/^\d*$/}
+                      inputTypeRegex={"numeric"}
                     />
                   </Grid2>
 
@@ -121,6 +139,8 @@ export const PropertiesSection = ({ formProps, createOrderType }: any) => {
                       )}
                       label="Wifi"
                       style={{ display: "flex" }}
+                      regex={/^\d*$/}
+                      inputTypeRegex={"numeric"}
                     />
                   </Grid2>
                 </>
