@@ -89,12 +89,17 @@ const ordersListStore = create<IOrdersListState>((set) => ({
         former_company: response.data.former_company,
         mobility: response.data.mobility,
       };
-      response.data.order_schedule.order_supply_date = dayjs(response.data.order_schedule.order_supply_date)
-      response.data.order_customer_payment.order_card_expired_date = dayjs(response.data.order_customer_payment.order_card_expired_date)
+      if(response.data.order_schedule) {
+        response.data.order_schedule.order_supply_date = dayjs(response.data.order_schedule.order_supply_date)
+      }
+      if(response.data.order_customer_payment) {
+        response.data.order_customer_payment.order_card_expired_date = dayjs(response.data.order_customer_payment.order_card_expired_date)
+      }
       set((state) => ({
         order: response.data
       }));
     } catch (error: any) {
+      console.log('zzz error', error)
       showNotification({
         message: error.response?.data?.detail || "An error occurred.",
         status: error.response?.status || 500,

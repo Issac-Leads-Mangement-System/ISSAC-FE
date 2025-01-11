@@ -177,7 +177,6 @@ const jobStatsStore = create<IJobsState>((set) => ({
       `${process.env.REACT_APP_BASE_URL}/orders/create_order`, values,
     );
 
-    console.log(response)
   },
 
   setActiveFilters: (ids: any, key: string) =>

@@ -126,7 +126,7 @@ export const OrderListModal = () => {
     },
   ];
 
-  const columnsProperties: GridColDef<(typeof order)[number]>[] = [
+  const columnsPropertiesTV: GridColDef<(typeof order)[number]>[] = [
     {
       field: "order_package_name",
       headerName: "Package name",
@@ -217,6 +217,46 @@ export const OrderListModal = () => {
     },
   ];
 
+  const columnsPropertiesMobile: GridColDef<(typeof order)[number]>[] = [
+    {
+      field: "order_package_name",
+      headerName: "Package name",
+      width: 350,
+      renderCell: (params: any) => {
+        const { row } = params;
+        return (
+          <Typography>{row.order_properties.order_package_name}</Typography>
+        );
+      },
+    },
+    {
+      field: "order_phone_numbers",
+      headerName: "Phone numbers",
+      width: 800,
+      renderCell: (params: any) => {
+        const { row } = params;
+        return (
+          <Typography>
+            {Array.isArray(row.order_properties.order_phone_numbers) ? row.order_properties.order_phone_numbers.join(", ") : ""}
+          </Typography>
+        );
+      },
+    },
+    {
+      field: "orders_mobile_properties_comment",
+      headerName: "Mobile properties comment",
+      width: 500,
+      renderCell: (params: any) => {
+        const { row } = params;
+        return (
+          <Typography>
+            {row.order_properties.orders_mobile_properties_comment}
+          </Typography>
+        );
+      },
+    },
+  ];
+
   const columnsSchedule: GridColDef<(typeof order)[number]>[] = [
     {
       field: "order_supply_comment",
@@ -237,9 +277,7 @@ export const OrderListModal = () => {
         const { row } = params;
         return (
           <Typography>
-            {dayjs(row.order_schedule.order_supply_date).format(
-              "DD-MM-YYYY"
-            )}
+            {dayjs(row.order_schedule.order_supply_date).format("DD-MM-YYYY")}
           </Typography>
         );
       },
@@ -251,9 +289,7 @@ export const OrderListModal = () => {
       renderCell: (params: any) => {
         const { row } = params;
         return (
-          <Typography>
-            {row.order_schedule.order_supply_time_range}
-          </Typography>
+          <Typography>{row.order_schedule.order_supply_time_range}</Typography>
         );
       },
     },
@@ -261,73 +297,80 @@ export const OrderListModal = () => {
 
   return (
     <Box sx={{ height: "60vh", overflowY: "auto", width: "100%" }}>
-      <Paper elevation={4} sx={{ p: 3, m: 2, borderRadius: 2 }}>
-        <Typography
-          variant="h6"
-          component="div"
-          sx={{ fontWeight: "bold", mb: 2 }}
-        >
-          Basic Info
-        </Typography>
-        <CustomDataGrid
-          rows={[order]}
-          columns={columnsBasicInfo}
-          disableRowSelectionOnClick
-          disableVirtualization
-          hideFooterPagination={true}
-        />
-      </Paper>
+      {order.order_customer_info && (
+        <Paper elevation={4} sx={{ p: 3, m: 2, borderRadius: 2 }}>
+          <Typography
+            variant="h6"
+            component="div"
+            sx={{ fontWeight: "bold", mb: 2 }}
+          >
+            Basic Info
+          </Typography>
+          <CustomDataGrid
+            rows={[order]}
+            columns={columnsBasicInfo}
+            disableRowSelectionOnClick
+            disableVirtualization
+            hideFooterPagination={true}
+          />
+        </Paper>
+      )}
 
-      <Paper elevation={4} sx={{ p: 3, m: 2, borderRadius: 2 }}>
-        <Typography
-          variant="h6"
-          component="div"
-          sx={{ fontWeight: "bold", mb: 2 }}
-        >
-          Payments
-        </Typography>
-        <CustomDataGrid
-          rows={[order]}
-          columns={columnsPayments}
-          disableRowSelectionOnClick
-          disableVirtualization
-          hideFooterPagination={true}
-        />
-      </Paper>
+      {order.order_customer_payment && (
+        <Paper elevation={4} sx={{ p: 3, m: 2, borderRadius: 2 }}>
+          <Typography
+            variant="h6"
+            component="div"
+            sx={{ fontWeight: "bold", mb: 2 }}
+          >
+            Payments
+          </Typography>
+          <CustomDataGrid
+            rows={[order]}
+            columns={columnsPayments}
+            disableRowSelectionOnClick
+            disableVirtualization
+            hideFooterPagination={true}
+          />
+        </Paper>
+      )}
 
-      <Paper elevation={4} sx={{ p: 3, m: 2, borderRadius: 2 }}>
-        <Typography
-          variant="h6"
-          component="div"
-          sx={{ fontWeight: "bold", mb: 2 }}
-        >
-          Properties
-        </Typography>
-        <CustomDataGrid
-          rows={[order]}
-          columns={columnsProperties}
-          disableRowSelectionOnClick
-          disableVirtualization
-          hideFooterPagination={true}
-        />
-      </Paper>
-
-      <Paper elevation={4} sx={{ p: 3, m: 2, borderRadius: 2 }}>
-        <Typography
-          variant="h6"
-          component="div"
-          sx={{ fontWeight: "bold", mb: 2 }}
-        >
-          Schedule
-        </Typography>
-        <CustomDataGrid
-          rows={[order]}
-          columns={columnsSchedule}
-          disableRowSelectionOnClick
-          disableVirtualization
-          hideFooterPagination={true}
-        />
-      </Paper>
+      {order.order_properties && (
+        <Paper elevation={4} sx={{ p: 3, m: 2, borderRadius: 2 }}>
+          <Typography
+            variant="h6"
+            component="div"
+            sx={{ fontWeight: "bold", mb: 2 }}
+          >
+            Properties
+          </Typography>
+          <CustomDataGrid
+            rows={[order]}
+            columns={order.order_type === 'TV' ? columnsPropertiesTV : columnsPropertiesMobile}
+            disableRowSelectionOnClick
+            disableVirtualization
+            hideFooterPagination={true}
+          />
+        </Paper>
+      )}
+      {order.order_schedule && (
+        <Paper elevation={4} sx={{ p: 3, m: 2, borderRadius: 2 }}>
+          <Typography
+            variant="h6"
+            component="div"
+            sx={{ fontWeight: "bold", mb: 2 }}
+          >
+            Schedule
+          </Typography>
+          <CustomDataGrid
+            rows={[order]}
+            columns={columnsSchedule}
+            disableRowSelectionOnClick
+            disableVirtualization
+            hideFooterPagination={true}
+          />
+        </Paper>
+      )}
     </Box>
   );
 };
