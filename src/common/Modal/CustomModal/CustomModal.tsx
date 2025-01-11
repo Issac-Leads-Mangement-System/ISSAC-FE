@@ -20,12 +20,12 @@ const CustomModal = ({
     bgcolor: "#ffffff",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: "auto",
     border: "1px solid #000",
     boxShadow: 24,
     borderRadius: "3px",
     padding: "32px 32px 16px 32px",
-    minWidth: minWidth || "400px",
+    width: "90%",
+    height: "80vh"
   };
 
   return (
