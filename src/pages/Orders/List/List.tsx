@@ -74,7 +74,7 @@ const OrdersList = ({ className }: any) => {
   const handleSearchInputChange = (e: any) => {
     setSearchValue(e?.target.value);
     if (!e?.target.value) {
-      getOrders(0, 10);
+      getOrders();
     }
   };
 
@@ -271,7 +271,7 @@ const OrdersList = ({ className }: any) => {
                 onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
                   if (event.key === "Enter") {
                     event.preventDefault();
-                    //   getOrders();
+                      getOrders();
                   }
                 }}
               />

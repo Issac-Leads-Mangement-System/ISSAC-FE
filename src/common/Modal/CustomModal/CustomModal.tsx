@@ -25,7 +25,7 @@ const CustomModal = ({
     borderRadius: "3px",
     padding: "32px 32px 16px 32px",
     width: "90%",
-    height: "80vh"
+    minWidth: minWidth || "400px"
   };
 
   return (
@@ -46,7 +46,7 @@ const CustomModal = ({
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            // padding: 2,
+            padding: 2,
             bgcolor: "#fffff",
           }}
         >
@@ -67,7 +67,7 @@ const CustomModal = ({
         </Box>
         <Divider />
 
-        <Box>{children}</Box>
+        <Box sx={{marginTop: "20px"}}>{children}</Box>
       </Box>
     </Modal>
   );
