@@ -30,6 +30,7 @@ import {
 } from "../../../forms/createOrderSchema";
 import { submitBtnStyle } from "../../../common/constants";
 import dayjs from "dayjs";
+import { OrderListModal } from "../../../common/Modal/OrdersList/OrdersListModal";
 
 const OrdersList = ({ className }: any) => {
   const {
@@ -54,6 +55,7 @@ const OrdersList = ({ className }: any) => {
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [idOrder, setIdOrder] = useState<number | null>(null);
   const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [isViewDetails, setIsViewDetails] = useState<boolean>(false);
   const [initialFormValues, setInitialFormValues] =
     useState<ICreateOrderModalSchema>({
       ...initialValues,
@@ -131,7 +133,14 @@ const OrdersList = ({ className }: any) => {
 
   const onCloseFct = () => {
     setIsEdit(false);
+    setIsViewDetails(false);
   };
+
+  const handleViewDetails = async (id: any) => {
+    await getOrderById(id);
+    setIsViewDetails(true);
+
+  }
 
   const handleSubmitModal = async (values: any) => {
     // delete unecessarly values
@@ -210,7 +219,7 @@ const OrdersList = ({ className }: any) => {
                 color: "black",
               }}
               className="textPrimary"
-              onClick={() => handleEditClick(id)}
+              onClick={() => handleViewDetails(id)}
             />,
 
             <GridActionsCellItem
@@ -326,6 +335,12 @@ const OrdersList = ({ className }: any) => {
       )}
 
       {isLoading && <Loader />}
+
+      {isViewDetails && (
+        <CustomModal isOpen={isViewDetails} onClose={onCloseFct} title="View details" minWidth="300px">
+          <OrderListModal/>
+        </CustomModal>
+      )}
     </PageContainer>
   );
 };
