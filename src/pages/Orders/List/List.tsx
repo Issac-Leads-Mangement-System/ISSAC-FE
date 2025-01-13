@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { Box, Card, CardContent } from "@mui/material";
+import { Box, Button, Card, CardContent } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
@@ -28,9 +28,14 @@ import {
   initialValues,
   validationCreateOrderSchema,
 } from "../../../forms/createOrderSchema";
-import { submitBtnStyle } from "../../../common/constants";
+import { filterBtnStyle, submitBtnStyle } from "../../../common/constants";
 import dayjs from "dayjs";
 import { OrderListModal } from "../../../common/Modal/OrdersList/OrdersListModal";
+import FilterListIcon from "@mui/icons-material/FilterList";
+import Filters from "../../../components/Filters/filters";
+import { FilterOrders } from "../../../common/forms-filters/FilterOrders";
+import usersStore from "../../../store/Users/users-store";
+import jobsStore from "../../../store/Jobs/jobs-store";
 
 const OrdersList = ({ className }: any) => {
   const {
@@ -45,17 +50,20 @@ const OrdersList = ({ className }: any) => {
     pagination,
     setRowsPerPage,
     setPage,
+    resetFilters,
   }: any = ordersListStore();
   const {
     setSecontToolbarMessage,
     setSecontToolbarPath,
     resetSecondToolbar,
   }: any = secondToolbarStore();
+  const { getUserTeam }: any = jobsStore();
 
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [idOrder, setIdOrder] = useState<number | null>(null);
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [isViewDetails, setIsViewDetails] = useState<boolean>(false);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [initialFormValues, setInitialFormValues] =
     useState<ICreateOrderModalSchema>({
       ...initialValues,
@@ -65,6 +73,7 @@ const OrdersList = ({ className }: any) => {
     setSecontToolbarMessage("ORDERS");
     setSecontToolbarPath("LIST");
     getOrders();
+    getUserTeam(false);
 
     return () => {
       resetSecondToolbar();
@@ -139,8 +148,7 @@ const OrdersList = ({ className }: any) => {
   const handleViewDetails = async (id: any) => {
     await getOrderById(id);
     setIsViewDetails(true);
-
-  }
+  };
 
   const handleSubmitModal = async (values: any) => {
     // delete unecessarly values
@@ -155,11 +163,28 @@ const OrdersList = ({ className }: any) => {
     delete values.user_name;
     const idOrder = values.id;
     delete values.id;
-    values.order_customer_payment.order_card_expired_date =  dayjs(values.order_customer_payment.order_card_expired_date).format("MM/YY");
-    values.order_schedule.order_supply_date = dayjs(values.order_schedule.order_supply_date).format("DD-MM-YYYY");
-    await updateOrder(idOrder, values)
+    values.order_customer_payment.order_card_expired_date = dayjs(
+      values.order_customer_payment.order_card_expired_date
+    ).format("MM/YY");
+    values.order_schedule.order_supply_date = dayjs(
+      values.order_schedule.order_supply_date
+    ).format("DD-MM-YYYY");
+    await updateOrder(idOrder, values);
     await getOrders();
     setIsEdit(false);
+  };
+
+  const handleFiltersClose = () => {
+    setIsFilterOpen(false);
+  };
+
+  const handleFilter = async () => {
+    await getOrders();
+    setIsFilterOpen(false);
+  };
+
+  const resetFilter = () => {
+    resetFilters();
   };
 
   const columns: GridColDef<(typeof orders)[number]>[] = [
@@ -271,10 +296,22 @@ const OrdersList = ({ className }: any) => {
                 onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
                   if (event.key === "Enter") {
                     event.preventDefault();
-                      getOrders();
+                    getOrders();
                   }
                 }}
               />
+
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+                <Button
+                  variant="outlined"
+                  onClick={() => setIsFilterOpen(true)}
+                  startIcon={<FilterListIcon />}
+                  size="small"
+                  sx={filterBtnStyle}
+                >
+                  Filters
+                </Button>
+              </Box>
             </Box>
 
             <CustomDataGrid
@@ -337,9 +374,25 @@ const OrdersList = ({ className }: any) => {
       {isLoading && <Loader />}
 
       {isViewDetails && (
-        <CustomModal isOpen={isViewDetails} onClose={onCloseFct} title="View details" minWidth="300px">
-          <OrderListModal/>
+        <CustomModal
+          isOpen={isViewDetails}
+          onClose={onCloseFct}
+          title="View details"
+          minWidth="300px"
+        >
+          <OrderListModal />
         </CustomModal>
+      )}
+
+      {isFilterOpen && (
+        <Filters
+          open={isFilterOpen}
+          onClose={handleFiltersClose}
+          handleFilter={handleFilter}
+          resetFilter={resetFilter}
+        >
+          <FilterOrders/>
+        </Filters>
       )}
     </PageContainer>
   );

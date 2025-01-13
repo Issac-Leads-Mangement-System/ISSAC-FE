@@ -74,4 +74,11 @@ export const submitBtnStyle = {
   textTransform: "uppercase",
 };
 
-export const ORDERS_TYPE = ['TV', 'mobile']
+export const ORDERS_TYPE = ['TV', 'mobile'];
+export const MOBILITY = [{label: "Yes", value: true}, {label: "No", value: false}];
+
+export const STATUSES = [
+  { id: "close", name: "close" },
+  { id: "in progress", name: "in progress" },
+  { id: "open", name: "open" },
+];

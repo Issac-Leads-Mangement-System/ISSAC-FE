@@ -12,6 +12,7 @@ interface IOrdarsState {
     package_name: string;
   };
   pagination: any;
+  
 }
 
 const ordersStore = create<IOrdarsState>((set) => ({
@@ -27,6 +28,7 @@ const ordersStore = create<IOrdarsState>((set) => ({
     pageSize: 10,
     page: 0,
   },
+  
 
   getOrders: async (type: string) => {
     const { showNotification } = useNotificationStore.getState();

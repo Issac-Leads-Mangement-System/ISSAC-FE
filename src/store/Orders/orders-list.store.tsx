@@ -10,6 +10,12 @@ interface IOrdersListState {
   searchValue: string;
   order: any;
   pagination: any;
+  activate_filters: {
+    order_status: any,
+    order_type: any,
+    mobility: any,
+    user_id: any,
+  }
 }
 
 const ordersListStore = create<IOrdersListState>((set) => ({
@@ -22,18 +28,25 @@ const ordersListStore = create<IOrdersListState>((set) => ({
     pageSize: 10,
     page: 0,
   },
+  activate_filters: {
+    order_status: [],
+    order_type: [],
+    mobility: [],
+    user_id: [],
+  },
 
   getOrders: async (type: string) => {
     const { showNotification } = useNotificationStore.getState();
     try {
       set({ isLoading: true });
-      const { searchValue, pagination } = ordersListStore.getState();
+      const { searchValue, pagination, activate_filters } = ordersListStore.getState();
       const response = await api.post(
         `${process.env.REACT_APP_BASE_URL}/orders/?page=${
           pagination.page + 1
         }&limit=${pagination.pageSize}${
           searchValue ? `&search=${searchValue}` : ""
-        }`
+        }`,
+        activate_filters,
       );
       set({
         orders: response.data.orders_response,
@@ -59,6 +72,14 @@ const ordersListStore = create<IOrdersListState>((set) => ({
       },
     }));
   },
+
+  setActiveFilters: (ids: any, key: string) =>
+    set((state) => ({
+      activate_filters: {
+        ...state.activate_filters,
+        [key]: Array.from(new Set(ids)), // Elimină duplicatele
+      },
+    })),
 
   setPage: async (page: number) => {
     set((state) => ({
@@ -162,6 +183,16 @@ const ordersListStore = create<IOrdersListState>((set) => ({
     } finally {
       set({ isLoading: false });
     }
+  },
+  resetFilters: () => {
+    set({
+      activate_filters: {
+        order_status: [],
+        order_type: [],
+        mobility: [],
+        user_id: [],
+      },
+    });
   },
 }));
 
