@@ -146,50 +146,15 @@ export const PropertiesSection = ({ formProps, createOrderType }: any) => {
                 </>
               )}
 
-              {/* {createOrderType === "mobile" && (
-                <>
-                  <FieldArray name="order_phone_numbers">
-                    {({ push, remove }) => (
-                      <Box>
-                        <Typography variant="h6" gutterBottom>
-                          Phone numbers
-                        </Typography>
+              {createOrderType === "mobile" && (
+                <FieldArray name="order_properties.order_phone_numbers">
+                  {({ push, remove }) => (
+                    <Box>
+                      <Typography variant="h6" gutterBottom>
+                        Phone numbers
+                      </Typography>
 
-                        {formProps.values.order_properties.order_phone_numbers.map(
-                          (_: any, index: any) => (
-                            <Box
-                              key={index}
-                              sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: 2,
-                                mb: 2,
-                              }}
-                            >
-                              <TextField
-                                fullWidth
-                                label={`Phone number ${index + 1}`}
-                                onChange={(e) => {
-                                  const newPhoneNumbers = [...formProps.values.order_phone_numbers]; // Creezi o copie a array-ului
-                                  newPhoneNumbers[index] = e.target.value; // Actualizezi elementul specific
-                                  formProps.setFieldValue("order_phone_numbers", newPhoneNumbers); // Setezi array-ul actualizat
-                                }}
-                              />
-
-                              <IconButton
-                                color="error"
-                                onClick={() => remove(index)}
-                                disabled={
-                                  formProps.values.order_properties.order_phone_numbers
-                                    .length === 1
-                                }
-                              >
-                                <DeleteIcon />
-                              </IconButton>
-                            </Box>
-                          )
-                        )}
-
+                      <Box sx={{ mb: 2 }}>
                         <Button
                           variant="outlined"
                           startIcon={<AddIcon />}
@@ -198,10 +163,68 @@ export const PropertiesSection = ({ formProps, createOrderType }: any) => {
                           Add phone number
                         </Button>
                       </Box>
-                    )}
-                  </FieldArray>
-                </>
-              )} */}
+
+                      <Grid2 container spacing={2} wrap="wrap">
+                        {formProps.values.order_properties.order_phone_numbers.map(
+                          (_: any, index: number, array: any) => {
+                            const calculateSize = () => {
+                              const total = array.length;
+
+                              if (total === 1) return 12; 
+                              if (total === 2) return 6; 
+                              return 4; 
+                            };
+
+                            return (
+                              <Grid2
+                                key={index}
+                                size={calculateSize()} 
+                              >
+                                <Box
+                                  sx={{
+                                    display: "flex",
+                                    gap: 1,
+                                  }}
+                                >
+                                  <TextField
+                                    fullWidth
+                                    label={`Phone number ${index + 1}`}
+                                    value={
+                                      formProps.values.order_properties
+                                        .order_phone_numbers[index]
+                                    }
+                                    onChange={(e) => {
+                                      const newPhoneNumbers = [
+                                        ...formProps.values.order_properties
+                                          .order_phone_numbers,
+                                      ];
+                                      newPhoneNumbers[index] = e.target.value;
+                                      formProps.setFieldValue(
+                                        "order_properties.order_phone_numbers",
+                                        newPhoneNumbers
+                                      );
+                                    }}
+                                  />
+                                  <IconButton
+                                    color="error"
+                                    onClick={() => remove(index)}
+                                    disabled={
+                                      formProps.values.order_properties
+                                        .order_phone_numbers.length === 1
+                                    }
+                                  >
+                                    <DeleteIcon />
+                                  </IconButton>
+                                </Box>
+                              </Grid2>
+                            );
+                          }
+                        )}
+                      </Grid2>
+                    </Box>
+                  )}
+                </FieldArray>
+              )}
 
               <Grid2 size={12}>
                 <TextField
