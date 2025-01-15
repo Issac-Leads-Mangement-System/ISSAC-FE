@@ -84,9 +84,9 @@ const jobStatsStore = create<IJobsState>((set) => ({
       const { activeJob, searchValue, pagination, filters } =
         jobStatsStore.getState();
       const response = await api.post(
-        `${process.env.REACT_APP_BASE_URL}/jobs/${activeJob}/leads?page=${
+        `${process.env.REACT_APP_BASE_URL}/jobs/${activeJob}/leads?${isPlayScreen ? '' : `page=${
           pagination.page + 1
-        }&limit=${pagination.pageSize}&search=${searchValue}&play_mode=${isPlayScreen ? true : false}`,
+        }&limit=${pagination.pageSize}`}&search=${searchValue}&play_mode=${isPlayScreen ? true : false}`,
         filters
       );
       if(response.data.job_leads_response?.length > 0) {
