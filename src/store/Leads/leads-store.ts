@@ -237,6 +237,15 @@ const leadsStore = create<ILeadsState>((set) => ({
       },
     });
   },
+
+  resetPagination: () => {
+    set({
+      pagination: {
+        pageSize: 10,
+        page: 0,
+      }
+    })
+  }
 }));
 
 export default leadsStore;

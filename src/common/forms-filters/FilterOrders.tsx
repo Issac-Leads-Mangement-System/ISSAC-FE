@@ -9,17 +9,13 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import OutlinedInput from "@mui/material/OutlinedInput";
-import leadsTypesStore from "../../store/Leads/types-store";
-import leadsStatusesStore from "../../store/Leads/statuses-store";
 import { MOBILITY, ORDERS_TYPE, STATUSES } from "../constants";
 import ordersListStore from "../../store/Orders/orders-list.store";
-import jobsStore from "../../store/Jobs/jobs-store";
+import usersStore from "../../store/Users/users-store";
 
 export const FilterOrders = () => {
   const { activate_filters, setActiveFilters }: any = ordersListStore();
-  const { types }: any = leadsTypesStore();
-  const { statuses }: any = leadsStatusesStore();
-  const { userTeam }: any = jobsStore();
+  const { users: userTeam }: any = usersStore();
 
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;

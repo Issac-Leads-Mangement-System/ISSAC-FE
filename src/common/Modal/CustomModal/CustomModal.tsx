@@ -7,12 +7,14 @@ const CustomModal = ({
   title,
   children,
   minWidth,
+  width,
 }: {
   isOpen: boolean;
   onClose: () => void;
   title: string;
   children: any;
   minWidth?: string;
+  width?: string;
 }) => {
   const style = {
     position: "absolute",
@@ -24,7 +26,7 @@ const CustomModal = ({
     boxShadow: 24,
     borderRadius: "3px",
     padding: "32px 32px 16px 32px",
-    width: "90%",
+    width: width || "90%",
     minWidth: minWidth || "400px"
   };
 

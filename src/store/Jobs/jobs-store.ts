@@ -335,6 +335,15 @@ const jobsStore = create<IJobsState>((set) => ({
       },
     });
   },
+
+  resetPagination: () => {
+    set({
+      pagination: {
+        pageSize: 10,
+        page: 0,
+      }
+    })
+  }
 }));
 
 export default jobsStore;

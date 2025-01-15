@@ -1,27 +1,104 @@
-import React, { useState } from "react";
-import { Box, Button, Typography, Grid, IconButton, Tooltip } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import {
+  Box,
+  Button,
+  Typography,
+  Grid,
+  IconButton,
+  Tooltip,
+} from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import UserChipsExample from "./JobScreenNavigationUserInfo";
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import CustomModal from "../../common/Modal/CustomModal/CustomModal";
+import { GenericAddEditForm } from "../../common/forms-generic-ad-edit/GenericAdEditForm";
+import { ICreateOrderModalSchema, initialValues, validationCreateOrderSchema } from "../../forms/createOrderSchema";
+import { JobStatsCreateOrderModal } from "./JobStatsCreateOrderModal";
+import { submitBtnStyle } from "../../common/constants";
 
 const ScreenNavigationWithGrid = ({
-  currentId,
-  totalButtons,
-  onNext,
-  onPrevious,
-  onButtonClick,
-  isPreviousButtonDisabled,
-  isNextButtonDisabled,
+  jobLeadsById,
+  idLeadIdPlayButton,
+  handleSubmitModal,
 }: any) => {
   const [tooltipText, setTooltipText] = useState("Copy to clipboard");
+  const [idLeadJobConfirmation, setIdLeadJobConfirmation]: any =
+      useState(undefined);
+  const [isButtonClick, setIsButtonClick]: any = useState(false);
+  const [orderType, setOrderType]: any = useState('');
+  const [initialFormValues, setInitialFormValues] =
+      useState<ICreateOrderModalSchema>({
+        ...initialValues,
+      });
+
+  useEffect(() => {
+    if(jobLeadsById.length > 0) {
+      setIdLeadJobConfirmation(jobLeadsById[0].lead_id)
+    }
+    if(idLeadIdPlayButton) {
+      setIdLeadJobConfirmation(idLeadIdPlayButton)
+    }
+  }, [])
+
+  const handleNext = () => {
+    const filteredJobs = jobLeadsById.filter((job: any) => job.isCurrentUser);
+
+    const findIndexCurrentJob = filteredJobs.findIndex(
+      (job: any) => job.lead_id === idLeadJobConfirmation
+    );
+    if (filteredJobs[findIndexCurrentJob + 1]) {
+      setIdLeadJobConfirmation(filteredJobs[findIndexCurrentJob + 1].lead_id);
+    }
+  };
+
+  const isPreviousButtonDisabled = (() => {
+    const findIndexCurrentJob = jobLeadsById.findIndex(
+      (job: any) => job.lead_id === idLeadJobConfirmation
+    );
+    if (jobLeadsById[findIndexCurrentJob - 1]) {
+      return false;
+    } else {
+      return true;
+    }
+  })();
+
+  const isNextButtonDisabled = (() => {
+    const findIndexCurrentJob = jobLeadsById.findIndex(
+      (job: any) => job.lead_id === idLeadJobConfirmation
+    );
+    if (jobLeadsById[findIndexCurrentJob + 1]) {
+      return false;
+    } else {
+      return true;
+    }
+  })();
+
+  const handlePrevious = () => {
+    const findIndexCurrentJob = jobLeadsById.findIndex(
+      (job: any) => job.lead_id === idLeadJobConfirmation
+    );
+    if (jobLeadsById[findIndexCurrentJob - 1]) {
+      setIdLeadJobConfirmation(jobLeadsById[findIndexCurrentJob - 1].lead_id);
+    }
+  };
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(currentId).then(() => {
+    navigator.clipboard.writeText(jobLeadsById[0].lead_id).then(() => {
       setTooltipText("Copied!");
       setTimeout(() => setTooltipText("Copy to clipboard"), 2000);
     });
   };
+
+  const handleButtonClick = (order: string) => {
+    setIsButtonClick(true)
+    setOrderType(order);
+    // setCurrentId(id);
+  };
+
+  const onCloseCreateOrder = () => {
+    setIsButtonClick(false)
+  }
 
   return (
     <Box
@@ -35,7 +112,7 @@ const ScreenNavigationWithGrid = ({
         backgroundColor: "#f9fafc",
       }}
     >
-      <UserChipsExample/>
+      <UserChipsExample />
       {/* Header cu butoanele Previous și Next */}
       <Box
         sx={{
@@ -50,11 +127,11 @@ const ScreenNavigationWithGrid = ({
         <Button
           variant="outlined"
           color="primary"
-          onClick={onPrevious}
+          onClick={handlePrevious}
           disabled={isPreviousButtonDisabled}
           sx={{ minWidth: "120px" }}
         >
-          <ArrowBackIcon/>
+          <ArrowBackIcon />
         </Button>
         {/* <Typography
           variant="h6"
@@ -85,29 +162,31 @@ const ScreenNavigationWithGrid = ({
               color: "#333",
             }}
           >
-            {currentId}
+            {idLeadJobConfirmation || 'No lead available'}
           </Typography>
-          <Tooltip title={tooltipText} arrow>
-            <IconButton
-              onClick={handleCopy}
-              size="small"
-              sx={{
-                marginLeft: "8px",
-                color: "#555",
-              }}
-            >
-              <ContentCopyIcon fontSize="small" />
-            </IconButton>
-          </Tooltip>
+          {idLeadJobConfirmation && (
+            <Tooltip title={tooltipText} arrow>
+              <IconButton
+                onClick={handleCopy}
+                size="small"
+                sx={{
+                  marginLeft: "8px",
+                  color: "#555",
+                }}
+              >
+                <ContentCopyIcon fontSize="small" />
+              </IconButton>
+            </Tooltip>
+          )}
         </Box>
         <Button
           variant="outlined"
           color="primary"
-          onClick={onNext}
+          onClick={handleNext}
           disabled={isNextButtonDisabled}
           sx={{ minWidth: "120px" }}
         >
-          <ArrowForwardIcon/>
+          <ArrowForwardIcon />
         </Button>
       </Box>
 
@@ -139,13 +218,26 @@ const ScreenNavigationWithGrid = ({
               variant="contained"
               color={"primary"}
               fullWidth
-              onClick={() => onButtonClick()}
+              onClick={() => handleButtonClick('TV')}
               sx={{
                 fontWeight: "bold",
                 borderRadius: "8px",
               }}
             >
-              Button
+              Create TV order
+            </Button>
+
+            <Button
+              variant="contained"
+              color={"primary"}
+              fullWidth
+              onClick={() => handleButtonClick('mobile')}
+              sx={{
+                fontWeight: "bold",
+                borderRadius: "8px",
+              }}
+            >
+              Create mobile order
             </Button>
           </Grid>
           {/* {Array.from({ length: totalButtons }).map((_, index) => (
@@ -165,6 +257,29 @@ const ScreenNavigationWithGrid = ({
             </Grid>
           ))} */}
         </Grid>
+
+        {isButtonClick && (
+        <CustomModal
+          isOpen={isButtonClick}
+          onClose={onCloseCreateOrder}
+          title={`Create order ${orderType}`}
+          minWidth="1200px"
+        >
+          <GenericAddEditForm
+            initialValues={initialFormValues}
+            validationSchema={validationCreateOrderSchema}
+            apiRequest={(values: any) => handleSubmitModal(values, orderType)}
+            hasSubmitButton={true}
+            submitBtnName={"save"}
+            form={(formProps: any) => (
+              <JobStatsCreateOrderModal formProps={formProps} createOrderType={orderType}/>
+            )}
+            btnStyle={submitBtnStyle}
+          />
+        </CustomModal>
+      )}
+
+
       </Box>
     </Box>
   );

@@ -77,7 +77,7 @@ const jobStatsStore = create<IJobsState>((set) => ({
     }
   },
 
-  getJobLeadsById: async () => {
+  getJobLeadsById: async (isPlayScreen:boolean = false) => {
     try {
       const { user }: any = usersStore.getState();
       set({ isLoading: true });
@@ -86,17 +86,19 @@ const jobStatsStore = create<IJobsState>((set) => ({
       const response = await api.post(
         `${process.env.REACT_APP_BASE_URL}/jobs/${activeJob}/leads?page=${
           pagination.page + 1
-        }&limit=${pagination.pageSize}&search=${searchValue}`,
+        }&limit=${pagination.pageSize}&search=${searchValue}&play_mode=${isPlayScreen ? true : false}`,
         filters
       );
-      response.data.job_leads_response.forEach((jobLead: any) => {
-        if (jobLead.user.user_id === user.id) {
-          jobLead.isCurrentUser = true;
-        } else {
-          jobLead.isCurrentUser = false;
-        }
-        return jobLead;
-      });
+      if(response.data.job_leads_response?.length > 0) {
+        response.data.job_leads_response.forEach((jobLead: any) => {
+          if (jobLead.user.user_id === user.id) {
+            jobLead.isCurrentUser = true;
+          } else {
+            jobLead.isCurrentUser = false;
+          }
+          return jobLead;
+        });
+      }
       set({
         jobLeadsById: response.data.job_leads_response,
         counter_job_leads: response.data.counter_job_leads,
@@ -195,7 +197,18 @@ const jobStatsStore = create<IJobsState>((set) => ({
       },
     });
   },
+  resetJobLeadsById: () => {
+    set({ jobLeadsById: [] });
 
+    // return new Promise<void>((resolve) => {
+    //   const unsubscribe = jobStatsStore.subscribe((state) => {
+    //     if (state.jobLeadsById.length === 0) {
+    //       unsubscribe(); // Dezabonare
+    //       resolve(); // Rezolvăm promisiunea
+    //     }
+    //   });
+    // });
+  },
   
 }));
 
