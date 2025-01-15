@@ -58,6 +58,7 @@ const OrdersList = ({ className }: any) => {
     resetSecondToolbar,
   }: any = secondToolbarStore();
   const { getUserTeam }: any = jobsStore();
+  const { getUsers } :any = usersStore();
 
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [idOrder, setIdOrder] = useState<number | null>(null);
@@ -73,7 +74,7 @@ const OrdersList = ({ className }: any) => {
     setSecontToolbarMessage("ORDERS");
     setSecontToolbarPath("LIST");
     getOrders();
-    getUserTeam(false);
+    getUsers(0, 50);
 
     return () => {
       resetSecondToolbar();
@@ -168,7 +169,7 @@ const OrdersList = ({ className }: any) => {
     ).format("MM/YY");
     values.order_schedule.order_supply_date = dayjs(
       values.order_schedule.order_supply_date
-    ).format("DD-MM-YYYY");
+    ).format("YYYY-MM-DD");
     await updateOrder(idOrder, values);
     await getOrders();
     setIsEdit(false);
@@ -191,8 +192,9 @@ const OrdersList = ({ className }: any) => {
     {
       field: "lead_id",
       headerName: "Lead id",
-      width: 350,
+      width: 250,
     },
+    { field: "created_time", headerName: "Created time", width: 200 },
     {
       field: "order_status",
       headerName: "Order Status",
@@ -391,7 +393,7 @@ const OrdersList = ({ className }: any) => {
           handleFilter={handleFilter}
           resetFilter={resetFilter}
         >
-          <FilterOrders/>
+          <FilterOrders />
         </Filters>
       )}
     </PageContainer>

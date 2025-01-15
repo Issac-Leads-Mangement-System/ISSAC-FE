@@ -20,32 +20,36 @@ import jobStatsStore from "../../store/Jobs/job-stats-store";
 import { debounce } from "lodash";
 import ordersStore from "../../store/Orders/orders-store";
 
-export const JobStatsCreateOrderModal = ({formProps, createOrderType}: any) => {
+export const JobStatsCreateOrderModal = ({
+  formProps,
+  createOrderType,
+}: any) => {
   const { setCreateOrder }: any = jobStatsStore();
   const { getOrders }: any = ordersStore();
-
   useEffect(() => {
     getOrders(createOrderType);
-  }, [])
-
+  }, []);
 
   return (
     <>
       <Box sx={{ height: "60vh", overflowY: "auto", width: "100%" }}>
         {/* Basic Info */}
-        <BasicInfoSection formProps={formProps}/>
+        <BasicInfoSection formProps={formProps} />
 
         {/* Customer Information */}
-        <InformationSection formProps={formProps}/>
+        <InformationSection formProps={formProps} />
 
         {/* Schedule */}
-        <ScheduleSection formProps={formProps}/>
+        {createOrderType === "TV" && <ScheduleSection formProps={formProps} />}
 
         {/* Customer Payment */}
-        <PaymentSection formProps={formProps}/>
+        <PaymentSection formProps={formProps} />
 
         {/* Properties */}
-        <PropertiesSection formProps={formProps} createOrderType={createOrderType}/>
+        <PropertiesSection
+          formProps={formProps}
+          createOrderType={createOrderType}
+        />
       </Box>
     </>
   );

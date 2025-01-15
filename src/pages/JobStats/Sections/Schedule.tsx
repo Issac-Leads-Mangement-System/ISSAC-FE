@@ -27,6 +27,7 @@ export const ScheduleSection = ({ formProps }: any) => {
     "15:00-17:00",
     "17:00-19:00",
   ];
+
   return (
     <Box>
       <Paper elevation={4} sx={{ p: 3, m: 2, borderRadius: 2 }}>
@@ -44,18 +45,18 @@ export const ScheduleSection = ({ formProps }: any) => {
                 <DemoContainer components={["DatePicker"]} sx={{ p: 0, m: 0 }}>
                   <DatePicker
                     label="Supply date"
-                    value={formProps.values.order_schedule.order_supply_date 
-                      ? dayjs(formProps.values.order_schedule.order_supply_date, "DD-MM-YYYY") 
-                      : null}
+                    value={formProps.values.order_schedule?.order_supply_date 
+                      ? dayjs(formProps.values.order_schedule.order_supply_date, "YYYY-MM-DD") 
+                    : null}
                     onChange={(newValue) => {
                       const formattedValue =
-                      dayjs(newValue).format("DD-MM-YYYY");
+                      dayjs(newValue).format("YYYY-MM-DD");
                       formProps.setFieldValue(
                         "order_schedule.order_supply_date",
                         formattedValue
                       );
                     }}
-                    format="DD-MM-YYYY"
+                    format="YYYY-MM-DD"
                     sx={{ width: "100%" }}
                   />
                 </DemoContainer>

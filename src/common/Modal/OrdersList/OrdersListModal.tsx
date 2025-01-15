@@ -277,7 +277,7 @@ export const OrderListModal = () => {
         const { row } = params;
         return (
           <Typography>
-            {dayjs(row.order_schedule.order_supply_date).format("DD-MM-YYYY")}
+            {dayjs(row.order_schedule.order_supply_date).format("YYYY-MM-DD")}
           </Typography>
         );
       },

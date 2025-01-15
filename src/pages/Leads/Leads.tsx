@@ -34,6 +34,7 @@ import { StyledMenu } from "../../common/CustomMenu/custom-menu";
 import { PageContainer } from "../../common/PageContainer/page-container";
 import HistoryToggleOffIcon from "@mui/icons-material/HistoryToggleOff";
 import { LeadsHistory } from "../../common/Modal/LeadsHistory/LeadsHistory";
+import { Loader } from "../../common/Loader/Loader";
 
 const Leads = () => {
   const [open, setOpen] = useState(false);
@@ -52,6 +53,8 @@ const Leads = () => {
     setPage,
     deleteLeads,
     resetFilters,
+    resetPagination,
+    isLoading,
   }: any = leadsStore();
   const {
     setSecontToolbarMessage,
@@ -133,6 +136,8 @@ const Leads = () => {
 
     return () => {
       resetSecondToolbar();
+      resetFilter();
+      resetPagination();
     };
   }, []);
 
@@ -221,7 +226,8 @@ const Leads = () => {
         return `${row.lead_type.type_name}`;
       },
     },
-    { field: "created_date", headerName: "Created date", width: 350 },
+    { field: "created_date", headerName: "Created date", width: 200 },
+    { field: "updated_date", headerName: "Updated date", width: 200 },
     {
       field: "actions",
       type: "actions",
@@ -451,6 +457,8 @@ const Leads = () => {
           <LeadsHistory id={idHistory} />
         </CustomModal>
       )}
+      {isLoading && <Loader />}
+
     </PageContainer>
   );
 };

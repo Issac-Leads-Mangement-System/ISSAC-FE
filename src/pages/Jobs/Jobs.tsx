@@ -27,6 +27,7 @@ import leadsTypesStore from "../../store/Leads/types-store";
 import jobsStore from "../../store/Jobs/jobs-store";
 import jobStatsStore from "../../store/Jobs/job-stats-store";
 import teamsStore from "../../store/Teams/teams-store";
+import { Loader } from "../../common/Loader/Loader";
 
 const Jobs = ({ className }: any) => {
   const {
@@ -47,6 +48,8 @@ const Jobs = ({ className }: any) => {
     setSearchedValue,
     updateJobStatus,
     resetFilters,
+    resetPagination,
+    isLoading
   }: any = jobsStore();
   const navigate = useNavigate();
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
@@ -60,7 +63,9 @@ const Jobs = ({ className }: any) => {
     getAllTeams();
 
     return () => {
+      resetFilters();
       resetSecondToolbar();
+      resetPagination();
     };
   }, []);
 
@@ -364,6 +369,8 @@ const Jobs = ({ className }: any) => {
           <FilterJobs />
         </Filters>
       )}
+
+      {isLoading && <Loader />}
     </PageContainer>
   );
 };

@@ -2,40 +2,41 @@ import * as Yup from "yup";
 
 export type ICreateOrderModalSchema = {
   order_basic_info: {
-    former_company: string,
-    mobility: boolean
-  },
+    former_company: string;
+    mobility: boolean;
+  };
   order_customer_info: {
-    customer_id: string,
-    customer_full_name: string,
-    customer_phone: string,
-    customer_phone_2: string,
-    customer_phone_home: string,
-    customer_city: string,
-    customer_street: string,
-    customer_home_number: string,
-    customer_apartment_number: string,
-  },
-  order_schedule: {},
+    customer_id: string;
+    customer_full_name: string;
+    customer_phone: string;
+    customer_phone_2: string;
+    customer_phone_home: string;
+    customer_city: string;
+    customer_street: string;
+    customer_home_number: string;
+    customer_apartment_number: string;
+  };
+  order_schedule: {
+    order_supply_date: Date | null;
+    order_supply_time_range: string;
+    order_supply_comment: string;
+  };
   order_customer_payment: {
-    order_card_number: string,
-    order_card_expired_date: string,
-    order_card_cvv: string,
-  },
+    order_card_number: string;
+    order_card_expired_date: string;
+    order_card_cvv: string;
+  };
   order_properties: {
-    order_package_id: number | null,
-    order_monthly_price: number | null,
-    order_installation_price: number | null,
-    order_installation_payments: number | null,
-    tv_streamers: number | null,
-    tv_users: number | null,
-    wifi_extenders: number | null,
-    orders_tv_properties_comment: string,
-    order_phone_numbers: [string],
-  }
-  
-  
-  
+    order_package_id: number | null;
+    order_monthly_price: number | null;
+    order_installation_price: number | null;
+    order_installation_payments: number | null;
+    tv_streamers: number | null;
+    tv_users: number | null;
+    wifi_extenders: number | null;
+    orders_tv_properties_comment: string;
+    order_phone_numbers: [string];
+  };
 };
 
 export const initialValues: ICreateOrderModalSchema = {
@@ -54,7 +55,11 @@ export const initialValues: ICreateOrderModalSchema = {
     customer_home_number: "",
     customer_apartment_number: "",
   },
-  order_schedule: {},
+  order_schedule: {
+    order_supply_date: null,
+    order_supply_time_range: "",
+    order_supply_comment: "",
+  },
   order_customer_payment: {
     order_card_number: "",
     order_card_expired_date: "",
@@ -69,9 +74,8 @@ export const initialValues: ICreateOrderModalSchema = {
     tv_users: null,
     wifi_extenders: null,
     orders_tv_properties_comment: "",
-    order_phone_numbers: [''],
-  }
-  
+    order_phone_numbers: [""],
+  },
 };
 
 export const validationCreateOrderSchema = Yup.object().shape({

@@ -80,6 +80,7 @@ export const JobStats = () => {
     updateJobLead,
     resetFilters,
     submitCreateOrder,
+    // resetJobLeadsById,
   }: any = jobStatsStore();
 
   const { getOrders }: any = ordersStore();
@@ -97,12 +98,18 @@ export const JobStats = () => {
     useState(undefined);
   const [lead, setLead]: any = useState(null);
   const [createOrderType, setCreateOrderType]: any = useState("TV");
+  const [idLeadIdPlayButton, setIdLeadIdPlayButton]: any = useState(undefined);
   
   
 
-  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+  const handleChange = async (event: React.SyntheticEvent, newValue: string) => {
     if (newValue === "2") {
-      setIdLeadJobConfirmation(jobLeadsById[0].lead_id);
+      await getJobLeadsById(true);
+      // setIdLeadJobConfirmation(jobLeadsById[0].lead_id);
+    } else {
+      await getJobById();
+      await getJobLeadsById();
+      await getStatus(0, 50, true);
     }
     setValue(newValue);
   };
@@ -361,75 +368,36 @@ export const JobStats = () => {
   ];
   const totalButtons = 9;
 
-  const handleNext = () => {
-    const filteredJobs = jobLeadsById.filter((job: any) => job.isCurrentUser);
-
-    const findIndexCurrentJob = filteredJobs.findIndex(
-      (job: any) => job.lead_id === idLeadJobConfirmation
-    );
-    if (filteredJobs[findIndexCurrentJob + 1]) {
-      setIdLeadJobConfirmation(filteredJobs[findIndexCurrentJob + 1].lead_id);
-    }
-  };
-
-  const isPreviousButtonDisabled = (() => {
-    const findIndexCurrentJob = jobLeadsById.findIndex(
-      (job: any) => job.lead_id === idLeadJobConfirmation
-    );
-    if (jobLeadsById[findIndexCurrentJob - 1]) {
-      return false;
-    } else {
-      return true;
-    }
-  })();
-
-  const isNextButtonDisabled = (() => {
-    const findIndexCurrentJob = jobLeadsById.findIndex(
-      (job: any) => job.lead_id === idLeadJobConfirmation
-    );
-    if (jobLeadsById[findIndexCurrentJob + 1]) {
-      return false;
-    } else {
-      return true;
-    }
-  })();
-
-  const handlePrevious = () => {
-    const findIndexCurrentJob = jobLeadsById.findIndex(
-      (job: any) => job.lead_id === idLeadJobConfirmation
-    );
-    if (jobLeadsById[findIndexCurrentJob - 1]) {
-      setIdLeadJobConfirmation(jobLeadsById[findIndexCurrentJob - 1].lead_id);
-    }
-  };
-
   const playScreen = (lead_id: any) => {
-    setIdLeadJobConfirmation(lead_id);
+    setIdLeadIdPlayButton(lead_id);
+    // setIdLeadJobConfirmation(lead_id);
     setValue("2");
   };
 
-  const handleButtonClick = (id: any) => {
-    // setCurrentId(id);
-  };
+  // const handleButtonClick = (id: any) => {
+  //   // setCurrentId(id);
+  // };
 
-  const handleSubmitModal = async (values: any) => {
-    values.job_id = parseInt(activeJob);
-    values.order_basic_info.lead_job_id = lead.toString();
-    values.order_basic_info.lead_id = idLeadJob;
-    values.order_basic_info.order_type = createOrderType;
-    if(createOrderType === 'TV'){
-      values.order_properties.order_monthly_price = parseFloat(values.order_properties.order_monthly_price).toFixed(2);
-      values.order_properties.order_installation_price = parseFloat(values.order_properties.order_installation_price).toFixed(2);
-      values.order_properties.order_installation_payments = parseInt(values.order_properties.order_installation_payments);
-      values.order_properties.tv_streamers = parseInt(values.order_properties.tv_streamers);
-      values.order_properties.tv_users = parseInt(values.order_properties.tv_users);
-      values.order_properties.wifi_extenders = parseInt(values.order_properties.wifi_extenders);
+  const handleSubmitModal = async (values: any, orderType: any) => {
+    // console.log(values, orderType)
+    // disabled the functionality for now
+    // values.job_id = parseInt(activeJob);
+    // values.order_basic_info.lead_job_id = parseInt(lead);
+    // values.order_basic_info.lead_id = idLeadJob;
+    // values.order_basic_info.order_type = createOrderType;
+    // values.order_properties.order_installation_price = parseFloat(values.order_properties.order_installation_price).toFixed(2);
+    // values.order_properties.order_monthly_price = parseFloat(values.order_properties.order_monthly_price).toFixed(2);
+    // if(createOrderType === 'TV'){
+    //   values.order_properties.order_installation_payments = parseInt(values.order_properties.order_installation_payments);
+    //   values.order_properties.tv_streamers = parseInt(values.order_properties.tv_streamers);
+    //   values.order_properties.tv_users = parseInt(values.order_properties.tv_users);
+    //   values.order_properties.wifi_extenders = parseInt(values.order_properties.wifi_extenders);
       
-      delete values.order_properties.order_phone_numbers;
-    }
-    await submitCreateOrder(values);
-    await getJobLeadsById();
-    setIsCreateOrderOpen(false);
+    //   delete values.order_properties.order_phone_numbers;
+    // }
+    // await submitCreateOrder(values);
+    // await getJobLeadsById();
+    // setIsCreateOrderOpen(false);
   };
 
   return (
@@ -548,13 +516,9 @@ export const JobStats = () => {
                   {/* play screen */}
                   <TabPanel value="2">
                     <ScreenNavigationWithGrid
-                      currentId={idLeadJobConfirmation}
-                      totalButtons={totalButtons}
-                      onNext={handleNext}
-                      onPrevious={handlePrevious}
-                      onButtonClick={handleButtonClick}
-                      isPreviousButtonDisabled={isPreviousButtonDisabled}
-                      isNextButtonDisabled={isNextButtonDisabled}
+                      jobLeadsById={jobLeadsById}
+                      idLeadIdPlayButton={idLeadIdPlayButton}
+                      handleSubmitModal={handleSubmitModal}
                     />
                   </TabPanel>
                 </TabContext>
@@ -568,6 +532,7 @@ export const JobStats = () => {
           isOpen={isOpen}
           onClose={onCloseFct}
           title="Change status lead job"
+          width="30%"
         >
           <JobStatsModal updateStatus={updateStatus} />
         </CustomModal>
