@@ -368,10 +368,11 @@ export const JobStats = () => {
   ];
   const totalButtons = 9;
 
-  const playScreen = (lead_id: any) => {
+  const playScreen = async (lead_id: any) => {
     setIdLeadIdPlayButton(lead_id);
     // setIdLeadJobConfirmation(lead_id);
     setValue("2");
+    await getJobLeadsById(true);
   };
 
   // const handleButtonClick = (id: any) => {
