@@ -20,7 +20,7 @@ import teamsStore from "../../store/Teams/teams-store";
 import { ConfirmationModal } from "../../common/Modal/ConfirmationDialog/ConfirmationDialog";
 import { SearchInput } from "../../common/Input/SearchInput";
 import secondToolbarStore from "../../store/SecondToolbar/second-tollbar-store";
-import { addBtnStyle } from "../../common/utils";
+import { addBtnStyle, customUsersValidation } from "../../common/utils";
 import { CustomDataGrid } from "../../common/CustomDataGrid/custom-data-grid";
 import { PageContainer } from "../../common/PageContainer/page-container";
 import FilterListIcon from "@mui/icons-material/FilterList";
@@ -303,7 +303,7 @@ export const Users = () => {
         >
           <GenericAddEditForm
             initialValues={initialFormValues}
-            validationSchema={validationUserSchema}
+            validationSchema={customUsersValidation}
             apiRequest={handleSubmitModal}
             hasSubmitButton={true}
             submitBtnName={submitBtnName}

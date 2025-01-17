@@ -12,7 +12,7 @@ import { ButtonType, ButtonTypes } from "../../common/Button/models";
 import {
   LoginSchema,
   initialValues,
-  validationSchema,
+  // validationSchema,
 } from "../../forms/loginSchema";
 import Button from "../../common/Button/Button";
 import { InputType } from "../../common/Input/models";
@@ -20,6 +20,8 @@ import { LoginStyle } from "./LoginStyle";
 import Logo from "../../assets/images/transparent-logo.png";
 import { useNavigate } from "react-router-dom";
 import { Theme } from "../../theme/Theme";
+import { customLoginValidation } from "../../common/utils";
+import { ErrorMessage } from "formik";
 
 interface JwtPayload extends WtJwtPayload {
   id: string;
@@ -86,19 +88,20 @@ const Login = ({ className, setUser }: any) => {
             </div>
             <GenericAddEditForm
               initialValues={initialFormValues}
-              validationSchema={validationSchema}
+              validationSchema={customLoginValidation}
               apiRequest={handleSubmitModal}
               form={(formProps: any) => (
                 <>
                   <Input
                     {...generateFormikInputFieldProps(
                       formProps,
-                      INPUTS.EMAIL.NAME
+                      'email'
                     )}
                     placeholder={INPUTS.EMAIL.PLACEHOLDER}
                     minWidth="100%"
                     hasEmailIcon={true as boolean}
                     disabled={false}
+                    label="Email"
                   />
 
                   <Input
@@ -111,6 +114,7 @@ const Login = ({ className, setUser }: any) => {
                     inputType={InputType.Password}
                     hasPasswordIcon={true as boolean}
                     disabled={false}
+                    label="Password"
                   />
 
                   <Button

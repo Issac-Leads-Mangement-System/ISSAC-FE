@@ -10,7 +10,7 @@ export const initialValues: LoginSchema = {
   password: '',
 };
 
-export const validationSchema = Yup.object().shape({
-  email: Yup.string().email().required('Email is a required field'),
-  password: Yup.string().required('Password is a required field'),
-});
+// export const validationSchema = Yup.object().shape({
+//   email: Yup.string().email().required('Email is a required field'),
+//   password: Yup.string().required('Password is a required field'),
+// });

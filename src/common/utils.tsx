@@ -304,3 +304,47 @@ export const customValidation = (values: any) => {
 
   return errors;
 };
+
+export const customLoginValidation = (values: any) => {
+  const errors: any = {};
+
+  // Validare pentru order_basic_info
+  if (!values.email) {
+    errors.email = "Email is a required field";
+  }
+
+  if (!values.password) {
+    errors.password = "Password is a required field";
+  }
+
+  return errors;
+};
+
+export const customUsersValidation = (values: any) => {
+  const errors: any = {};
+  if (!values.first_name) {
+    errors.first_name = "First name is a required field";
+  }
+
+  if (!values.last_name) {
+    errors.last_name = "Last name is a required field";
+  }
+
+  if (!values.email) {
+    errors.email = "Email is a required field";
+  }
+
+  if (!values.user_password) {
+    errors.user_password = "Password is a required field";
+  }
+
+  if (!values.user_role) {
+    errors.user_role = "Role is a required field";
+  }
+
+  if (!values.team_id) {
+    errors.team_id = "Team is a required field";
+  }
+
+  return errors;
+};
