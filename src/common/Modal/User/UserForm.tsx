@@ -9,6 +9,7 @@ import {
 import { generateFormikInputFieldProps } from "../../../forms/formikHelper";
 import Input from "../../Input/Input";
 import { INPUTS, ROLE } from "../../constants";
+import { ErrorMessage } from "formik";
 
 export const UserForm = ({ formProps, userTeamList }: any) => {
   return (
@@ -57,7 +58,7 @@ export const UserForm = ({ formProps, userTeamList }: any) => {
         />
       </Grid2>
       <Grid2 size={3}>
-        <FormControl size="small" sx={{width: "100%"}}>
+        <FormControl size="small" sx={{ width: "100%" }}>
           <InputLabel id="role">Team</InputLabel>
           <Select
             labelId="role"
@@ -71,10 +72,23 @@ export const UserForm = ({ formProps, userTeamList }: any) => {
               </MenuItem>
             ))}
           </Select>
+          <ErrorMessage name="team_id">
+            {(msg) => (
+              <div
+                style={{
+                  color: "red",
+                  margin: "5px 0px 0px 0px",
+                  fontSize: "0.75rem",
+                }}
+              >
+                {msg}
+              </div>
+            )}
+          </ErrorMessage>
         </FormControl>
       </Grid2>
       <Grid2 size={3}>
-        <FormControl size="small" sx={{width: "100%"}}>
+        <FormControl size="small" sx={{ width: "100%" }}>
           <InputLabel id="role">Role</InputLabel>
           <Select
             labelId="role"
@@ -88,6 +102,19 @@ export const UserForm = ({ formProps, userTeamList }: any) => {
               </MenuItem>
             ))}
           </Select>
+          <ErrorMessage name="user_role">
+            {(msg) => (
+              <div
+                style={{
+                  color: "red",
+                  margin: "5px 0px 0px 0px",
+                  fontSize: "0.75rem",
+                }}
+              >
+                {msg}
+              </div>
+            )}
+          </ErrorMessage>
         </FormControl>
       </Grid2>
     </Grid2>

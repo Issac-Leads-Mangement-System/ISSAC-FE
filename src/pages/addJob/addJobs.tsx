@@ -28,6 +28,7 @@ import { useNavigate } from "react-router-dom";
 import useNotificationStore from "../../store/Notification/notification-store";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { Loader } from "../../common/Loader/Loader";
+import { ErrorMessage } from "formik";
 const AddJobs = () => {
   const navigate = useNavigate();
   const { setSecontToolbarMessage, setSecontToolbarPath }: any =
@@ -65,19 +66,24 @@ const AddJobs = () => {
         });
         return;
       }
+      if(!job.job_name) {
+        showNotification({
+          message: "An error occurred: Please add job name!",
+        });
+        return;
+      }
       if (total !== job.free_leads) {
         showNotification({
           message: `An error occurred: The total number of leads exceeds the configured limit. Please review the configuration settings.`,
         });
         return;
       } else {
-         try {
+        try {
           await createInProgressJob();
           setActiveStep((prev) => prev + 1);
-         } catch (err ) {
-          console.log(err)
-         } 
-        
+        } catch (err) {
+          console.log(err);
+        }
       }
     }
     if (step === 1) {
@@ -154,7 +160,7 @@ const AddJobs = () => {
       setLeadsPerEmployee(id, value);
     }
   };
-  
+
   const handleChangeLeads = (event: any) => {
     const inputValue = event.target.value;
     let numericValue = inputValue.replace(/\D/g, "");
@@ -244,7 +250,10 @@ const AddJobs = () => {
     navigate("/jobs");
   };
 
-  const accumulateJobLeads = job.leads_per_employee.reduce((sum: any, item: any) => sum + item.value, 0)
+  const accumulateJobLeads = job.leads_per_employee.reduce(
+    (sum: any, item: any) => sum + item.value,
+    0
+  );
   return (
     <PageContainer>
       <Box
@@ -368,7 +377,7 @@ const AddJobs = () => {
                         </Box>
                         <Typography
                           sx={{
-                          color: "#388e3c",
+                            color: "#388e3c",
                             fontWeight: "bold",
                             fontSize: "1rem",
                           }}
@@ -534,7 +543,8 @@ const AddJobs = () => {
                   <Typography
                     sx={{
                       fontWeight: "bold",
-                      color: accumulateJobLeads === job.free_leads ? "green" : "red",
+                      color:
+                        accumulateJobLeads === job.free_leads ? "green" : "red",
                       marginBottom: "8px",
                       display: "block",
                       textAlign: "center",
