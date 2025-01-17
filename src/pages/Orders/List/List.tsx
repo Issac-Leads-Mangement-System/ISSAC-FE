@@ -26,7 +26,6 @@ import { GenericAddEditForm } from "../../../common/forms-generic-ad-edit/Generi
 import {
   ICreateOrderModalSchema,
   initialValues,
-  validationCreateOrderSchema,
 } from "../../../forms/createOrderSchema";
 import { filterBtnStyle, submitBtnStyle } from "../../../common/constants";
 import dayjs from "dayjs";
@@ -36,6 +35,7 @@ import Filters from "../../../components/Filters/filters";
 import { FilterOrders } from "../../../common/forms-filters/FilterOrders";
 import usersStore from "../../../store/Users/users-store";
 import jobsStore from "../../../store/Jobs/jobs-store";
+import { customValidation } from "../../../common/utils";
 
 const OrdersList = ({ className }: any) => {
   const {
@@ -348,7 +348,7 @@ const OrdersList = ({ className }: any) => {
         <CustomModal isOpen={isEdit} onClose={onCloseFct} title="Edit order">
           <GenericAddEditForm
             initialValues={initialFormValues}
-            validationSchema={validationCreateOrderSchema}
+            validationSchema={customValidation}
             apiRequest={handleSubmitModal}
             hasSubmitButton={true}
             submitBtnName={"save"}

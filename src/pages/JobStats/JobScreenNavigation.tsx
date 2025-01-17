@@ -6,6 +6,7 @@ import {
   Grid,
   IconButton,
   Tooltip,
+  LinearProgress,
 } from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import UserChipsExample from "./JobScreenNavigationUserInfo";
@@ -13,73 +14,122 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import CustomModal from "../../common/Modal/CustomModal/CustomModal";
 import { GenericAddEditForm } from "../../common/forms-generic-ad-edit/GenericAdEditForm";
-import { ICreateOrderModalSchema, initialValues, validationCreateOrderSchema } from "../../forms/createOrderSchema";
+import {
+  ICreateOrderModalSchema,
+  initialValues,
+} from "../../forms/createOrderSchema";
 import { JobStatsCreateOrderModal } from "./JobStatsCreateOrderModal";
 import { submitBtnStyle } from "../../common/constants";
+import leadsStatusesStore from "../../store/Leads/statuses-store";
+import { ConfirmationModal } from "../../common/Modal/ConfirmationDialog/ConfirmationDialog";
+import jobStatsStore from "../../store/Jobs/job-stats-store";
+import { customValidation } from "../../common/utils";
 
 const ScreenNavigationWithGrid = ({
   jobLeadsById,
-  idLeadIdPlayButton,
+  leadJobId,
   handleSubmitModal,
+  activeJob,
 }: any) => {
+  const {
+    updateJobLead,
+    resetPagination,
+    resetJobLeadsById,
+    resetFilters,
+  }: any = jobStatsStore();
+  const { statuses }: any = leadsStatusesStore();
   const [tooltipText, setTooltipText] = useState("Copy to clipboard");
-  const [idLeadJobConfirmation, setIdLeadJobConfirmation]: any =
-      useState(undefined);
   const [isButtonClick, setIsButtonClick]: any = useState(false);
-  const [orderType, setOrderType]: any = useState('');
+  const [orderType, setOrderType]: any = useState("");
+  const [isConfirmModal, setIsConfirmModal]: any = useState(false);
   const [initialFormValues, setInitialFormValues] =
-      useState<ICreateOrderModalSchema>({
-        ...initialValues,
-      });
+    useState<ICreateOrderModalSchema>({
+      ...initialValues,
+    });
+  const [jobDetailsById, setJobDetailsById]: any = useState();
+  const [changeJobIdStatus, setChangeJobIdStatus]: any = useState();
+  const [step, setStep]: any = useState(1);
 
   useEffect(() => {
-    if(jobLeadsById.length > 0) {
-      setIdLeadJobConfirmation(jobLeadsById[0].lead_id)
+    if (!leadJobId) {
+      setJobDetailsById(jobLeadsById[0]);
+      setInitialFormValues({
+        ...initialFormValues,
+        order_basic_info: {
+          ...initialFormValues.order_basic_info,
+          lead_id: jobLeadsById?.[0]?.lead_id || null,
+          lead_job_id: jobLeadsById?.[0]?.id || null,
+        },
+      });
+      setStep(1);
+    } else {
+      const jobDetails = jobLeadsById.find((job: any) => job.id === leadJobId);
+      setJobDetailsById(jobDetails);
+      setStep(jobLeadsById.findIndex((job: any) => job.id === leadJobId) + 1);
     }
-    if(idLeadIdPlayButton) {
-      setIdLeadJobConfirmation(idLeadIdPlayButton)
-    }
-  }, [])
+  }, [jobLeadsById]);
+
+  useEffect(() => {
+    return () => {
+      resetPagination();
+      resetFilters();
+    };
+  }, []);
 
   const handleNext = () => {
-    const filteredJobs = jobLeadsById.filter((job: any) => job.isCurrentUser);
-
-    const findIndexCurrentJob = filteredJobs.findIndex(
-      (job: any) => job.lead_id === idLeadJobConfirmation
+    const findIndexCurrentJob = jobLeadsById.findIndex(
+      (job: any) => job.lead_id === jobDetailsById.lead_id
     );
-    if (filteredJobs[findIndexCurrentJob + 1]) {
-      setIdLeadJobConfirmation(filteredJobs[findIndexCurrentJob + 1].lead_id);
+    setStep(step + 1);
+    if (jobLeadsById[findIndexCurrentJob + 1]) {
+      setJobDetailsById(jobLeadsById[findIndexCurrentJob + 1]);
     }
   };
 
+  const handleNextAlert = () => {
+    setIsConfirmModal({
+      open: true,
+      title: `Before moving next, did you also offer a Mobile deal?`,
+      type: "next_button",
+    });
+  }
+
   const isPreviousButtonDisabled = (() => {
-    const findIndexCurrentJob = jobLeadsById.findIndex(
-      (job: any) => job.lead_id === idLeadJobConfirmation
-    );
-    if (jobLeadsById[findIndexCurrentJob - 1]) {
-      return false;
-    } else {
-      return true;
+    if (jobDetailsById) {
+      const findIndexCurrentJob = jobLeadsById.findIndex(
+        (job: any) => job.lead_id === jobDetailsById.lead_id
+      );
+      if (jobLeadsById[findIndexCurrentJob - 1]) {
+        return false;
+      } else {
+        return true;
+      }
     }
+    return true;
   })();
 
   const isNextButtonDisabled = (() => {
-    const findIndexCurrentJob = jobLeadsById.findIndex(
-      (job: any) => job.lead_id === idLeadJobConfirmation
-    );
-    if (jobLeadsById[findIndexCurrentJob + 1]) {
-      return false;
-    } else {
-      return true;
+    if (jobDetailsById) {
+      const findIndexCurrentJob = jobLeadsById.findIndex(
+        (job: any) => job.lead_id === jobDetailsById.lead_id
+      );
+      if (jobLeadsById[findIndexCurrentJob + 1]) {
+        return false;
+      } else {
+        return true;
+      }
     }
+
+    return true;
   })();
 
   const handlePrevious = () => {
     const findIndexCurrentJob = jobLeadsById.findIndex(
-      (job: any) => job.lead_id === idLeadJobConfirmation
+      (job: any) => job.lead_id === jobDetailsById.lead_id
     );
+    setStep(step - 1);
     if (jobLeadsById[findIndexCurrentJob - 1]) {
-      setIdLeadJobConfirmation(jobLeadsById[findIndexCurrentJob - 1].lead_id);
+      setJobDetailsById(jobLeadsById[findIndexCurrentJob - 1]);
     }
   };
 
@@ -91,196 +141,281 @@ const ScreenNavigationWithGrid = ({
   };
 
   const handleButtonClick = (order: string) => {
-    setIsButtonClick(true)
+    setIsButtonClick(true);
     setOrderType(order);
-    // setCurrentId(id);
   };
 
   const onCloseCreateOrder = () => {
-    setIsButtonClick(false)
-  }
+    setIsButtonClick(false);
+  };
+
+  const onButtonSectionClick = (jobLead: any) => {
+    setIsConfirmModal({
+      open: true,
+      title: `Are you sure you want to change the status in ${jobLead.status_name}?`,
+      type: "status_change",
+    });
+    setChangeJobIdStatus(jobLead.id);
+  };
+
+  const handleCloseConfirmationModal = () => {
+    setIsConfirmModal({ open: false });
+  };
+
+  const handleSaveConfirmationModal = async () => {
+    if (isConfirmModal.type === "status_change") {
+      await updateJobLead(activeJob, jobDetailsById.id, changeJobIdStatus);
+    }
+    if(isConfirmModal.type === 'next_button') {
+      handleNext();
+    }
+    setIsConfirmModal({ open: false });
+  };
 
   return (
     <Box
       sx={{
         display: "flex",
         flexDirection: "column",
-        // alignItems: "center",
-        // justifyContent: "center",
-        // height: "100vh",
         padding: "16px",
         backgroundColor: "#f9fafc",
+        maxWidth: "1282px",
+        margin: "auto",
       }}
     >
-      <UserChipsExample />
-      {/* Header cu butoanele Previous și Next */}
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          width: "100%",
-          // maxWidth: "600px",
-          marginBottom: "32px",
-        }}
-      >
-        <Button
-          variant="outlined"
-          color="primary"
-          onClick={handlePrevious}
-          disabled={isPreviousButtonDisabled}
-          sx={{ minWidth: "120px" }}
-        >
-          <ArrowBackIcon />
-        </Button>
-        {/* <Typography
-          variant="h6"
-          sx={{
-            textAlign: "center",
-            fontWeight: "bold",
-            color: "#333",
-          }}
-        >
-          ID: {currentId}
-        </Typography> */}
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: "8px 12px",
-            border: "1px solid #ddd",
-            borderRadius: "8px",
-            backgroundColor: "#f9f9f9",
-            width: "fit-content",
-          }}
-        >
-          <Typography
-            variant="body1"
+      {jobDetailsById && (
+        <>
+          <LinearProgress
+            variant="determinate"
+            value={(step / jobLeadsById.length) * 100}
+            color="primary"
             sx={{
-              fontWeight: "bold",
-              color: "#333",
+              height: "12px",
+              borderRadius: "6px",
+              marginBottom: "16px",
+            }}
+          />
+          <UserChipsExample
+            jobDetailsById={jobDetailsById}
+            jobLeadsByIdLength={jobLeadsById.length}
+            step={step}
+          />
+          {/* Header cu butoanele Previous și Next */}
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              width: "100%",
+              // maxWidth: "600px",
+              marginBottom: "15px",
             }}
           >
-            {idLeadJobConfirmation || 'No lead available'}
-          </Typography>
-          {idLeadJobConfirmation && (
-            <Tooltip title={tooltipText} arrow>
-              <IconButton
-                onClick={handleCopy}
-                size="small"
-                sx={{
-                  marginLeft: "8px",
-                  color: "#555",
-                }}
-              >
-                <ContentCopyIcon fontSize="small" />
-              </IconButton>
-            </Tooltip>
-          )}
-        </Box>
-        <Button
-          variant="outlined"
-          color="primary"
-          onClick={handleNext}
-          disabled={isNextButtonDisabled}
-          sx={{ minWidth: "120px" }}
-        >
-          <ArrowForwardIcon />
-        </Button>
-      </Box>
-
-      {/* Grila de butoane */}
-      <Box
-        sx={{
-          width: "100%",
-          maxWidth: "600px",
-          backgroundColor: "#ffffff",
-          borderRadius: "12px",
-          boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
-          padding: "16px",
-        }}
-      >
-        <Typography
-          variant="h6"
-          sx={{
-            textAlign: "center",
-            fontWeight: "medium",
-            color: "#555",
-            marginBottom: "16px",
-          }}
-        >
-          Select an Option
-        </Typography>
-        <Grid container spacing={2}>
-          <Grid item xs={4}>
             <Button
-              variant="contained"
-              color={"primary"}
-              fullWidth
-              onClick={() => handleButtonClick('TV')}
+              variant="outlined"
+              color="primary"
+              onClick={handlePrevious}
+              disabled={isPreviousButtonDisabled}
+              sx={{ minWidth: "120px" }}
+            >
+              <ArrowBackIcon />
+            </Button>
+            <Box
               sx={{
-                fontWeight: "bold",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: "8px 12px",
+                border: "1px solid #ddd",
                 borderRadius: "8px",
+                backgroundColor: "#f9f9f9",
+                width: "fit-content",
               }}
             >
-              Create TV order
-            </Button>
-
-            <Button
-              variant="contained"
-              color={"primary"}
-              fullWidth
-              onClick={() => handleButtonClick('mobile')}
-              sx={{
-                fontWeight: "bold",
-                borderRadius: "8px",
-              }}
-            >
-              Create mobile order
-            </Button>
-          </Grid>
-          {/* {Array.from({ length: totalButtons }).map((_, index) => (
-            <Grid item xs={4} key={index}>
-              <Button
-                variant="contained"
-                color={index + 1 === currentId ? "secondary" : "primary"}
-                fullWidth
-                onClick={() => onButtonClick(index + 1)}
+              <Typography
+                variant="body1"
                 sx={{
                   fontWeight: "bold",
-                  borderRadius: "8px",
+                  color: "#333",
                 }}
               >
-                Button {index + 1}
-              </Button>
-            </Grid>
-          ))} */}
-        </Grid>
+                {jobDetailsById?.lead_id || "No lead available"}
+              </Typography>
+              {jobDetailsById && (
+                <Tooltip title={tooltipText} arrow>
+                  <IconButton
+                    onClick={handleCopy}
+                    size="small"
+                    sx={{
+                      marginLeft: "8px",
+                      color: "#555",
+                    }}
+                  >
+                    <ContentCopyIcon fontSize="small" />
+                  </IconButton>
+                </Tooltip>
+              )}
+            </Box>
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={jobDetailsById.mobile_deal_success ? handleNext : handleNextAlert}
+              disabled={isNextButtonDisabled}
+              sx={{ minWidth: "120px" }}
+            >
+              <ArrowForwardIcon />
+            </Button>
+          </Box>
 
-        {isButtonClick && (
-        <CustomModal
-          isOpen={isButtonClick}
-          onClose={onCloseCreateOrder}
-          title={`Create order ${orderType}`}
-          minWidth="1200px"
-        >
-          <GenericAddEditForm
-            initialValues={initialFormValues}
-            validationSchema={validationCreateOrderSchema}
-            apiRequest={(values: any) => handleSubmitModal(values, orderType)}
-            hasSubmitButton={true}
-            submitBtnName={"save"}
-            form={(formProps: any) => (
-              <JobStatsCreateOrderModal formProps={formProps} createOrderType={orderType}/>
+          {/* Grila de butoane */}
+
+          <Box
+            sx={{
+              width: "100%",
+              maxWidth: "800px", // Adaptează după nevoie
+              backgroundColor: "#fff",
+              borderRadius: "16px",
+              boxShadow: "0 8px 16px rgba(0, 0, 0, 0.15)",
+              padding: "32px",
+              margin: "auto", // Centrare
+            }}
+          >
+            <Grid container spacing={4}>
+              {/* Left section - Create order buttons */}
+              <Grid
+                item
+                xs={6}
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "20px",
+                }}
+              >
+                <Button
+                  variant="contained"
+                  fullWidth
+                  disabled={[4, 5].includes(
+                    jobDetailsById.lead_status.lead_status_id
+                  )}
+                  onClick={() => handleButtonClick("TV")}
+                  sx={{
+                    fontWeight: "bold",
+                    borderRadius: "8px",
+                    padding: "12px 16px",
+                    backgroundColor: "#1976d2",
+                    color: "#fff",
+                    "&:hover": {
+                      backgroundColor: "#155a9c",
+                    },
+                    "&:disabled": {
+                      backgroundColor: "#e0e0e0",
+                      color: "#9e9e9e",
+                    },
+                  }}
+                >
+                  Create TV order
+                </Button>
+
+                <Button
+                  variant="contained"
+                  fullWidth
+                  disabled={jobDetailsById.mobile_deal_success}
+                  onClick={() => handleButtonClick("mobile")}
+                  sx={{
+                    fontWeight: "bold",
+                    borderRadius: "8px",
+                    padding: "12px 16px",
+                    backgroundColor: "#1976d2",
+                    color: "#fff",
+                    "&:hover": {
+                      backgroundColor: "#155a9c",
+                    },
+                    "&:disabled": {
+                      backgroundColor: "#e0e0e0",
+                      color: "#9e9e9e",
+                    },
+                  }}
+                >
+                  Create Mobile Order
+                </Button>
+              </Grid>
+
+              {/* Right section - Status buttons */}
+              <Grid
+                item
+                xs={6}
+                sx={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))",
+                  gap: "16px",
+                }}
+              >
+                {statuses.map((status: any, index: number) => (
+                  <Button
+                    key={index}
+                    variant="outlined"
+                    disabled={jobDetailsById.mobile_deal_success}
+                    onClick={() => onButtonSectionClick(status)}
+                    sx={{
+                      fontWeight: "bold",
+                      borderRadius: "8px",
+                      padding: "12px 16px",
+                      borderColor: "#0288d1",
+                      color: "#0288d1",
+                      "&:hover": {
+                        backgroundColor: "#e3f2fd",
+                        borderColor: "#0288d1",
+                      },
+                    }}
+                  >
+                    {status.status_name}
+                  </Button>
+                ))}
+              </Grid>
+            </Grid>
+
+            {isButtonClick && (
+              <CustomModal
+                isOpen={isButtonClick}
+                onClose={onCloseCreateOrder}
+                title={`Create Order: ${orderType}`}
+                minWidth="1200px"
+              >
+                <GenericAddEditForm
+                  initialValues={initialFormValues}
+                  validationSchema={customValidation}
+                  apiRequest={(values: any) =>
+                    handleSubmitModal(values, orderType)
+                  }
+                  hasSubmitButton={true}
+                  submitBtnName={"Save"}
+                  form={(formProps: any) => (
+                    <JobStatsCreateOrderModal
+                      formProps={formProps}
+                      createOrderType={orderType}
+                    />
+                  )}
+                  btnStyle={{
+                    fontWeight: "bold",
+                    borderRadius: "8px",
+                  }}
+                />
+              </CustomModal>
             )}
-            btnStyle={submitBtnStyle}
-          />
-        </CustomModal>
+          </Box>
+        </>
       )}
 
-
-      </Box>
+      {isConfirmModal.open && (
+        <ConfirmationModal
+          open={isConfirmModal.open}
+          onClose={handleCloseConfirmationModal}
+          onConfirm={handleSaveConfirmationModal}
+          message={isConfirmModal.title || ""}
+          btnName="Yes"
+          btnCancel="No"
+        />
+      )}
     </Box>
   );
 };

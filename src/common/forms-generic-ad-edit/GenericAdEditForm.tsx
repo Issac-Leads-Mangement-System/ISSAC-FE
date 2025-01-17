@@ -28,7 +28,7 @@ export function GenericAddEditForm<EntityType>(
       innerRef={props.formikRef ? props.formikRef : undefined}
       initialValues={props.initialValues}
       onSubmit={handleSubmit}
-      validationSchema={props.validationSchema}
+      validate={props.validationSchema}
       validateOnChange={props.validateOnChange || false}
       validateOnBlur={false}
       enableReinitialize

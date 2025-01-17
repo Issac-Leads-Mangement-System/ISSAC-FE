@@ -151,3 +151,156 @@ export const addBtnStyle = {
     bgcolor: "#2bb89b",
   },
 };
+
+export const customValidation = (values: any) => {
+  if (values.order_basic_info === "mobile") {
+    delete values.order_schedule;
+  }
+  const errors: any = {};
+
+  // Validare pentru order_basic_info
+  if (!values.order_basic_info?.former_company) {
+    errors.order_basic_info = {
+      former_company: "Please add a former company",
+    };
+  }
+
+  // Validare pentru order_customer_info
+  if (!values.order_customer_info?.customer_full_name) {
+    errors.order_customer_info = {
+      ...errors.order_customer_info,
+      customer_full_name: "Please add a customer name",
+    };
+  }
+  if (!values.order_customer_info?.customer_phone) {
+    errors.order_customer_info = {
+      ...errors.order_customer_info,
+      customer_phone: "Please add a customer phone",
+    };
+  }
+  if (!values.order_customer_info?.customer_city) {
+    errors.order_customer_info = {
+      ...errors.order_customer_info,
+      customer_city: "Please add city",
+    };
+  }
+  if (!values.order_customer_info?.customer_street) {
+    errors.order_customer_info = {
+      ...errors.order_customer_info,
+      customer_street: "Please add street",
+    };
+  }
+  if (!values.order_customer_info?.customer_home_number) {
+    errors.order_customer_info = {
+      ...errors.order_customer_info,
+      customer_home_number: "Please add home number",
+    };
+  }
+  if (!values.order_customer_info?.customer_apartment_number) {
+    errors.order_customer_info = {
+      ...errors.order_customer_info,
+      customer_apartment_number: "Please add apartment number",
+    };
+  }
+
+  // Validare pentru order_schedule
+  if (values.order_basic_info?.order_type === "TV") {
+    if (!values.order_schedule?.order_supply_date) {
+      errors.order_schedule = {
+        ...errors.order_schedule,
+        order_supply_date: "Please insert date",
+      };
+    } else if (!new Date(values.order_schedule.order_supply_date)) {
+      errors.order_schedule = {
+        ...errors.order_schedule,
+        order_supply_date: "Invalid date format",
+      };
+    }
+
+    if (!values.order_schedule?.order_supply_time_range) {
+      errors.order_schedule = {
+        ...errors.order_schedule,
+        order_supply_time_range: "Please select time range",
+      };
+    }
+  }
+
+  // Validare pentru order_customer_payment
+  if (!values.order_customer_payment?.order_card_number) {
+    errors.order_customer_payment = {
+      ...errors.order_customer_payment,
+      order_card_number: "Please add a card number",
+    };
+  }
+  if (!values.order_customer_payment?.order_card_expired_date) {
+    errors.order_customer_payment = {
+      ...errors.order_customer_payment,
+      order_card_expired_date: "Please select expired date",
+    };
+  } else if (!new Date(values.order_customer_payment.order_card_expired_date)) {
+    errors.order_customer_payment = {
+      ...errors.order_customer_payment,
+      order_card_expired_date: "Invalid date format",
+    };
+  }
+  if (!values.order_customer_payment?.order_card_cvv) {
+    errors.order_customer_payment = {
+      ...errors.order_customer_payment,
+      order_card_cvv: "Please add CVV",
+    };
+  }
+
+  // Validare pentru order_properties
+  const properties = values.order_properties || {};
+  if (!properties.order_package_id) {
+    errors.order_properties = {
+      ...errors.order_properties,
+      order_package_id: "Please select package offer",
+    };
+  }
+  if (values.order_basic_info?.order_type === "TV") {
+    if (!properties.order_monthly_price) {
+      errors.order_properties = {
+        ...errors.order_properties,
+        order_monthly_price: "Please introduce monthly price",
+      };
+    } else if (isNaN(properties.order_monthly_price)) {
+      errors.order_properties = {
+        ...errors.order_properties,
+        order_monthly_price: "Please introduce a valid number",
+      };
+    }
+    if (!properties.order_installation_price) {
+      errors.order_properties = {
+        ...errors.order_properties,
+        order_installation_price: "Please add price for installation",
+      };
+    }
+    if (!properties.order_installation_payments) {
+      errors.order_properties = {
+        ...errors.order_properties,
+        order_installation_payments: "Please select installation payments",
+      };
+    }
+    if (!properties.tv_streamers) {
+      errors.order_properties = {
+        ...errors.order_properties,
+        tv_streamers: "Please add TV streamers",
+      };
+    }
+    if (!properties.tv_users) {
+      errors.order_properties = {
+        ...errors.order_properties,
+        tv_users: "Please add TV users",
+      };
+    }
+    if (!properties.wifi_extenders) {
+      errors.order_properties = {
+        ...errors.order_properties,
+        wifi_extenders: "Please add WIFI extenders",
+      };
+    }
+  }
+
+  return errors;
+};

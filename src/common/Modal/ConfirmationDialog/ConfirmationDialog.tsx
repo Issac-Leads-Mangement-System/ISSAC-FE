@@ -13,12 +13,14 @@ export const ConfirmationModal = ({
   onConfirm,
   message,
   btnName,
+  btnCancel,
 }: {
   open: boolean;
   onClose: () => void;
   onConfirm: any;
   message: string;
   btnName: string;
+  btnCancel?: string;
 }) => {
   return (
     <Dialog open={open} onClose={onClose}>
@@ -43,7 +45,7 @@ export const ConfirmationModal = ({
             minWidth: "130px",
           }}
         >
-          Cancel
+          {btnCancel || 'Cancel'}
         </Button>
         <Button
           onClick={onConfirm}

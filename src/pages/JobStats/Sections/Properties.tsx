@@ -16,7 +16,7 @@ import {
 import Input from "../../../common/Input/Input";
 import { generateFormikInputFieldProps } from "../../../forms/formikHelper";
 import ordersStore from "../../../store/Orders/orders-store";
-import { FieldArray } from "formik";
+import { ErrorMessage, FieldArray } from "formik";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 
@@ -54,6 +54,9 @@ export const PropertiesSection = ({ formProps, createOrderType }: any) => {
                       </MenuItem>
                     ))}
                   </Select>
+                  <ErrorMessage name="order_properties.order_package_id">
+                      { msg => <div style={{ color: 'red', margin: '5px 0px 0px 0px', fontSize:'0.75rem' }}>{msg}</div> }
+                  </ErrorMessage>
                 </FormControl>
               </Grid2>
               {createOrderType === "TV" && (
@@ -102,6 +105,19 @@ export const PropertiesSection = ({ formProps, createOrderType }: any) => {
                           </MenuItem>
                         ))}
                       </Select>
+                      <ErrorMessage name="order_properties.order_installation_payments">
+                        {(msg) => (
+                          <div
+                            style={{
+                              color: "red",
+                              margin: "5px 0px 0px 0px",
+                              fontSize: "0.75rem",
+                            }}
+                          >
+                            {msg}
+                          </div>
+                        )}
+                      </ErrorMessage>
                     </FormControl>
                   </Grid2>
 
@@ -170,16 +186,13 @@ export const PropertiesSection = ({ formProps, createOrderType }: any) => {
                             const calculateSize = () => {
                               const total = array.length;
 
-                              if (total === 1) return 12; 
-                              if (total === 2) return 6; 
-                              return 4; 
+                              if (total === 1) return 12;
+                              if (total === 2) return 6;
+                              return 4;
                             };
 
                             return (
-                              <Grid2
-                                key={index}
-                                size={calculateSize()} 
-                              >
+                              <Grid2 key={index} size={calculateSize()}>
                                 <Box
                                   sx={{
                                     display: "flex",
