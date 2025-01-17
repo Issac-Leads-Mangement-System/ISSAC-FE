@@ -17,6 +17,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { generateFormikInputFieldProps } from "../../../forms/formikHelper";
 import dayjs from "dayjs";
+import { ErrorMessage } from "formik";
 
 export const ScheduleSection = ({ formProps }: any) => {
   const supplyTimeRange = [
@@ -45,12 +46,17 @@ export const ScheduleSection = ({ formProps }: any) => {
                 <DemoContainer components={["DatePicker"]} sx={{ p: 0, m: 0 }}>
                   <DatePicker
                     label="Supply date"
-                    value={formProps.values.order_schedule?.order_supply_date 
-                      ? dayjs(formProps.values.order_schedule.order_supply_date, "YYYY-MM-DD") 
-                    : null}
+                    value={
+                      formProps.values.order_schedule?.order_supply_date
+                        ? dayjs(
+                            formProps.values.order_schedule.order_supply_date,
+                            "YYYY-MM-DD"
+                          )
+                        : null
+                    }
                     onChange={(newValue) => {
                       const formattedValue =
-                      dayjs(newValue).format("YYYY-MM-DD");
+                        dayjs(newValue).format("YYYY-MM-DD");
                       formProps.setFieldValue(
                         "order_schedule.order_supply_date",
                         formattedValue
@@ -60,6 +66,20 @@ export const ScheduleSection = ({ formProps }: any) => {
                     sx={{ width: "100%" }}
                   />
                 </DemoContainer>
+                {/* <ErrorMessage name="order_schedule.order_supply_date" component="div" /> */}
+                <ErrorMessage name="order_schedule.order_supply_date">
+                  {(msg) => (
+                    <div
+                      style={{
+                        color: "red",
+                        margin: "5px 0px 0px 0px",
+                        fontSize: "0.75rem",
+                      }}
+                    >
+                      {msg}
+                    </div>
+                  )}
+                </ErrorMessage>
               </LocalizationProvider>
             </Grid2>
             <Grid2 size={5}>
@@ -82,6 +102,19 @@ export const ScheduleSection = ({ formProps }: any) => {
                     </MenuItem>
                   ))}
                 </Select>
+                <ErrorMessage name="order_schedule.order_supply_time_range">
+                  {(msg) => (
+                    <div
+                      style={{
+                        color: "red",
+                        margin: "5px 0px 0px 0px",
+                        fontSize: "0.75rem",
+                      }}
+                    >
+                      {msg}
+                    </div>
+                  )}
+                </ErrorMessage>
               </FormControl>
             </Grid2>
             <Grid2 size={12}>

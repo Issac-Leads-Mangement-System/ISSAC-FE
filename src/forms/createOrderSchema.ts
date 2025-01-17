@@ -2,8 +2,11 @@ import * as Yup from "yup";
 
 export type ICreateOrderModalSchema = {
   order_basic_info: {
+    lead_id: string;
+    lead_job_id: number | undefined;
     former_company: string;
     mobility: boolean;
+    order_type: string;
   };
   order_customer_info: {
     customer_id: string;
@@ -17,7 +20,7 @@ export type ICreateOrderModalSchema = {
     customer_apartment_number: string;
   };
   order_schedule: {
-    order_supply_date: Date | null;
+    order_supply_date: Date | string;
     order_supply_time_range: string;
     order_supply_comment: string;
   };
@@ -28,7 +31,7 @@ export type ICreateOrderModalSchema = {
   };
   order_properties: {
     order_package_id: number | null;
-    order_monthly_price: number | null;
+    order_monthly_price: number;
     order_installation_price: number | null;
     order_installation_payments: number | null;
     tv_streamers: number | null;
@@ -41,8 +44,11 @@ export type ICreateOrderModalSchema = {
 
 export const initialValues: ICreateOrderModalSchema = {
   order_basic_info: {
+    lead_id: "",
+    lead_job_id: undefined,
     former_company: "",
     mobility: false,
+    order_type: "",
   },
   order_customer_info: {
     customer_id: "",
@@ -56,7 +62,7 @@ export const initialValues: ICreateOrderModalSchema = {
     customer_apartment_number: "",
   },
   order_schedule: {
-    order_supply_date: null,
+    order_supply_date: "",
     order_supply_time_range: "",
     order_supply_comment: "",
   },
@@ -67,7 +73,7 @@ export const initialValues: ICreateOrderModalSchema = {
   },
   order_properties: {
     order_package_id: null,
-    order_monthly_price: null,
+    order_monthly_price: 0,
     order_installation_price: null,
     order_installation_payments: null,
     tv_streamers: null,
@@ -77,10 +83,3 @@ export const initialValues: ICreateOrderModalSchema = {
     order_phone_numbers: [""],
   },
 };
-
-export const validationCreateOrderSchema = Yup.object().shape({
-  order_basic_info: Yup.object().shape({
-    former_company: Yup.string().required("Please add a former company"),
-    mobility: Yup.boolean().required("Please specify mobility"),
-  }),
-});

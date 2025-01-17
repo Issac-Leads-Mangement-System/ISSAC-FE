@@ -60,7 +60,7 @@ const jobStatsStore = create<IJobsState>((set) => ({
           [key]: value,
         },
       },
-    }))
+    }));
   },
 
   getOrderBasicInfo: (state: any) => state.create_order.order_basic_info,
@@ -77,19 +77,21 @@ const jobStatsStore = create<IJobsState>((set) => ({
     }
   },
 
-  getJobLeadsById: async (isPlayScreen:boolean = false) => {
+  getJobLeadsById: async (isPlayScreen: boolean = false) => {
     try {
       const { user }: any = usersStore.getState();
       set({ isLoading: true });
       const { activeJob, searchValue, pagination, filters } =
         jobStatsStore.getState();
       const response = await api.post(
-        `${process.env.REACT_APP_BASE_URL}/jobs/${activeJob}/leads?${isPlayScreen ? '' : `page=${
-          pagination.page + 1
-        }&limit=${pagination.pageSize}`}&search=${searchValue}&play_mode=${isPlayScreen ? true : false}`,
+        `${process.env.REACT_APP_BASE_URL}/jobs/${activeJob}/leads?${
+          isPlayScreen
+            ? ""
+            : `page=${pagination.page + 1}&limit=${pagination.pageSize}`
+        }&search=${searchValue}&play_mode=${isPlayScreen ? true : false}`,
         filters
       );
-      if(response.data.job_leads_response?.length > 0) {
+      if (response.data.job_leads_response?.length > 0) {
         response.data.job_leads_response.forEach((jobLead: any) => {
           if (jobLead.user.user_id === user.id) {
             jobLead.isCurrentUser = true;
@@ -176,9 +178,9 @@ const jobStatsStore = create<IJobsState>((set) => ({
 
   submitCreateOrder: async (values: any) => {
     const response = await api.post(
-      `${process.env.REACT_APP_BASE_URL}/orders/create_order`, values,
+      `${process.env.REACT_APP_BASE_URL}/orders/create_order`,
+      values
     );
-
   },
 
   setActiveFilters: (ids: any, key: string) =>
@@ -209,7 +211,15 @@ const jobStatsStore = create<IJobsState>((set) => ({
     //   });
     // });
   },
-  
+
+  resetPagination: () => {
+    set({
+      pagination: {
+        pageSize: 10,
+        page: 0,
+      },
+    });
+  },
 }));
 
 export default jobStatsStore;

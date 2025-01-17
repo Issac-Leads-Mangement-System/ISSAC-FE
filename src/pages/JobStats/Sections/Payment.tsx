@@ -36,6 +36,8 @@ export const PaymentSection = ({ formProps }: any) => {
                 )}
                 label="Card number"
                 style={{ display: "flex" }}
+                regex={/^\d*$/}
+                inputTypeRegex={"numeric"}
               />
             </Grid2>
             <Grid2 size={8}>
@@ -65,6 +67,8 @@ export const PaymentSection = ({ formProps }: any) => {
                   "order_customer_payment.order_card_cvv"
                 )}
                 label="CVV"
+                regex={/^\d*$/}
+                inputTypeRegex={"numeric"}
                 style={{ display: "flex" }}
               />
             </Grid2>

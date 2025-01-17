@@ -15,7 +15,7 @@ const menus = [
   {
     name: "Home",
     icon: <HomeIcon />,
-    router: "/home",
+    route: "/home",
   },
 
   {

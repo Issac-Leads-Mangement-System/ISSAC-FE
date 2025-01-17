@@ -47,9 +47,9 @@ import { GenericAddEditForm } from "../../common/forms-generic-ad-edit/GenericAd
 import {
   ICreateOrderModalSchema,
   initialValues,
-  validationCreateOrderSchema,
 } from "../../forms/createOrderSchema";
 import ordersStore from "../../store/Orders/orders-store";
+import { customValidation } from "../../common/utils";
 
 export const JobStats = () => {
   const [initialFormValues, setInitialFormValues] =
@@ -87,31 +87,42 @@ export const JobStats = () => {
 
   const { getStatus }: any = leadsStatusesStore();
   const { user }: any = usersStore();
-  const [idLeadJob, setIdLeadJob]: any = useState(undefined);
+  const [idLead, setIdLead]: any = useState(undefined);
   const [isFilterOpen, setIsFilterOpen]: any = useState(false);
-  const [value, setValue] = useState("1");
+  const [tab, setTab] = useState("1");
   const [isOpen, setIsOpen] = useState(false);
   const [isCreateOrderOpen, setIsCreateOrderOpen] = useState(false);
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
-  // playscreen
-  const [idLeadJobConfirmation, setIdLeadJobConfirmation]: any =
-    useState(undefined);
-  const [lead, setLead]: any = useState(null);
+  
+  const [leadJobId, setLeadJobId]: any = useState(null);
   const [createOrderType, setCreateOrderType]: any = useState("TV");
-  const [idLeadIdPlayButton, setIdLeadIdPlayButton]: any = useState(undefined);
   
   
 
   const handleChange = async (event: React.SyntheticEvent, newValue: string) => {
     if (newValue === "2") {
       await getJobLeadsById(true);
+      setInitialFormValues((prevValues) => ({
+        ...prevValues,
+        order_basic_info: {
+          ...(prevValues.order_basic_info || {}),
+          order_type: 'mobile',
+        },
+      }));
       // setIdLeadJobConfirmation(jobLeadsById[0].lead_id);
     } else {
+      setInitialFormValues((prevValues) => ({
+        ...prevValues,
+        order_basic_info: {
+          ...(prevValues.order_basic_info || {}),
+          order_type: 'TV',
+        },
+      }));
       await getJobById();
       await getJobLeadsById();
       await getStatus(0, 50, true);
     }
-    setValue(newValue);
+    setTab(newValue);
   };
 
   useEffect(() => {
@@ -162,21 +173,28 @@ export const JobStats = () => {
   };
 
   const handleUpdateJobStatusClick = (id: number, row: any) => {
-    setIdLeadJob(id);
+    setIdLead(id);
     setKey("new_status", row.lead_status.lead_status_id);
     setIsOpen(true);
   };
 
   const handleDeleteClick = async (id: number) => {
-    setIdLeadJobConfirmation(id);
+    setLeadJobId(id);
     setIsConfirmationOpen(true);
   };
 
   const createOrder = (id: number, lead_id: string, order_type: string) => {
-    setIdLeadJob(lead_id);
-    setLead(id);
+    setIdLead(lead_id);
+    setLeadJobId(id);
     setCreateOrderType(order_type);
     setIsCreateOrderOpen(true);
+    setInitialFormValues((prevValues) => ({
+      ...prevValues,
+      order_basic_info: {
+        ...(prevValues.order_basic_info || {}),
+        order_type: order_type,
+      },
+    }));
   };
 
   const createMobileOrder = (id: number) => {};
@@ -190,7 +208,7 @@ export const JobStats = () => {
   };
 
   const updateStatus = async () => {
-    await updateJobLead(activeJob, idLeadJob, new_status);
+    await updateJobLead(activeJob, idLead, new_status);
     setIsOpen(false);
     await getJobById();
     await getJobLeadsById();
@@ -220,7 +238,7 @@ export const JobStats = () => {
   };
 
   const handleSaveConfirmationModal = async () => {
-    await deleteJobLead(activeJob, idLeadJobConfirmation);
+    await deleteJobLead(activeJob, leadJobId);
     await getJobLeadsById();
     setIsConfirmationOpen(false);
   };
@@ -297,6 +315,7 @@ export const JobStats = () => {
       headerClassName: "MuiDataGrid-columnHeader--pinned",
       getActions: (params: any) => {
         const { id, row } = params;
+        
         if (id) {
           return [
             <GridActionsCellItem
@@ -305,10 +324,10 @@ export const JobStats = () => {
               title="Play screen"
               key={id}
               sx={{
-                color: "green",
+                color: "#1976d2",
               }}
               className="textPrimary"
-              onClick={() => playScreen(row.lead_id)}
+              onClick={() => playScreen(row.lead_id, id)}
               disabled={!row.isCurrentUser}
             />,
 
@@ -317,10 +336,10 @@ export const JobStats = () => {
               label="Update Lead Job Status"
               title="Update Lead Job Status"
               key={id}
-              disabled={jobById.job_status === "close"}
-              // sx={{
-              //   color: "black",
-              // }}
+              disabled={jobById.job_status === "close" || [4, 5].includes(row.lead_status.lead_status_id)}
+              sx={{
+                color: "#434343",
+              }}
               className="textPrimary"
               onClick={() => handleUpdateJobStatusClick(id, row)}
             />,
@@ -329,9 +348,9 @@ export const JobStats = () => {
               label="Create order"
               title="Create order"
               key={id}
-              // disabled
+              disabled={[4, 5].includes(row.lead_status.lead_status_id)}
               sx={{
-                color: "blue",
+                color: "#6ac250",
               }}
               className="textPrimary"
               onClick={() => createOrder(id, row.lead_id, 'TV')}
@@ -340,9 +359,10 @@ export const JobStats = () => {
               icon={<MobileFriendlyIcon />}
               label="Create mobile order"
               title="Create mobile order"
+              disabled={row.mobile_deal_success}
               key={id}
               sx={{
-                color: "green",
+                color: "#6ac250",
               }}
               className="textPrimary"
               onClick={() => createOrder(id, row.lead_id, 'mobile')}
@@ -366,12 +386,11 @@ export const JobStats = () => {
       },
     },
   ];
-  const totalButtons = 9;
 
-  const playScreen = async (lead_id: any) => {
-    setIdLeadIdPlayButton(lead_id);
-    // setIdLeadJobConfirmation(lead_id);
-    setValue("2");
+  const playScreen = async (lead_id: string, id: number) => {
+    setLeadJobId(id);
+    setIdLead(lead_id);
+    setTab("2");
     await getJobLeadsById(true);
   };
 
@@ -380,26 +399,38 @@ export const JobStats = () => {
   // };
 
   const handleSubmitModal = async (values: any, orderType: any) => {
-    // console.log(values, orderType)
     // disabled the functionality for now
-    // values.job_id = parseInt(activeJob);
-    // values.order_basic_info.lead_job_id = parseInt(lead);
-    // values.order_basic_info.lead_id = idLeadJob;
-    // values.order_basic_info.order_type = createOrderType;
-    // values.order_properties.order_installation_price = parseFloat(values.order_properties.order_installation_price).toFixed(2);
-    // values.order_properties.order_monthly_price = parseFloat(values.order_properties.order_monthly_price).toFixed(2);
-    // if(createOrderType === 'TV'){
-    //   values.order_properties.order_installation_payments = parseInt(values.order_properties.order_installation_payments);
-    //   values.order_properties.tv_streamers = parseInt(values.order_properties.tv_streamers);
-    //   values.order_properties.tv_users = parseInt(values.order_properties.tv_users);
-    //   values.order_properties.wifi_extenders = parseInt(values.order_properties.wifi_extenders);
+    values.job_id = parseInt(activeJob);
+    if(leadJobId) {
+      values.order_basic_info.lead_job_id = parseInt(leadJobId);
+    }
+    if(idLead) {
+      values.order_basic_info.lead_id = idLead;
+    }
+
+    values.order_basic_info.order_type = createOrderType;
+    values.order_properties.order_installation_price = parseFloat(values.order_properties.order_installation_price).toFixed(2);
+    values.order_properties.order_monthly_price = parseFloat(values.order_properties.order_monthly_price).toFixed(2);
+    if(createOrderType === 'TV'){
+      values.order_properties.order_installation_payments = parseInt(values.order_properties.order_installation_payments);
+      values.order_properties.tv_streamers = parseInt(values.order_properties.tv_streamers);
+      values.order_properties.tv_users = parseInt(values.order_properties.tv_users);
+      values.order_properties.wifi_extenders = parseInt(values.order_properties.wifi_extenders);
       
-    //   delete values.order_properties.order_phone_numbers;
-    // }
-    // await submitCreateOrder(values);
-    // await getJobLeadsById();
-    // setIsCreateOrderOpen(false);
+      delete values.order_properties.order_phone_numbers;
+    }
+    
+    if(createOrderType === 'mobile') {
+      delete values.order_schedule;
+    }
+
+    await submitCreateOrder(values);
+    await getJobLeadsById();
+    setIsCreateOrderOpen(false);
   };
+
+
+  
 
   return (
     <PageContainer>
@@ -415,7 +446,7 @@ export const JobStats = () => {
           <Grid2 size={12}>
             <Card sx={{ marginTop: "15px" }}>
               <CardContent>
-                <TabContext value={value}>
+                <TabContext value={tab}>
                   <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
                     <TabList
                       onChange={handleChange}
@@ -518,8 +549,9 @@ export const JobStats = () => {
                   <TabPanel value="2">
                     <ScreenNavigationWithGrid
                       jobLeadsById={jobLeadsById}
-                      idLeadIdPlayButton={idLeadIdPlayButton}
+                      leadJobId={leadJobId}
                       handleSubmitModal={handleSubmitModal}
+                      activeJob={activeJob}
                     />
                   </TabPanel>
                 </TabContext>
@@ -548,7 +580,7 @@ export const JobStats = () => {
         >
           <GenericAddEditForm
             initialValues={initialFormValues}
-            validationSchema={validationCreateOrderSchema}
+            validationSchema={customValidation}
             apiRequest={handleSubmitModal}
             hasSubmitButton={true}
             submitBtnName={"save"}
