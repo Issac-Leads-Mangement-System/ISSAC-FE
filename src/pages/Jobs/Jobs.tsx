@@ -56,8 +56,8 @@ const Jobs = ({ className }: any) => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   useEffect(() => {
-    setSecontToolbarMessage("JOBS");
-    setSecontToolbarPath("List");
+    setSecontToolbarMessage("עבודות");
+    setSecontToolbarPath("רשימה");
     getTypes(0, 50);
     getAllJobs();
     getAllTeams();
@@ -131,11 +131,11 @@ const Jobs = ({ className }: any) => {
   // };
 
   const columns: GridColDef<(typeof jobs)[number]>[] = [
-    { field: "job_name", headerName: "Job name", width: 250 },
-    { field: "created_time", headerName: "Created time", width: 150 },
+    { field: "job_name", headerName: "שם העבודה", width: 250 },
+    { field: "created_time", headerName: "זמן יצירה", width: 150 },
     {
       field: "job_status",
-      headerName: "Job status",
+      headerName: "סטטוס העבודה",
       width: 150,
       cellClassName: (params) => {
         if (params.value === "close") return "row-closed";
@@ -146,7 +146,7 @@ const Jobs = ({ className }: any) => {
     },
     {
       field: "lead_type",
-      headerName: "Lead type",
+      headerName: "סוג ליד",
       width: 150,
       valueGetter: (_, row: any) => {
         return `${row.lead_type.type_name}`;
@@ -154,20 +154,20 @@ const Jobs = ({ className }: any) => {
     },
     {
       field: "total_leads",
-      headerName: "Total leads",
+      headerName: 'סה"כ לידים',
       width: 150,
     },
-    { field: "open_leads", headerName: "Open leads", width: 150 },
-    { field: "success_leads", headerName: "Success leads", width: 150 },
-    { field: "closed_leads", headerName: "Closed leads", width: 150 },
+    { field: "open_leads", headerName: "לידים פתוחים", width: 150 },
+    { field: "success_leads", headerName: "לידים מוצלחים", width: 150 },
+    { field: "closed_leads", headerName: "לידים סגורים", width: 150 },
     {
       field: "mobile_deals_success",
-      headerName: "Mobile deals success",
+      headerName: "הצלחה בעסקאות ניידות",
       width: 150,
     },
     {
       field: "total_leads_user",
-      headerName: "Total leads user",
+      headerName: ' סה"כ לידים למשתמש',
       width: 150,
       valueGetter: (_, row: any) => {
         return `${row.leads_user_info.total_leads_user}`;
@@ -175,7 +175,7 @@ const Jobs = ({ className }: any) => {
     },
     {
       field: "open_leads_user",
-      headerName: "Open leads user",
+      headerName: "לידים פתוחים למשתמש",
       width: 150,
       valueGetter: (_, row: any) => {
         return `${row.leads_user_info.open_leads_user}`;
@@ -183,7 +183,7 @@ const Jobs = ({ className }: any) => {
     },
     {
       field: "success_leads_user",
-      headerName: "Success leads user",
+      headerName: "לידים מוצלחים למשתמש",
       width: 150,
       valueGetter: (_, row: any) => {
         return `${row.leads_user_info.success_leads_user}`;
@@ -191,7 +191,7 @@ const Jobs = ({ className }: any) => {
     },
     {
       field: "closed_leads_user",
-      headerName: "Close leads user",
+      headerName: "לידים סגורים למשתמש",
       width: 150,
       valueGetter: (_, row: any) => {
         return `${row.leads_user_info.closed_leads_user}`;
@@ -199,7 +199,7 @@ const Jobs = ({ className }: any) => {
     },
     {
       field: "mobile_deals_success_user",
-      headerName: "Mobile deals success user",
+      headerName: "הצלחה בעסקאות ניידות למשתמש",
       width: 150,
       valueGetter: (_, row: any) => {
         return `${row.leads_user_info.mobile_deals_success_user}`;
@@ -211,7 +211,7 @@ const Jobs = ({ className }: any) => {
       type: "actions",
       width: 150,
       editable: false,
-      renderHeader: (params: any) => <strong>{"Actions "}</strong>,
+      renderHeader: (params: any) => <strong>{"פעולות "}</strong>,
       filterable: false,
       cellClassName: "pinned-column",
       headerClassName: "MuiDataGrid-columnHeader--pinned",
@@ -221,7 +221,7 @@ const Jobs = ({ className }: any) => {
           return [
             <GridActionsCellItem
               icon={<VisibilityIcon />}
-              label="Previw"
+              label="תצוגה מקדימה"
               key={id}
               // sx={{
               //   color: "black",
@@ -232,7 +232,7 @@ const Jobs = ({ className }: any) => {
 
             <GridActionsCellItem
               icon={<TaskAltIcon />}
-              label="Close job"
+              label="סגור עבודה"
               title="Close job"
               key={id}
               disabled={row.job_status === "close"}
@@ -305,7 +305,7 @@ const Jobs = ({ className }: any) => {
                   size="small"
                   sx={filterBtnStyle}
                 >
-                  Filters
+                  מסננים
                 </Button>
 
                 <Button
@@ -315,7 +315,7 @@ const Jobs = ({ className }: any) => {
                   size="small"
                   sx={addBtnStyle}
                 >
-                  Add job
+                  הוסף עבודה
                 </Button>
               </Box>
             </Box>

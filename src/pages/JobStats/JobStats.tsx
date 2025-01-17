@@ -80,8 +80,8 @@ export const JobStats = () => {
     updateJobLead,
     resetFilters,
     submitCreateOrder,
-    // resetJobLeadsById,
-  }: any = jobStatsStore();
+  }: // resetJobLeadsById,
+  any = jobStatsStore();
 
   const { getOrders }: any = ordersStore();
 
@@ -93,20 +93,21 @@ export const JobStats = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isCreateOrderOpen, setIsCreateOrderOpen] = useState(false);
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
-  
+
   const [leadJobId, setLeadJobId]: any = useState(null);
   const [createOrderType, setCreateOrderType]: any = useState("TV");
-  
-  
 
-  const handleChange = async (event: React.SyntheticEvent, newValue: string) => {
+  const handleChange = async (
+    event: React.SyntheticEvent,
+    newValue: string
+  ) => {
     if (newValue === "2") {
       await getJobLeadsById(true);
       setInitialFormValues((prevValues) => ({
         ...prevValues,
         order_basic_info: {
           ...(prevValues.order_basic_info || {}),
-          order_type: 'mobile',
+          order_type: "mobile",
         },
       }));
       // setIdLeadJobConfirmation(jobLeadsById[0].lead_id);
@@ -115,7 +116,7 @@ export const JobStats = () => {
         ...prevValues,
         order_basic_info: {
           ...(prevValues.order_basic_info || {}),
-          order_type: 'TV',
+          order_type: "TV",
         },
       }));
       await getJobById();
@@ -129,7 +130,7 @@ export const JobStats = () => {
     if (!activeJob) {
       setKey("activeJob", location.pathname.split("/")[2]);
     }
-    
+
     return () => {
       resetSecondToolbar();
     };
@@ -145,9 +146,9 @@ export const JobStats = () => {
 
   useEffect(() => {
     setSecontToolbarMessage(
-      `JOB LEADS / ${jobLeadsById[0]?.job.job_name.toUpperCase() || ""}`
+      `לידים עבודה / ${jobLeadsById[0]?.job.job_name.toUpperCase() || ""}`
     );
-    setSecontToolbarPath("Stats");
+    setSecontToolbarPath("סטטיסטיקות");
   }, [jobLeadsById, getJobLeadsById]);
 
   const handleSearchInputChange = (event: any) => {
@@ -263,10 +264,10 @@ export const JobStats = () => {
   };
 
   const columns: GridColDef<(typeof jobById)[number]>[] = [
-    { field: "lead_id", headerName: "Lead", width: 200 },
+    { field: "lead_id", headerName: "ליד ", width: 200 },
     {
       field: "user",
-      headerName: "User",
+      headerName: "משתמש ",
       width: 250,
       renderCell: (params: any) => {
         const { row } = params;
@@ -279,7 +280,7 @@ export const JobStats = () => {
     },
     {
       field: "lead_status",
-      headerName: "Lead status",
+      headerName: "סטטוס ליד",
       width: 200,
       renderCell: (params: any) => {
         const { row } = params;
@@ -288,7 +289,7 @@ export const JobStats = () => {
     },
     {
       field: "mobile_deal_success",
-      headerName: "Mobile deal",
+      headerName: "עסקת נייד",
       width: 200,
       renderCell: (params: any) => {
         const { row } = params;
@@ -299,28 +300,26 @@ export const JobStats = () => {
         );
       },
     },
-    { field: "created_time", headerName: "Created", width: 250 },
-    { field: "updated_time", headerName: "Updated", width: 250 },
-    
-    
-    
+    { field: "created_time", headerName: "נוצר ", width: 250 },
+    { field: "updated_time", headerName: "עודכן ", width: 250 },
+
     {
       field: "actions",
       type: "actions",
       width: 200,
       editable: false,
-      renderHeader: (params: any) => <strong>{"Actions "}</strong>,
+      renderHeader: (params: any) => <strong>{"פעולות  "}</strong>,
       filterable: false,
       cellClassName: "pinned-column",
       headerClassName: "MuiDataGrid-columnHeader--pinned",
       getActions: (params: any) => {
         const { id, row } = params;
-        
+
         if (id) {
           return [
             <GridActionsCellItem
               icon={<PlayCircleOutlineIcon />}
-              label="Play screen"
+              label="מסך הפעלה"
               title="Play screen"
               key={id}
               sx={{
@@ -333,10 +332,13 @@ export const JobStats = () => {
 
             <GridActionsCellItem
               icon={<AssignmentIcon />}
-              label="Update Lead Job Status"
+              label="עדכון סטטוס עבודה ליד"
               title="Update Lead Job Status"
               key={id}
-              disabled={jobById.job_status === "close" || [4, 5].includes(row.lead_status.lead_status_id)}
+              disabled={
+                jobById.job_status === "close" ||
+                [4, 5].includes(row.lead_status.lead_status_id)
+              }
               sx={{
                 color: "#434343",
               }}
@@ -345,7 +347,7 @@ export const JobStats = () => {
             />,
             <GridActionsCellItem
               icon={<PostAddIcon />}
-              label="Create order"
+              label="צור הזמנה טלוויזיה"
               title="Create order"
               key={id}
               disabled={[4, 5].includes(row.lead_status.lead_status_id)}
@@ -353,11 +355,11 @@ export const JobStats = () => {
                 color: "#6ac250",
               }}
               className="textPrimary"
-              onClick={() => createOrder(id, row.lead_id, 'TV')}
+              onClick={() => createOrder(id, row.lead_id, "TV")}
             />,
             <GridActionsCellItem
               icon={<MobileFriendlyIcon />}
-              label="Create mobile order"
+              label="צור הזמנה ניידת"
               title="Create mobile order"
               disabled={row.mobile_deal_success}
               key={id}
@@ -365,12 +367,12 @@ export const JobStats = () => {
                 color: "#6ac250",
               }}
               className="textPrimary"
-              onClick={() => createOrder(id, row.lead_id, 'mobile')}
+              onClick={() => createOrder(id, row.lead_id, "mobile")}
             />,
 
             <GridActionsCellItem
               icon={<DeleteForeverIcon />}
-              label="Delete"
+              label="מחק "
               title="Delete"
               key={id}
               sx={{
@@ -401,26 +403,38 @@ export const JobStats = () => {
   const handleSubmitModal = async (values: any, orderType: any) => {
     // disabled the functionality for now
     values.job_id = parseInt(activeJob);
-    if(leadJobId) {
+    if (leadJobId) {
       values.order_basic_info.lead_job_id = parseInt(leadJobId);
     }
-    if(idLead) {
+    if (idLead) {
       values.order_basic_info.lead_id = idLead;
     }
 
     values.order_basic_info.order_type = createOrderType;
-    values.order_properties.order_installation_price = parseFloat(values.order_properties.order_installation_price).toFixed(2);
-    values.order_properties.order_monthly_price = parseFloat(values.order_properties.order_monthly_price).toFixed(2);
-    if(createOrderType === 'TV'){
-      values.order_properties.order_installation_payments = parseInt(values.order_properties.order_installation_payments);
-      values.order_properties.tv_streamers = parseInt(values.order_properties.tv_streamers);
-      values.order_properties.tv_users = parseInt(values.order_properties.tv_users);
-      values.order_properties.wifi_extenders = parseInt(values.order_properties.wifi_extenders);
-      
+    values.order_properties.order_installation_price = parseFloat(
+      values.order_properties.order_installation_price
+    ).toFixed(2);
+    values.order_properties.order_monthly_price = parseFloat(
+      values.order_properties.order_monthly_price
+    ).toFixed(2);
+    if (createOrderType === "TV") {
+      values.order_properties.order_installation_payments = parseInt(
+        values.order_properties.order_installation_payments
+      );
+      values.order_properties.tv_streamers = parseInt(
+        values.order_properties.tv_streamers
+      );
+      values.order_properties.tv_users = parseInt(
+        values.order_properties.tv_users
+      );
+      values.order_properties.wifi_extenders = parseInt(
+        values.order_properties.wifi_extenders
+      );
+
       delete values.order_properties.order_phone_numbers;
     }
-    
-    if(createOrderType === 'mobile') {
+
+    if (createOrderType === "mobile") {
       delete values.order_schedule;
     }
 
@@ -428,9 +442,6 @@ export const JobStats = () => {
     await getJobLeadsById();
     setIsCreateOrderOpen(false);
   };
-
-
-  
 
   return (
     <PageContainer>
@@ -453,7 +464,7 @@ export const JobStats = () => {
                       aria-label="lab API tabs example"
                     >
                       <Tab
-                        label="List"
+                        label="רשימה "
                         value="1"
                         icon={<ListAltIcon fontSize="small" />}
                         iconPosition="start"
@@ -464,7 +475,7 @@ export const JobStats = () => {
                         }}
                       />
                       <Tab
-                        label="Play"
+                        label="שחק "
                         value="2"
                         icon={<PlayCircleOutlineIcon fontSize="small" />}
                         iconPosition="start"
@@ -507,42 +518,44 @@ export const JobStats = () => {
                           size="small"
                           sx={filterBtnStyle}
                         >
-                          Filters
+                          מסננים
                         </Button>
                       </Box>
                     </Box>
 
-                    <CustomDataGrid
-                      rows={jobLeadsById}
-                      rowCount={counter_job_leads}
-                      columns={columns}
-                      initialState={{
-                        pagination: {
-                          paginationModel: {
-                            pageSize: 10,
+                    <Box sx={{ overflow: "auto", height: "50vh" }}>
+                      <CustomDataGrid
+                        rows={jobLeadsById}
+                        rowCount={counter_job_leads}
+                        columns={columns}
+                        initialState={{
+                          pagination: {
+                            paginationModel: {
+                              pageSize: 10,
+                            },
                           },
-                        },
-                      }}
-                      pageSizeOptions={[5, 10, 25, 50]}
-                      onPaginationModelChange={(model: any) => {
-                        //   handleChangeRowsPerPage(model);
-                        //   handleChangePage(model);
-                        if (model.pageSize !== pagination.pageSize) {
-                          handleChangeRowsPerPage(model);
-                        }
-                        if (model.page !== pagination.page) {
-                          handleChangePage(model);
-                        }
-                      }}
-                      // rowCount={count}
-                      disableRowSelectionOnClick
-                      disableVirtualization
-                      paginationMode="server"
-                      pagination
-                      loading={isLoading}
-                      getCellClassName={getCellClassName}
-                      getRowClassName={getRowClassName}
-                    />
+                        }}
+                        pageSizeOptions={[5, 10, 25, 50]}
+                        onPaginationModelChange={(model: any) => {
+                          //   handleChangeRowsPerPage(model);
+                          //   handleChangePage(model);
+                          if (model.pageSize !== pagination.pageSize) {
+                            handleChangeRowsPerPage(model);
+                          }
+                          if (model.page !== pagination.page) {
+                            handleChangePage(model);
+                          }
+                        }}
+                        // rowCount={count}
+                        disableRowSelectionOnClick
+                        disableVirtualization
+                        paginationMode="server"
+                        pagination
+                        loading={isLoading}
+                        getCellClassName={getCellClassName}
+                        getRowClassName={getRowClassName}
+                      />
+                    </Box>
                   </TabPanel>
 
                   {/* play screen */}
@@ -575,7 +588,9 @@ export const JobStats = () => {
         <CustomModal
           isOpen={isCreateOrderOpen}
           onClose={onCloseCreateOrder}
-          title={`Create order ${createOrderType}`}
+          title={`${
+            createOrderType === "TV" ? "צור הזמנה טלוויזיה" : "צור הזמנה ניידת"
+          }`}
           minWidth="1200px"
         >
           <GenericAddEditForm
@@ -585,7 +600,10 @@ export const JobStats = () => {
             hasSubmitButton={true}
             submitBtnName={"save"}
             form={(formProps: any) => (
-              <JobStatsCreateOrderModal formProps={formProps} createOrderType={createOrderType}/>
+              <JobStatsCreateOrderModal
+                formProps={formProps}
+                createOrderType={createOrderType}
+              />
             )}
             btnStyle={submitBtnStyle}
           />

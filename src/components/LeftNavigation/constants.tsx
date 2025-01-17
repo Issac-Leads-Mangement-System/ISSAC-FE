@@ -13,33 +13,33 @@ import HomeIcon from "@mui/icons-material/Home";
 
 const menus = [
   {
-    name: "Home",
+    name: "בית",
     icon: <HomeIcon />,
     route: "/home",
   },
 
   {
-    name: "Jobs",
+    name: "עבודות ",
     icon: <WorkIcon />,
     route: "/jobs",
   },
 
   {
-    name: "Leads",
+    name: "לידים ",
     icon: <InterpreterModeIcon />,
     children: [
       {
-        name: "List",
+        name: "רשימה ",
         icon: <ListAltIcon />,
         route: "/leads",
       },
       {
-        name: "Types",
+        name: "סוגים ",
         icon: <BorderColorIcon />,
         route: "/leads-types",
       },
       {
-        name: "Status",
+        name: "סטטוס ",
         icon: <SignalWifiStatusbar4BarIcon />,
         route: "/leads-status",
       },
@@ -47,16 +47,16 @@ const menus = [
   },
 
   {
-    name: "Orders",
+    name: "הזמנות ",
     icon: <GradingIcon />,
     children: [
       {
-        name: "List",
+        name: "רשימה ",
         icon: <ListAltIcon />,
         route: "/orders/list",
       },
       {
-        name: "Types",
+        name: "סוגים ",
         icon: <InventoryIcon />,
         route: "/orders/package-type",
       },
@@ -64,16 +64,16 @@ const menus = [
   },
 
   {
-    name: "Users",
+    name: "משתמשים ",
     icon: <Groups3Icon />,
     children: [
       {
-        name: "List",
+        name: "רשימה ",
         icon: <ManageAccountsIcon />,
         route: "/users",
       },
       {
-        name: "Teams",
+        name: "צוותים ",
         icon: <GroupWorkIcon />,
         route: "/team",
       },

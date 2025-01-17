@@ -39,7 +39,7 @@ export const JobStatsCard = () => {
                 marginBottom: "8px",
               }}
             >
-              Total
+              סה"כ 
             </Typography>
             <Typography
               variant="h4"
@@ -56,7 +56,7 @@ export const JobStatsCard = () => {
                 color: "#666",
               }}
             >
-              employee: {jobById.leads_user_info.total_leads_user}
+              עובד : {jobById.leads_user_info.total_leads_user}
             </Typography>
           </Box>
 
@@ -110,7 +110,7 @@ export const JobStatsCard = () => {
                 marginBottom: "8px",
               }}
             >
-              Open
+              פתוח 
             </Typography>
             <Typography
               variant="h4"
@@ -127,7 +127,7 @@ export const JobStatsCard = () => {
                 color: "#666",
               }}
             >
-              employee: {jobById.leads_user_info.open_leads_user}
+              עובד : {jobById.leads_user_info.open_leads_user}
             </Typography>
           </Box>
 
@@ -180,7 +180,7 @@ export const JobStatsCard = () => {
                 marginBottom: "8px",
               }}
             >
-              Success
+              הצלחה 
             </Typography>
             <Typography
               variant="h4"
@@ -197,7 +197,7 @@ export const JobStatsCard = () => {
                 color: "#666",
               }}
             >
-              employee: {jobById.leads_user_info.success_leads_user}
+              עובד : {jobById.leads_user_info.success_leads_user}
             </Typography>
           </Box>
 
@@ -251,7 +251,7 @@ export const JobStatsCard = () => {
                 marginBottom: "8px",
               }}
             >
-              Closed
+              סגור 
             </Typography>
             <Typography
               variant="h4"
@@ -268,7 +268,7 @@ export const JobStatsCard = () => {
                 color: "#666",
               }}
             >
-              employee: {jobById.leads_user_info.closed_leads_user}
+              עובד : {jobById.leads_user_info.closed_leads_user}
             </Typography>
           </Box>
 
@@ -322,7 +322,7 @@ export const JobStatsCard = () => {
                 marginBottom: "8px",
               }}
             >
-              Mobile
+              נייד 
             </Typography>
             <Typography
               variant="h4"
@@ -339,7 +339,7 @@ export const JobStatsCard = () => {
                 color: "#666",
               }}
             >
-              mobile: {jobById.leads_user_info.mobile_deals_success_user}
+              נייד: {jobById.leads_user_info.mobile_deals_success_user}
             </Typography>
           </Box>
 

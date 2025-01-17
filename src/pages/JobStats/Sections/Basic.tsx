@@ -20,7 +20,7 @@ export const BasicInfoSection = React.memo(({ formProps }: any) => {
           component="div"
           sx={{ fontWeight: "bold", mb: 2 }}
         >
-          Basic Info
+          מידע בסיסי
         </Typography>
         <Box display="flex" flexDirection="column" gap={2}>
           <Grid2 container spacing={5}>
@@ -38,7 +38,7 @@ export const BasicInfoSection = React.memo(({ formProps }: any) => {
                     {...generateFormikInputFieldProps(formProps, "order_basic_info.mobility")}
                   />
                 }
-                label="Mobility"
+                label="ניוד"
               />
             </Grid2>
           </Grid2>

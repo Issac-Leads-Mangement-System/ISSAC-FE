@@ -37,7 +37,7 @@ export const ScheduleSection = ({ formProps }: any) => {
           component="div"
           sx={{ fontWeight: "bold", mb: 2 }}
         >
-          Schedule
+          לוח זמנים
         </Typography>
         <Box display="flex" flexDirection="column" gap={2}>
           <Grid2 container spacing={1.5}>
@@ -45,7 +45,7 @@ export const ScheduleSection = ({ formProps }: any) => {
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer components={["DatePicker"]} sx={{ p: 0, m: 0 }}>
                   <DatePicker
-                    label="Supply date"
+                    label="תאריך התקנה"
                     value={
                       formProps.values.order_schedule?.order_supply_date
                         ? dayjs(
@@ -84,13 +84,11 @@ export const ScheduleSection = ({ formProps }: any) => {
             </Grid2>
             <Grid2 size={5}>
               <FormControl fullWidth>
-                <InputLabel id="supply_time_range">
-                  Supply time range
-                </InputLabel>
+                <InputLabel id="supply_time_range">שעת התקנה</InputLabel>
                 <Select
                   labelId="supply_time_range"
                   id="supply_time_range"
-                  label="Supply time range"
+                  label="שעת התקנה"
                   {...generateFormikInputFieldProps(
                     formProps,
                     "order_schedule.order_supply_time_range"
@@ -124,7 +122,7 @@ export const ScheduleSection = ({ formProps }: any) => {
                   formProps,
                   "order_schedule.order_supply_comment"
                 )}
-                placeholder="Supply comment"
+                placeholder="הערות מיוחדות"
                 multiline
                 rows={8}
                 maxRows={15}

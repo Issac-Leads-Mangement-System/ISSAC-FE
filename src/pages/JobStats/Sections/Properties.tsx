@@ -24,7 +24,10 @@ export const PropertiesSection = ({ formProps, createOrderType }: any) => {
   const { orders } = ordersStore();
   const orderInstallationPayments = [1, 12, 36];
   return (
-    <Box display="flex" flexDirection="column" gap={2}>
+    <div dir="ltr">
+
+
+    <Box display="flex" flexDirection="column" gap={2} dir="ltr">
       <Box>
         <Paper elevation={3} sx={{ p: 3, m: 2, borderRadius: 2 }}>
           <Typography
@@ -32,17 +35,17 @@ export const PropertiesSection = ({ formProps, createOrderType }: any) => {
             component="div"
             sx={{ fontWeight: "bold", mb: 2 }}
           >
-            Properties
+            נכסים
           </Typography>
           <Box display="flex" flexDirection="column" gap={2}>
             <Grid2 container spacing={2}>
               <Grid2 size={12}>
                 <FormControl fullWidth>
-                  <InputLabel id="package_name">Package name</InputLabel>
+                  <InputLabel id="package_name">חבילה</InputLabel>
                   <Select
                     labelId="package_name"
                     id="package_name"
-                    label="Package name"
+                    label="חבילה"
                     {...generateFormikInputFieldProps(
                       formProps,
                       "order_properties.order_package_id"
@@ -55,7 +58,17 @@ export const PropertiesSection = ({ formProps, createOrderType }: any) => {
                     ))}
                   </Select>
                   <ErrorMessage name="order_properties.order_package_id">
-                      { msg => <div style={{ color: 'red', margin: '5px 0px 0px 0px', fontSize:'0.75rem' }}>{msg}</div> }
+                    {(msg) => (
+                      <div
+                        style={{
+                          color: "red",
+                          margin: "5px 0px 0px 0px",
+                          fontSize: "0.75rem",
+                        }}
+                      >
+                        {msg}
+                      </div>
+                    )}
                   </ErrorMessage>
                 </FormControl>
               </Grid2>
@@ -67,7 +80,7 @@ export const PropertiesSection = ({ formProps, createOrderType }: any) => {
                         formProps,
                         "order_properties.order_monthly_price"
                       )}
-                      label="Price"
+                      label="מחיר חודשי"
                       style={{ display: "flex" }}
                       regex={/^\d*\.?\d*$/}
                       inputTypeRegex={"decimal"}
@@ -80,7 +93,7 @@ export const PropertiesSection = ({ formProps, createOrderType }: any) => {
                         formProps,
                         "order_properties.order_installation_price"
                       )}
-                      label="Installation price"
+                      label="מחיר בתקנה"
                       style={{ display: "flex" }}
                       regex={/^\d*\.?\d*$/}
                       inputTypeRegex={"decimal"}
@@ -89,11 +102,11 @@ export const PropertiesSection = ({ formProps, createOrderType }: any) => {
 
                   <Grid2 size={4}>
                     <FormControl fullWidth>
-                      <InputLabel id="payments">Payments</InputLabel>
+                      <InputLabel id="payments">תשלומים להתקנה</InputLabel>
                       <Select
                         labelId="payments"
                         id="payments"
-                        label="Payments"
+                        label="תשלומים להתקנה"
                         {...generateFormikInputFieldProps(
                           formProps,
                           "order_properties.order_installation_payments"
@@ -127,7 +140,7 @@ export const PropertiesSection = ({ formProps, createOrderType }: any) => {
                         formProps,
                         "order_properties.tv_streamers"
                       )}
-                      label="Streamers"
+                      label="סטרימרים"
                       style={{ display: "flex" }}
                       regex={/^\d*$/}
                       inputTypeRegex={"numeric"}
@@ -140,7 +153,7 @@ export const PropertiesSection = ({ formProps, createOrderType }: any) => {
                         formProps,
                         "order_properties.tv_users"
                       )}
-                      label="Users"
+                      label="משתמשים"
                       style={{ display: "flex" }}
                       regex={/^\d*$/}
                       inputTypeRegex={"numeric"}
@@ -153,7 +166,7 @@ export const PropertiesSection = ({ formProps, createOrderType }: any) => {
                         formProps,
                         "order_properties.wifi_extenders"
                       )}
-                      label="Wifi"
+                      label="מגדילי טווח"
                       style={{ display: "flex" }}
                       regex={/^\d*$/}
                       inputTypeRegex={"numeric"}
@@ -167,7 +180,7 @@ export const PropertiesSection = ({ formProps, createOrderType }: any) => {
                   {({ push, remove }) => (
                     <Box>
                       <Typography variant="h6" gutterBottom>
-                        Phone numbers
+                        מספרי טלפון
                       </Typography>
 
                       <Box sx={{ mb: 2 }}>
@@ -176,7 +189,7 @@ export const PropertiesSection = ({ formProps, createOrderType }: any) => {
                           startIcon={<AddIcon />}
                           onClick={() => push("")}
                         >
-                          Add phone number
+                          הוסף מספר טלפון
                         </Button>
                       </Box>
 
@@ -201,7 +214,7 @@ export const PropertiesSection = ({ formProps, createOrderType }: any) => {
                                 >
                                   <TextField
                                     fullWidth
-                                    label={`Phone number ${index + 1}`}
+                                    label={`מספר טלפון ${index + 1}`}
                                     value={
                                       formProps.values.order_properties
                                         .order_phone_numbers[index]
@@ -246,7 +259,7 @@ export const PropertiesSection = ({ formProps, createOrderType }: any) => {
                     formProps,
                     "order_properties.orders_tv_properties_comment"
                   )}
-                  placeholder="Comments"
+                  placeholder="הערות"
                   multiline
                   rows={8}
                   maxRows={15}
@@ -257,5 +270,6 @@ export const PropertiesSection = ({ formProps, createOrderType }: any) => {
         </Paper>
       </Box>
     </Box>
+    </div>
   );
 };
