@@ -24,7 +24,7 @@ export const PaymentSection = ({ formProps }: any) => {
           component="div"
           sx={{ fontWeight: "bold", mb: 2 }}
         >
-          Customer Payment
+          תשלום לקוח
         </Typography>
         <Box display="flex" flexDirection="column" gap={2}>
           <Grid2 container spacing={2}>
@@ -34,7 +34,7 @@ export const PaymentSection = ({ formProps }: any) => {
                   formProps,
                   "order_customer_payment.order_card_number"
                 )}
-                label="Card number"
+                label="מספר כרטיס"
                 style={{ display: "flex" }}
                 regex={/^\d*$/}
                 inputTypeRegex={"numeric"}
@@ -44,7 +44,7 @@ export const PaymentSection = ({ formProps }: any) => {
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
                   sx={{ width: "100%" }}
-                  label="Expired date"
+                  label="תוקף"
                   views={["month", "year"]}
                   format="MM/YY"
                   onChange={(newValue) => {

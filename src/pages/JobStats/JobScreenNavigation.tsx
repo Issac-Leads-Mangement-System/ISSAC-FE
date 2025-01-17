@@ -378,7 +378,7 @@ const ScreenNavigationWithGrid = ({
               <CustomModal
                 isOpen={isButtonClick}
                 onClose={onCloseCreateOrder}
-                title={`Create Order: ${orderType}`}
+                title={`${orderType === 'TV' ? 'צור הזמנה טלוויזיה' : 'צור הזמנה ניידת'}`}
                 minWidth="1200px"
               >
                 <GenericAddEditForm

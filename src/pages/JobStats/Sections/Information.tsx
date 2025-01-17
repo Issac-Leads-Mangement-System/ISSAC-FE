@@ -11,7 +11,7 @@ export const InformationSection = ({ formProps }: any) => {
           component="div"
           sx={{ fontWeight: "bold", mb: 2 }}
         >
-          Customer Information
+          מידע על הלקוח
         </Typography>
         <Box display="flex" flexDirection="column" gap={2}>
           <Grid2 container spacing={1.5}>
@@ -21,7 +21,7 @@ export const InformationSection = ({ formProps }: any) => {
                   formProps,
                   "order_customer_info.customer_id"
                 )}
-                label="Customer ID"
+                label="תעודת זהות"
                 style={{ display: "flex" }}
               />
             </Grid2>
@@ -32,7 +32,7 @@ export const InformationSection = ({ formProps }: any) => {
                   formProps,
                   "order_customer_info.customer_full_name"
                 )}
-                label="Customer Full Name"
+                label="שם מלא"
                 style={{ display: "flex" }}
               />
             </Grid2>
@@ -43,7 +43,7 @@ export const InformationSection = ({ formProps }: any) => {
                   formProps,
                   "order_customer_info.customer_phone"
                 )}
-                label="Phone"
+                label="נייד"
                 style={{ display: "flex" }}
               />
             </Grid2>
@@ -54,7 +54,7 @@ export const InformationSection = ({ formProps }: any) => {
                   formProps,
                   "order_customer_info.customer_phone_2"
                 )}
-                label="Phone 2"
+                label="נייד נוסף"
                 style={{ display: "flex" }}
               />
             </Grid2>
@@ -65,7 +65,7 @@ export const InformationSection = ({ formProps }: any) => {
                   formProps,
                   "order_customer_info.customer_phone_home"
                 )}
-                label="Phone home"
+                label="טלפון נייח"
                 style={{ display: "flex" }}
               />
             </Grid2>
@@ -75,7 +75,7 @@ export const InformationSection = ({ formProps }: any) => {
                   formProps,
                   "order_customer_info.customer_city"
                 )}
-                label="City"
+                label="עיר"
                 style={{ display: "flex" }}
               />
             </Grid2>
@@ -85,7 +85,7 @@ export const InformationSection = ({ formProps }: any) => {
                   formProps,
                   "order_customer_info.customer_street"
                 )}
-                label="Street"
+                label="רחוב"
                 style={{ display: "flex" }}
               />
             </Grid2>
@@ -95,7 +95,7 @@ export const InformationSection = ({ formProps }: any) => {
                   formProps,
                   "order_customer_info.customer_home_number"
                 )}
-                label="Home Number"
+                label="בית"
                 style={{ display: "flex" }}
               />
             </Grid2>
@@ -105,7 +105,7 @@ export const InformationSection = ({ formProps }: any) => {
                   formProps,
                   "order_customer_info.customer_apartment_number"
                 )}
-                label="Apartment Number"
+                label="דירה"
                 style={{ display: "flex" }}
               />
             </Grid2>

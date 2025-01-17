@@ -56,6 +56,7 @@ export const filterBtnStyle = {
   bgcolor: "#17a2b8", // teal color for background
   color: "#fff", // white text
   textTransform: "none",
+  border: "none",
   "&:hover": {
     bgcolor: "#138496", // slightly darker teal on hover
   },
