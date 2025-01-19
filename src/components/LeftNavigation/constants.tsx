@@ -15,30 +15,36 @@ const menus = [
   {
     name: "בית",
     icon: <HomeIcon />,
+    permissions: ['admin', 'manager'],
     route: "/home",
   },
 
   {
     name: "עבודות ",
     icon: <WorkIcon />,
+    permissions: ['admin', 'manager', 'employee'],
     route: "/jobs",
   },
 
   {
     name: "לידים ",
     icon: <InterpreterModeIcon />,
+    permissions: ['admin'],
     children: [
       {
+        permissions: ['admin'],
         name: "רשימת לידים",
         icon: "-",
         route: "/leads",
       },
       {
+        permissions: ['admin'],
         name: "סוגי לידים",
         icon: "-",
         route: "/leads-types",
       },
       {
+        permissions: ['admin'],
         name: "סטטוסים ",
         icon: "-",
         route: "/leads-status",
@@ -49,13 +55,16 @@ const menus = [
   {
     name: "הזמנות ",
     icon: <GradingIcon />,
+    permissions: ['admin'],
     children: [
       {
+        permissions: ['admin'],
         name: "רשימת הזמנות ",
         icon: "-",
         route: "/orders/list",
       },
       {
+        permissions: ['admin'],
         name: "סוגי הזמנות ",
         icon: "-",
         route: "/orders/package-type",
@@ -66,13 +75,16 @@ const menus = [
   {
     name: "משתמשים ",
     icon: <Groups3Icon />,
+    permissions: ['admin', 'manager'],
     children: [
       {
+        permissions: ['admin', 'manager'],
         name: "רשימת משתמשים ",
         icon: "-",
         route: "/users",
       },
       {
+        permissions: ['admin'],
         name: "רשימת צוותים ",
         icon: "-",
         route: "/team",

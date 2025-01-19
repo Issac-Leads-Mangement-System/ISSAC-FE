@@ -8,15 +8,18 @@ import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import menus from "./constants";
 import { useNavigate } from "react-router-dom";
+import usersStore from "../../store/Users/users-store";
 
 interface MenuItem {
   name: string;
   icon: React.ReactNode;
   route?: string;
   children?: MenuItem[];
+  permissions?: any;
 }
 export default function NestedList({ open }: { open: boolean }) {
   const navigate = useNavigate();
+  const { user }: any = usersStore();
 
   const [openItems, setOpenItems] = React.useState<Record<string, boolean>>({});
   const [selectedItem, setSelectedItem] = React.useState<string | null>(null);
@@ -37,46 +40,58 @@ export default function NestedList({ open }: { open: boolean }) {
   };
 
   const renderListItems = (list: MenuItem[]) => {
+    console.log(user);
     return list.map((item) => {
       return (
         <React.Fragment key={item.name}>
-          <ListItemButton
-            sx={{
-              textAlign: "right",
-              minHeight: 48,
-              justifyContent: "center",
-              px: 2.0,
-              color: "white",
-            }}
-            onClick={() => handleClick(item)}
-            selected={selectedItem === item.route}
-          >
-            <ListItemIcon
-              sx={{
-                minWidth: 0,
-                ml: open ? 2 : "auto",
-                justifyContent: "center",
-                color: "white",
-              }}
-            >
-              {item.icon}
-            </ListItemIcon>
-            <ListItemText primary={item.name} sx={{ opacity: open ? 1 : 0 }} />
-            {item.children ? (
-              openItems[item.name] ? (
-                <ExpandLess />
-              ) : (
-                <ExpandMore />
-              )
-            ) : null}
-          </ListItemButton>
+          {item.permissions?.includes(user.user_role) && (
+            <>
+              <ListItemButton
+                sx={{
+                  textAlign: "right",
+                  minHeight: 48,
+                  justifyContent: "center",
+                  px: 2.0,
+                  color: "white",
+                }}
+                onClick={() => handleClick(item)}
+                selected={selectedItem === item.route}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    ml: open ? 2 : "auto",
+                    justifyContent: "center",
+                    color: "white",
+                  }}
+                >
+                  {item.icon}
+                </ListItemIcon>
+                <ListItemText
+                  primary={item.name}
+                  sx={{ opacity: open ? 1 : 0 }}
+                />
+                {item.children ? (
+                  openItems[item.name] ? (
+                    <ExpandLess />
+                  ) : (
+                    <ExpandMore />
+                  )
+                ) : null}
+              </ListItemButton>
 
-          {item.children && (
-            <Collapse in={openItems[item.name]} timeout="auto" unmountOnExit>
-              <List component="div" disablePadding sx={{ pr: 4 }}>
-                {renderListItems(item.children)}
-              </List>
-            </Collapse>
+              {item.children && (
+                <Collapse
+                  in={openItems[item.name]}
+                  timeout="auto"
+                  unmountOnExit
+                >
+                  <List component="div" disablePadding sx={{ pr: 4 }}>
+                    {renderListItems(item.children)}
+                  </List>
+                </Collapse>
+              )}
+            </>
           )}
         </React.Fragment>
       );

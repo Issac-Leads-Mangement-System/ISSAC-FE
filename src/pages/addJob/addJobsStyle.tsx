@@ -16,4 +16,9 @@ export const AddJobsStyle = () => css`
     text-align: center;
     padding: 0;
   }
+
+  .MuiStepConnector-root {
+    left: calc(50% + 20px);
+    right: calc(-50% + 20px);
+  }
 `;
