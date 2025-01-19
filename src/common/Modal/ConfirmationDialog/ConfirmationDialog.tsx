@@ -23,14 +23,20 @@ export const ConfirmationModal = ({
   btnCancel?: string;
 }) => {
   return (
-    <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Please confirm your changes</DialogTitle>
+    <Dialog open={open} onClose={onClose} dir="rtl">
+      <DialogTitle>אנא אשר את השינוי</DialogTitle>
       <DialogContent>
         <DialogContentText>
           {message}
         </DialogContentText>
       </DialogContent>
-      <DialogActions>
+      <DialogActions
+      sx={{
+        display: 'flex',
+        justifyContent: 'center', // Center the buttons
+        gap: 1, // Optional, add space between buttons
+      }}
+      >
         <Button
           onClick={onClose}
           color="primary"

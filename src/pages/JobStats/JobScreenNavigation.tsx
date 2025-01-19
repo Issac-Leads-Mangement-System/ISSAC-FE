@@ -89,7 +89,7 @@ const ScreenNavigationWithGrid = ({
   const handleNextAlert = () => {
     setIsConfirmModal({
       open: true,
-      title: `Before moving next, did you also offer a Mobile deal?`,
+      title: `לפני שאתה ממשיך, האם הצעת גם עסקת מובייל?`,
       type: "next_button",
     });
   }
@@ -152,7 +152,7 @@ const ScreenNavigationWithGrid = ({
   const onButtonSectionClick = (jobLead: any) => {
     setIsConfirmModal({
       open: true,
-      title: `Are you sure you want to change the status in ${jobLead.status_name}?`,
+      title: `האם אתה בטוח שברצונך לשנות את הסטטוס ל${jobLead.status_name}?`,
       type: "status_change",
     });
     setChangeJobIdStatus(jobLead.id);
@@ -174,6 +174,7 @@ const ScreenNavigationWithGrid = ({
 
   return (
     <Box
+      dir = "ltr"
       sx={{
         display: "flex",
         flexDirection: "column",
@@ -193,6 +194,7 @@ const ScreenNavigationWithGrid = ({
               height: "12px",
               borderRadius: "6px",
               marginBottom: "16px",
+              boxShadow: "0 2px 6px rgba(0, 0, 0, 0.1)",
             }}
           />
           <UserChipsExample
@@ -220,6 +222,7 @@ const ScreenNavigationWithGrid = ({
             >
               <ArrowBackIcon />
             </Button>
+            
             <Box
               sx={{
                 display: "flex",
@@ -256,6 +259,7 @@ const ScreenNavigationWithGrid = ({
                 </Tooltip>
               )}
             </Box>
+
             <Button
               variant="outlined"
               color="primary"
@@ -313,7 +317,7 @@ const ScreenNavigationWithGrid = ({
                     },
                   }}
                 >
-                  Create TV order
+                  צור הזמנה 
                 </Button>
 
                 <Button
@@ -336,7 +340,7 @@ const ScreenNavigationWithGrid = ({
                     },
                   }}
                 >
-                  Create Mobile Order
+                  צור הזמנה מובייל
                 </Button>
               </Grid>
 
@@ -354,7 +358,7 @@ const ScreenNavigationWithGrid = ({
                   <Button
                     key={index}
                     variant="outlined"
-                    disabled={jobDetailsById.mobile_deal_success}
+                    disabled={[4, 5].includes(jobDetailsById.lead_status.lead_status_id)}
                     onClick={() => onButtonSectionClick(status)}
                     sx={{
                       fontWeight: "bold",
@@ -376,9 +380,10 @@ const ScreenNavigationWithGrid = ({
 
             {isButtonClick && (
               <CustomModal
+                dir="rtl"
                 isOpen={isButtonClick}
                 onClose={onCloseCreateOrder}
-                title={`${orderType === 'TV' ? 'צור הזמנה טלוויזיה' : 'צור הזמנה ניידת'}`}
+                title={`${orderType === 'TV' ? 'צור הזמנה טלוויזיה' : 'צור הזמנה מובייל'}`}
                 minWidth="1200px"
               >
                 <GenericAddEditForm

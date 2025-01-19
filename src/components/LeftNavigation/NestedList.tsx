@@ -42,6 +42,7 @@ export default function NestedList({ open }: { open: boolean }) {
         <React.Fragment key={item.name}>
           <ListItemButton
             sx={{
+              textAlign: "right",
               minHeight: 48,
               justifyContent: "center",
               px: 2.0,
@@ -53,7 +54,7 @@ export default function NestedList({ open }: { open: boolean }) {
             <ListItemIcon
               sx={{
                 minWidth: 0,
-                mr: open ? 2 : "auto",
+                ml: open ? 2 : "auto",
                 justifyContent: "center",
                 color: "white",
               }}
@@ -72,7 +73,7 @@ export default function NestedList({ open }: { open: boolean }) {
 
           {item.children && (
             <Collapse in={openItems[item.name]} timeout="auto" unmountOnExit>
-              <List component="div" disablePadding sx={{ pl: 4 }}>
+              <List component="div" disablePadding sx={{ pr: 4 }}>
                 {renderListItems(item.children)}
               </List>
             </Collapse>

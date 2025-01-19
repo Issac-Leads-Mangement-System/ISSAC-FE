@@ -128,8 +128,8 @@ const Leads = () => {
   );
 
   useEffect(() => {
-    setSecontToolbarMessage("LEADS");
-    setSecontToolbarPath("List");
+    setSecontToolbarMessage("לידים");
+    setSecontToolbarPath("רשימת לידים");
     getLeads();
     getTypes(0, 50);
     getStatus(0, 50);
@@ -208,32 +208,51 @@ const Leads = () => {
   };
 
   const columns: GridColDef<(typeof leads)[number]>[] = [
-    { field: "id", headerName: "Id", width: 150 },
-    { field: "lead_message", headerName: "Lead message", width: 250 },
+    { field: "id", headerName: "ליד",
+      flex: 1,
+      minWidth: 200,
+      headerAlign: "center", align: "center",},
+    { field: "lead_message", headerName: "הערה",      
+      flex: 1,
+      minWidth: 400,
+      headerAlign: "center", align: "center", },
     {
       field: "status_name",
-      headerName: "Status name",
-      width: 250,
+      headerName: "סטטוס",
+      flex: 1,
+      minWidth: 200,
+      headerAlign: "center", align: "center",
       valueGetter: (_, row: any) => {
         return `${row.lead_status.status_name}`;
       },
     },
     {
       field: "type_name",
-      headerName: "Type name",
-      width: 250,
+      headerName: "סוג",
+      flex: 1,
+      minWidth: 200,
+      headerAlign: "center", align: "center",
       valueGetter: (_, row: any) => {
         return `${row.lead_type.type_name}`;
       },
     },
-    { field: "created_date", headerName: "Created date", width: 200 },
-    { field: "updated_date", headerName: "Updated date", width: 200 },
+    { field: "created_date", headerName: "תאריך יצירה",       
+      flex: 1,
+      minWidth: 150,
+      headerAlign: "center", align: "center", },
+    { field: "updated_date", headerName: "עודכן לאחרונה", 
+      flex: 1,
+      minWidth: 150,
+      headerAlign: "center", align: "center",
+    },
     {
       field: "actions",
       type: "actions",
-      width: 150,
+      flex: 1,
+      minWidth: 200,
+      headerAlign: "center", align: "center",
       editable: false,
-      renderHeader: () => <strong>{"Actions "}</strong>,
+      renderHeader: () => <strong>{"פעולות "}</strong>,
       filterable: false,
       cellClassName: "pinned-column",
       headerClassName: "MuiDataGrid-columnHeader--pinned",
@@ -276,7 +295,7 @@ const Leads = () => {
               className="textPrimary"
               onClick={() => handleDeleteClick(id)}
             />,
-          ];
+          ].reverse();
         }
         return [];
       },
@@ -307,7 +326,7 @@ const Leads = () => {
               }}
             />
 
-            <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Box dir="ltr" sx={{ display: "flex", alignItems: "center" }}>
               {idsRowSelection.length > 0 && (
                 <Button
                   variant="contained"
@@ -320,7 +339,7 @@ const Leads = () => {
                     height: "32px",
                   }}
                 >
-                  Delete Selected Items
+                  מחק פריטים נבחרים
                 </Button>
               )}
 
@@ -331,7 +350,7 @@ const Leads = () => {
                 size="small"
                 sx={filterBtnStyle}
               >
-                Filters
+                מסננים
               </Button>
 
               <Button
@@ -343,10 +362,10 @@ const Leads = () => {
                 variant="contained"
                 disableElevation
                 onClick={handleClick}
-                endIcon={<KeyboardArrowDownIcon />}
+                startIcon={<KeyboardArrowDownIcon />}
                 sx={addBtnStyle}
               >
-                Add lead
+                הוסף לידים
               </Button>
               <StyledMenu
                 id="demo-customized-menu"
@@ -358,19 +377,20 @@ const Leads = () => {
                 onClose={handleClose}
               >
                 <MenuItem onClick={() => addLead(false)} disableRipple>
-                  <PersonAddAltIcon /> Add one lead
+                  <PersonAddAltIcon  sx={{marginLeft:"10px"}}/> הוסף ידנית
                 </MenuItem>
                 <MenuItem onClick={() => addLead(true)} disableRipple>
-                  <UploadFileIcon /> Upload file
+                  <UploadFileIcon sx={{marginLeft:"10px"}}/> העלה קובץ
                 </MenuItem>
               </StyledMenu>
             </Box>
           </Box>
 
           {leads?.length > 0 && (
+            <div dir="ltr">
             <CustomDataGrid
               rows={leads}
-              columns={columns}
+              columns={[...columns].reverse()}
               initialState={{
                 pagination: {
                   paginationModel: {
@@ -397,6 +417,7 @@ const Leads = () => {
                 handleRowSelection(selectionModel);
               }}
             />
+            </div>
           )}
         </CardContent>
       </Card>
@@ -429,7 +450,7 @@ const Leads = () => {
           open={isModalOpen}
           onClose={handleCloseModal}
           onConfirm={handleConfirmDelete}
-          message=" Are you sure you want to delete this lead? This action cannot be undone."
+          message=" האם אתה בטוח שברצונך למחוק ליד זה? לא ניתן לבטל פעולה זו."
           btnName="Delete"
         />
       )}

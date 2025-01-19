@@ -117,14 +117,20 @@ const PackageType = () => {
     {
       field: "package_name",
       headerName: "Package name",
-      width: 350,
+      flex: 1,
+      minWidth: 200,
+      headerAlign: "center", align: "center",
     },
-    { field: "order_type", headerName: "Type", width: 250 },
+    { field: "order_type", headerName: "Type", flex: 1,
+      minWidth: 200,
+      headerAlign: "center", align: "center", },
 
     {
       field: "actions",
       type: "actions",
-      width: 150,
+      flex: 1,
+      minWidth: 200,
+      headerAlign: "center", align: "center",
       editable: false,
       renderHeader: () => <strong>{"Actions "}</strong>,
       filterable: false,
@@ -188,7 +194,7 @@ const PackageType = () => {
               }}
             />
 
-            <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Box dir="ltr" sx={{ display: "flex", alignItems: "center" }}>
               <Button
                 variant="outlined"
                 onClick={() => addNewPackage()}
@@ -196,8 +202,8 @@ const PackageType = () => {
                 size="small"
                 sx={addBtnStyle}
               >
-                Add package
-              </Button>
+              הוסף סוג חבילה
+            </Button>
             </Box>
           </Box>
 

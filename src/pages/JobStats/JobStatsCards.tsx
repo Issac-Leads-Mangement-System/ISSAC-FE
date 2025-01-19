@@ -180,7 +180,7 @@ export const JobStatsCard = () => {
                 marginBottom: "8px",
               }}
             >
-              הצלחה 
+              נמכר 
             </Typography>
             <Typography
               variant="h4"
@@ -322,7 +322,7 @@ export const JobStatsCard = () => {
                 marginBottom: "8px",
               }}
             >
-              נייד 
+              מובייל 
             </Typography>
             <Typography
               variant="h4"
@@ -339,7 +339,7 @@ export const JobStatsCard = () => {
                 color: "#666",
               }}
             >
-              נייד: {jobById.leads_user_info.mobile_deals_success_user}
+              עובד : {jobById.leads_user_info.mobile_deals_success_user}
             </Typography>
           </Box>
 

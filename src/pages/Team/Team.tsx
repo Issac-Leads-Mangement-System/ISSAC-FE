@@ -128,12 +128,18 @@ const Team = () => {
   };
 
   const columns: GridColDef<(typeof teams)[number]>[] = [
-    { field: "team_name", headerName: "Team name", width: 200 },
-    { field: "created_date", headerName: "Created date", width: 200 },
+    { field: "team_name", headerName: "Team name",  flex: 1,
+      minWidth: 200,
+      headerAlign: "center", align: "center", },
+    { field: "created_date", headerName: "Created date",  flex: 1,
+      minWidth: 200,
+      headerAlign: "center", align: "center", },
     {
       field: "actions",
       type: "actions",
-      width: 150,
+      flex: 1,
+      minWidth: 200,
+      headerAlign: "center", align: "center",
       editable: false,
       renderHeader: (params: any) => <strong>{"Actions"}</strong>,
       filterable: false,
@@ -193,6 +199,7 @@ const Team = () => {
             />
 
             <Button
+              dir="ltr"
               className="issac-user-button"
               variant="outlined"
               onClick={() => addNewTeam()}
@@ -200,7 +207,7 @@ const Team = () => {
               size="small"
               sx={addBtnStyle}
             >
-              Add team
+              הוסף צוות
             </Button>
           </Box>
 

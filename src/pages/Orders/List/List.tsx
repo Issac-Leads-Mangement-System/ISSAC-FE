@@ -192,13 +192,19 @@ const OrdersList = ({ className }: any) => {
     {
       field: "lead_id",
       headerName: "Lead id",
-      width: 250,
+      flex: 1,
+      minWidth: 200,
+      headerAlign: "center", align: "center",
     },
-    { field: "created_time", headerName: "Created time", width: 200 },
+    { field: "created_time", headerName: "Created time",  flex: 1,
+      minWidth: 200,
+      headerAlign: "center", align: "center", },
     {
       field: "order_status",
       headerName: "Order Status",
-      width: 150,
+      flex: 1,
+      minWidth: 200,
+      headerAlign: "center", align: "center",
       cellClassName: (params) => {
         if (params.value === "close") return "row-closed";
         if (params.value === "open") return "row-open";
@@ -206,13 +212,21 @@ const OrdersList = ({ className }: any) => {
         return "";
       },
     },
-    { field: "order_type", headerName: " Order Type", width: 250 },
-    { field: "user_name", headerName: "User", width: 250 },
-    { field: "former_company", headerName: "Former", width: 250 },
+    { field: "order_type", headerName: " Order Type",  flex: 1,
+      minWidth: 200,
+      headerAlign: "center", align: "center", },
+    { field: "user_name", headerName: "User",  flex: 1,
+      minWidth: 200,
+      headerAlign: "center", align: "center", },
+    { field: "former_company", headerName: "Former",  flex: 1,
+      minWidth: 200,
+      headerAlign: "center", align: "center", },
     {
       field: "mobility",
       headerName: "Mobility",
-      width: 250,
+      flex: 1,
+      minWidth: 200,
+      headerAlign: "center", align: "center",
       renderCell: (params: any) => {
         const { row } = params;
         return [
@@ -227,7 +241,9 @@ const OrdersList = ({ className }: any) => {
     {
       field: "actions",
       type: "actions",
-      width: 150,
+      flex: 1,
+      minWidth: 200,
+      headerAlign: "center", align: "center",
       editable: false,
       renderHeader: () => <strong>{"Actions "}</strong>,
       filterable: false,
@@ -303,7 +319,7 @@ const OrdersList = ({ className }: any) => {
                 }}
               />
 
-              <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Box dir="ltr" sx={{ display: "flex", alignItems: "center" }}>
                 <Button
                   variant="outlined"
                   onClick={() => setIsFilterOpen(true)}
@@ -311,7 +327,7 @@ const OrdersList = ({ className }: any) => {
                   size="small"
                   sx={filterBtnStyle}
                 >
-                  Filters
+                מסננים
                 </Button>
               </Box>
             </Box>

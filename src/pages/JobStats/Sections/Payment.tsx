@@ -24,7 +24,7 @@ export const PaymentSection = ({ formProps }: any) => {
           component="div"
           sx={{ fontWeight: "bold", mb: 2 }}
         >
-          תשלום לקוח
+          פרטי תשלום
         </Typography>
         <Box display="flex" flexDirection="column" gap={2}>
           <Grid2 container spacing={2}>
@@ -41,6 +41,7 @@ export const PaymentSection = ({ formProps }: any) => {
               />
             </Grid2>
             <Grid2 size={8}>
+            <div dir="ltr">
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
                   sx={{ width: "100%" }}
@@ -59,6 +60,7 @@ export const PaymentSection = ({ formProps }: any) => {
                       : null}
                 />
               </LocalizationProvider>
+            </div>
             </Grid2>
             <Grid2 size={4}>
               <Input

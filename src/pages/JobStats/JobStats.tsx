@@ -146,9 +146,9 @@ export const JobStats = () => {
 
   useEffect(() => {
     setSecontToolbarMessage(
-      `לידים עבודה / ${jobLeadsById[0]?.job.job_name.toUpperCase() || ""}`
+      `לידים בעבודה / ${jobLeadsById[0]?.job.job_name.toUpperCase() || ""}`
     );
-    setSecontToolbarPath("סטטיסטיקות");
+    setSecontToolbarPath("נתוני עבודה");
   }, [jobLeadsById, getJobLeadsById]);
 
   const handleSearchInputChange = (event: any) => {
@@ -228,7 +228,7 @@ export const JobStats = () => {
 
     const grayStatuses = [1, 4, 5];
     if (!grayStatuses.includes(lead_status_id)) {
-      return "row-gray";
+      return "row-red";
     }
 
     return "";
@@ -264,33 +264,35 @@ export const JobStats = () => {
   };
 
   const columns: GridColDef<(typeof jobById)[number]>[] = [
-    { field: "lead_id", headerName: "ליד ", width: 200 },
+    { field: "lead_id", headerName: "ליד ", width: 200, headerAlign: "center", align: "center", },
     {
       field: "user",
       headerName: "משתמש ",
-      width: 250,
+      flex: 1,
+      minWidth: 250,
+      headerAlign: "center", align: "center",
       renderCell: (params: any) => {
         const { row } = params;
-        return (
-          <Typography>
-            {row.user.first_name} - {row.user.last_name}
-          </Typography>
-        );
+        return (`${row.user.first_name} - ${row.user.last_name}`);
       },
     },
     {
       field: "lead_status",
       headerName: "סטטוס ליד",
-      width: 200,
+      flex: 1,
+      minWidth: 200,
+      headerAlign: "center", align: "center",
       renderCell: (params: any) => {
         const { row } = params;
-        return <Typography>{row.lead_status.status_name}</Typography>;
+        return row.lead_status.status_name;
       },
     },
     {
       field: "mobile_deal_success",
-      headerName: "עסקת נייד",
-      width: 200,
+      headerName: "עסקת מובייל",
+      flex: 1,
+      minWidth: 200,
+      headerAlign: "center", align: "center",
       renderCell: (params: any) => {
         const { row } = params;
         return row.mobile_deal_success ? (
@@ -300,15 +302,17 @@ export const JobStats = () => {
         );
       },
     },
-    { field: "created_time", headerName: "נוצר ", width: 250 },
-    { field: "updated_time", headerName: "עודכן ", width: 250 },
+    { field: "created_time", headerName: "נוצר ", minWidth: 250,  headerAlign: "center", align: "center", flex: 1,},
+    { field: "updated_time", headerName: "עודכן ", minWidth: 250,  headerAlign: "center", align: "center", flex: 1, },
 
     {
       field: "actions",
       type: "actions",
-      width: 200,
+      minWidth: 200,
+      flex: 1,
       editable: false,
-      renderHeader: (params: any) => <strong>{"פעולות  "}</strong>,
+      headerName:"פעולות",
+      // renderHeader: (params: any) => <strong>{"פעולות"}</strong>,
       filterable: false,
       cellClassName: "pinned-column",
       headerClassName: "MuiDataGrid-columnHeader--pinned",
@@ -332,8 +336,8 @@ export const JobStats = () => {
 
             <GridActionsCellItem
               icon={<AssignmentIcon />}
-              label="עדכון סטטוס עבודה ליד"
-              title="Update Lead Job Status"
+              title="עדכון סטטוס עבודה ליד"
+              label="Update Lead Job Status"
               key={id}
               disabled={
                 jobById.job_status === "close" ||
@@ -347,8 +351,8 @@ export const JobStats = () => {
             />,
             <GridActionsCellItem
               icon={<PostAddIcon />}
-              label="צור הזמנה טלוויזיה"
-              title="Create order"
+              title="צור הזמנה טלוויזיה"
+              label="Create order"
               key={id}
               disabled={[4, 5].includes(row.lead_status.lead_status_id)}
               sx={{
@@ -359,8 +363,8 @@ export const JobStats = () => {
             />,
             <GridActionsCellItem
               icon={<MobileFriendlyIcon />}
-              label="צור הזמנה ניידת"
-              title="Create mobile order"
+              title="צור הזמנה מובייל"
+              label="Create mobile order"
               disabled={row.mobile_deal_success}
               key={id}
               sx={{
@@ -372,8 +376,8 @@ export const JobStats = () => {
 
             <GridActionsCellItem
               icon={<DeleteForeverIcon />}
-              label="מחק "
-              title="Delete"
+              title="מחק "
+              label="Delete"
               key={id}
               sx={{
                 color: "red",
@@ -382,7 +386,7 @@ export const JobStats = () => {
               onClick={() => handleDeleteClick(id)}
               disabled={jobById.job_status === "close"}
             />,
-          ];
+          ].reverse();
         }
         return [];
       },
@@ -444,6 +448,7 @@ export const JobStats = () => {
   };
 
   return (
+    <div dir="rtl">
     <PageContainer>
       {jobById && jobById.leads_user_info && (
         <Grid2
@@ -464,7 +469,7 @@ export const JobStats = () => {
                       aria-label="lab API tabs example"
                     >
                       <Tab
-                        label="רשימה "
+                        label="רשימה"
                         value="1"
                         icon={<ListAltIcon fontSize="small" />}
                         iconPosition="start"
@@ -475,13 +480,13 @@ export const JobStats = () => {
                         }}
                       />
                       <Tab
-                        label="שחק "
+                        label="PLAY"
                         value="2"
-                        icon={<PlayCircleOutlineIcon fontSize="small" />}
+                        icon={<PlayCircleOutlineIcon fontSize="small"/>}
                         iconPosition="start"
                         sx={{
                           minHeight: 40,
-                          padding: "0 8px",
+                          padding: "0px 8px",
                           gap: "4px",
                         }}
                       />
@@ -509,25 +514,31 @@ export const JobStats = () => {
                           }
                         }}
                       />
-
-                      <Box sx={{ display: "flex", alignItems: "center" }}>
+                    
+                    <Box sx={{ display: "flex", alignItems: "center" }}>
+                      <div dir="ltr">
                         <Button
+                          dir="ltr"
                           variant="outlined"
                           onClick={() => setIsFilterOpenFct()}
                           startIcon={<FilterListIcon />}
                           size="small"
                           sx={filterBtnStyle}
                         >
-                          מסננים
+                        מסננים 
                         </Button>
-                      </Box>
+                        </div>
                     </Box>
-
-                    <Box sx={{ overflow: "auto", height: "50vh" }}>
+                    </Box>
+                      
+                    <Box sx={{ overflow: "auto"}}>
+                      <div dir="ltr">
                       <CustomDataGrid
+                        dir="ltr"
                         rows={jobLeadsById}
                         rowCount={counter_job_leads}
-                        columns={columns}
+                        columns={[...columns].reverse()}
+             
                         initialState={{
                           pagination: {
                             paginationModel: {
@@ -547,14 +558,14 @@ export const JobStats = () => {
                           }
                         }}
                         // rowCount={count}
-                        disableRowSelectionOnClick
-                        disableVirtualization
+             
                         paginationMode="server"
                         pagination
                         loading={isLoading}
                         getCellClassName={getCellClassName}
                         getRowClassName={getRowClassName}
                       />
+                    </div>
                     </Box>
                   </TabPanel>
 
@@ -585,15 +596,17 @@ export const JobStats = () => {
       )}
 
       {isCreateOrderOpen && (
+        <div dir="rtl"> 
         <CustomModal
+          dir="rtl" 
           isOpen={isCreateOrderOpen}
           onClose={onCloseCreateOrder}
           title={`${
-            createOrderType === "TV" ? "צור הזמנה טלוויזיה" : "צור הזמנה ניידת"
+            createOrderType === "TV" ? "צור הזמנה טלוויזיה" : "צור הזמנה מובייל"
           }`}
           minWidth="1200px"
         >
-          <GenericAddEditForm
+          <GenericAddEditForm  
             initialValues={initialFormValues}
             validationSchema={customValidation}
             apiRequest={handleSubmitModal}
@@ -607,7 +620,8 @@ export const JobStats = () => {
             )}
             btnStyle={submitBtnStyle}
           />
-        </CustomModal>
+        </CustomModal>       
+        </div>
       )}
 
       {isConfirmationOpen && (
@@ -615,7 +629,7 @@ export const JobStats = () => {
           open={isConfirmationOpen}
           onClose={handleCloseConfirmationModal}
           onConfirm={handleSaveConfirmationModal}
-          message="Are you sure you want to delete this lead?"
+          message="האם אתה בטוח ברצונך למחוק את הליד?"
           btnName="Save"
         />
       )}
@@ -631,5 +645,6 @@ export const JobStats = () => {
         </Filters>
       )}
     </PageContainer>
+    </div>
   );
 };

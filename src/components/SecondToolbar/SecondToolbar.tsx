@@ -20,14 +20,14 @@ const SecondToolbarComponent = ({ className }: any) => {
           <Typography
             variant="subtitle1"
             component="div"
-            sx={{ flexGrow: 1, color: "black", ml: 2, fontWeight: "bold" }}
+            sx={{ flexGrow: 1, color: "black", mr: 2, fontWeight: "bold" }}
           >
             {name}
           </Typography>
           <Typography
             variant="subtitle1"
             component="div"
-            sx={{ color: "#878a99", mr: 2 }}
+            sx={{ color: "#878a99", ml: 2 }}
           >
             {path}
           </Typography>

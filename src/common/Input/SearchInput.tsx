@@ -35,7 +35,7 @@ export const SearchInput = ({ sx, onChange, onKeyDown }: Props) => {
     <StyledSearchInput>
       <SearchIcon color="action" />
       <StyledInputBase
-        placeholder="חפש את..."
+        placeholder=" חפש את..."
         size="small"
         onChange={onChange}
         onKeyDown={onKeyDown}

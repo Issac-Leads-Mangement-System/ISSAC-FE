@@ -75,8 +75,8 @@ const LeadsStatus = () => {
   };
 
   useEffect(() => {
-    setSecontToolbarMessage("LEADS");
-    setSecontToolbarPath("Statuses");
+    setSecontToolbarMessage("לידים");
+    setSecontToolbarPath("סטטוסים");
     getStatus(page, 5);
 
     return () => {
@@ -131,15 +131,21 @@ const LeadsStatus = () => {
   };
 
   const columns: GridColDef<(typeof statuses)[number]>[] = [
-    { field: "status_name", headerName: "Status name", width: 250 },
-    { field: "created_date", headerName: "Created date", width: 250 },
+    { field: "status_name", headerName: "שם סטטוס",  flex: 1,
+      minWidth: 200,
+      headerAlign: "center", align: "center", },
+    { field: "created_date", headerName: "תאריך יצירה",  flex: 1,
+      minWidth: 200,
+      headerAlign: "center", align: "center", },
 
     {
       field: "actions",
       type: "actions",
-      width: 150,
+      flex: 1,
+      minWidth: 200,
+      headerAlign: "center", align: "center",
       editable: false,
-      renderHeader: (params: any) => <strong>{"Actions "}</strong>,
+      renderHeader: (params: any) => <strong>{"פעולות "}</strong>,
       filterable: false,
       cellClassName: "pinned-column",
       headerClassName: "MuiDataGrid-columnHeader--pinned",
@@ -169,7 +175,7 @@ const LeadsStatus = () => {
               onClick={() => handleDeleteClick(id)}
               disabled={!row.status_is_editable}
             />,
-          ];
+          ].reverse();
         }
         return [];
       },
@@ -207,7 +213,7 @@ const LeadsStatus = () => {
               }}
             />
 
-            <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Box dir="ltr" sx={{ display: "flex", alignItems: "center" }}>
               <Button
                 variant="outlined"
                 onClick={() => addLeadsStatus()}
@@ -215,14 +221,14 @@ const LeadsStatus = () => {
                 size="small"
                 sx={addBtnStyle}
               >
-                Add status
-              </Button>
+            הוסף סטטוס
+            </Button>
             </Box>
           </Box>
-
+          <div dir="ltr">
           <CustomDataGrid
             rows={statuses}
-            columns={columns}
+            columns={[...columns].reverse()}
             initialState={{
               pagination: {
                 paginationModel: {
@@ -235,6 +241,7 @@ const LeadsStatus = () => {
             disableVirtualization
             loading={isLoading}
           />
+          </div>   
         </CardContent>
       </Card>
 
@@ -263,7 +270,7 @@ const LeadsStatus = () => {
           open={isModalOpen}
           onClose={handleCloseModal}
           onConfirm={handleConfirmDelete}
-          message=" Are you sure you want to delete this status? This action cannot be undone."
+          message="האם אתה בטוח שברצונך למחוק את הסטטוס הזה? לא ניתן לבטל פעולה זו."
           btnName="Delete"
         />
       )}

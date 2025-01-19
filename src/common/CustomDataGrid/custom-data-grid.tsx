@@ -1,5 +1,6 @@
 import { DataGrid } from "@mui/x-data-grid";
 import { styled as styledMaterial } from "@mui/material";
+import { Color } from "../../theme/Theme";
 
 export const CustomDataGrid: any = styledMaterial(DataGrid)(() => ({
   "& .row-green": {
@@ -12,7 +13,7 @@ export const CustomDataGrid: any = styledMaterial(DataGrid)(() => ({
     backgroundColor: "#f2f2f7 !important",
   },
   "& .bold": {
-    fontWeight: "bold",
+    fontWeight: 600
   },
   "& .MuiDataGrid-columnHeaders": {
     position: "relative",
@@ -23,15 +24,28 @@ export const CustomDataGrid: any = styledMaterial(DataGrid)(() => ({
   // Actions
   "& .pinned-column": {
     position: "sticky",
-    right: 0,
+    left: 0,
     backgroundColor: "#fff",
     zIndex: 2,
   },
   "& .MuiDataGrid-columnHeader--pinned": {
     position: "sticky!important",
-    right: 0,
+    left: 0,
     backgroundColor: "#fff",
     zIndex: 100,
+    color: "rgb(87, 87, 87)" ,
+    fontWeight: 600,
+  },
+  "& .MuiDataGrid-columnHeader": {
+    backgroundColor:"rgb(242, 242, 247)",
+  },
+  "& .MuiDataGrid-columnHeaderTitle": {
+    fontWeight: 600,
+    color: "rgb(54, 54, 54)"  
+  },
+  "& .MuiDataGrid-columnHeaderTitleContainerContent": {
+    fontWeight: 600,
+    color: "rgb(87, 87, 87)"  
   },
 
   "& .MuiDataGrid-row": {

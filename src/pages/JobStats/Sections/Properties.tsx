@@ -27,7 +27,7 @@ export const PropertiesSection = ({ formProps, createOrderType }: any) => {
     <div dir="ltr">
 
 
-    <Box display="flex" flexDirection="column" gap={2} dir="ltr">
+    <Box display="flex" flexDirection="column" gap={2} dir="rtl">
       <Box>
         <Paper elevation={3} sx={{ p: 3, m: 2, borderRadius: 2 }}>
           <Typography
@@ -35,7 +35,7 @@ export const PropertiesSection = ({ formProps, createOrderType }: any) => {
             component="div"
             sx={{ fontWeight: "bold", mb: 2 }}
           >
-            נכסים
+            פרטי חבילה
           </Typography>
           <Box display="flex" flexDirection="column" gap={2}>
             <Grid2 container spacing={2}>
@@ -178,18 +178,18 @@ export const PropertiesSection = ({ formProps, createOrderType }: any) => {
               {createOrderType === "mobile" && (
                 <FieldArray name="order_properties.order_phone_numbers">
                   {({ push, remove }) => (
-                    <Box>
+                    <Box  >
                       <Typography variant="h6" gutterBottom>
                         מספרי טלפון
                       </Typography>
 
-                      <Box sx={{ mb: 2 }}>
+                      <Box dir="rtl" sx={{ mb: 2 }}>
                         <Button
                           variant="outlined"
-                          startIcon={<AddIcon />}
+                          startIcon={<AddIcon sx={{ marginRight: "0px", marginLeft: "8px" }}/>}
                           onClick={() => push("")}
                         >
-                          הוסף מספר טלפון
+                        הוסף מספר טלפון 
                         </Button>
                       </Box>
 

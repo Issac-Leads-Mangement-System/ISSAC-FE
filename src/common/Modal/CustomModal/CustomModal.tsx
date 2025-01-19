@@ -8,6 +8,7 @@ const CustomModal = ({
   children,
   minWidth,
   width,
+  dir = "ltr",
 }: {
   isOpen: boolean;
   onClose: () => void;
@@ -15,6 +16,7 @@ const CustomModal = ({
   children: any;
   minWidth?: string;
   width?: string;
+  dir?: string
 }) => {
   const style = {
     position: "absolute",
@@ -37,7 +39,7 @@ const CustomModal = ({
       aria-labelledby="modal-title"
       aria-describedby="modal-description"
     >
-      <Box sx={style}>
+      <Box sx={style} dir={dir}>
         <Box
           display="flex"
           justifyContent="space-between"

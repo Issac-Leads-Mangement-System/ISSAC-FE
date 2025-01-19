@@ -30,18 +30,19 @@ export const ScheduleSection = ({ formProps }: any) => {
   ];
 
   return (
-    <Box>
+    <Box dir="rtl">
       <Paper elevation={4} sx={{ p: 3, m: 2, borderRadius: 2 }}>
         <Typography
           variant="h6"
           component="div"
           sx={{ fontWeight: "bold", mb: 2 }}
         >
-          לוח זמנים
+        מועד התקנה        
         </Typography>
         <Box display="flex" flexDirection="column" gap={2}>
           <Grid2 container spacing={1.5}>
             <Grid2 size={7}>
+              <div dir="ltr">
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer components={["DatePicker"]} sx={{ p: 0, m: 0 }}>
                   <DatePicker
@@ -81,6 +82,7 @@ export const ScheduleSection = ({ formProps }: any) => {
                   )}
                 </ErrorMessage>
               </LocalizationProvider>
+              </div>
             </Grid2>
             <Grid2 size={5}>
               <FormControl fullWidth>

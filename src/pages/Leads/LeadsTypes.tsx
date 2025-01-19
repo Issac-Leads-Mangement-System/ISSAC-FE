@@ -93,8 +93,8 @@ const LeadsTypes = () => {
   );
 
   useEffect(() => {
-    setSecontToolbarMessage("LEADS");
-    setSecontToolbarPath("Types");
+    setSecontToolbarMessage("לידים");
+    setSecontToolbarPath("סוגי לידים");
     getTypes(page, 5);
 
     return () => {
@@ -120,14 +120,20 @@ const LeadsTypes = () => {
   };
 
   const columns: GridColDef<(typeof types)[number]>[] = [
-    { field: "type_name", headerName: "Type name", width: 250 },
-    { field: "created_date", headerName: "Created date", width: 250 },
+    { field: "type_name", headerName: "שם", flex: 1,
+      minWidth: 200,
+      headerAlign: "center", align: "center", },
+    { field: "created_date", headerName: "תאריך יצירה", flex: 1,
+      minWidth: 200,
+      headerAlign: "center", align: "center", },
     {
       field: "actions",
       type: "actions",
-      width: 150,
+      flex: 1,
+      minWidth: 200,
+      headerAlign: "center", align: "center",
       editable: false,
-      renderHeader: (params: any) => <strong>{"Actions "}</strong>,
+      renderHeader: (params: any) => <strong>{"פעולות "}</strong>,
       filterable: false,
       cellClassName: "pinned-column",
       headerClassName: "MuiDataGrid-columnHeader--pinned",
@@ -155,7 +161,7 @@ const LeadsTypes = () => {
               className="textPrimary"
               onClick={() => handleDeleteClick(id)}
             />,
-          ];
+          ].reverse();
         }
         return [];
       },
@@ -186,7 +192,7 @@ const LeadsTypes = () => {
               }}
             />
 
-            <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Box dir="ltr" sx={{ display: "flex", alignItems: "center" }}>
               <Button
                 variant="outlined"
                 onClick={() => addNewType()}
@@ -194,14 +200,14 @@ const LeadsTypes = () => {
                 size="small"
                 sx={addBtnStyle}
               >
-                Add type
+              הוסף סוג ליד
               </Button>
             </Box>
           </Box>
-
+          <div dir="ltr">
           <CustomDataGrid
             rows={types}
-            columns={columns}
+            columns={[...columns].reverse()}
             loading={isLoading}
             initialState={{
               pagination: {
@@ -214,6 +220,7 @@ const LeadsTypes = () => {
             disableRowSelectionOnClick
             disableVirtualization
           />
+        </div>
         </CardContent>
       </Card>
 
@@ -242,7 +249,7 @@ const LeadsTypes = () => {
           open={isModalOpen}
           onClose={handleCloseModal}
           onConfirm={handleConfirmDelete}
-          message=" Are you sure you want to delete this type? This action cannot be undone."
+          message=" האם אתה בטוח שברצונך למחוק את הסוג הזה? לא ניתן לבטל פעולה זו."
           btnName="Delete"
         />
       )}

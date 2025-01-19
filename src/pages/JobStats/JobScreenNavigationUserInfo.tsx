@@ -15,6 +15,7 @@ const UserChipsExample = ({
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
+        position: "relative",
         gap: 2,
       }}
     >
@@ -31,17 +32,19 @@ const UserChipsExample = ({
       <Box>
         <Box
           sx={{
+            position: "absolute", // Position absolutely within the parent
+            left: "50%", // Move to the center
+            transform: "translate(-50%, -50%)", // Centers horizontally and vertically
             display: "inline-flex",
             alignItems: "center",
             justifyContent: "center",
-            padding: "4px 12px",
+            padding: "4px 18px",
             backgroundColor: "#f5f5f5",
             borderRadius: "16px",
             fontWeight: "bold",
             fontSize: "14px",
             color: "#1976d2",
             boxShadow: "0 2px 6px rgba(0, 0, 0, 0.1)",
-            marginRight: "40px"
           }}
         >
           <Typography
@@ -100,7 +103,7 @@ const UserChipsExample = ({
             sx={{ fontSize: 30, fontWeight: "medium", color: "#5a5a5a" }}
           />
           <Chip
-            label={<>Open</>}
+            label={<>פתוח</>}
             sx={{
               backgroundColor: "#eaf1fd",
               color: "#333",
@@ -129,7 +132,7 @@ const UserChipsExample = ({
               sx={{ fontSize: 30, fontWeight: "medium", color: "#155724" }}
             />
             <Chip
-              label={<>Success</>}
+              label={<>נמכר</>}
               sx={{
                 backgroundColor: "#e5f9df",
                 color: "#2d6a4f",
@@ -157,7 +160,7 @@ const UserChipsExample = ({
             sx={{ fontSize: 30, fontWeight: "medium", color: "red" }}
           />
            <Chip
-            label={<>Closed</>}
+            label={jobDetailsById.lead_status.status_name}
             sx={{
               backgroundColor: "#fdecea",
               color: "#721c24",

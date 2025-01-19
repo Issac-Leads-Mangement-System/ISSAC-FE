@@ -158,16 +158,30 @@ export const Users = () => {
   };
 
   const columns: GridColDef<(typeof users)[number]>[] = [
-    { field: "first_name", headerName: "First name", width: 250 },
-    { field: "last_name", headerName: "Last name", width: 250 },
-    { field: "email", headerName: "Email", width: 350 },
-    { field: "phone_number", headerName: "Phone number", width: 300 },
-    { field: "user_role", headerName: "User role", width: 250 },
-    { field: "team_name", headerName: "Team name", width: 300 },
+    { field: "first_name", headerName: "First name", flex: 1,
+      minWidth: 200,
+      headerAlign: "center", align: "center",},
+    { field: "last_name", headerName: "Last name",  flex: 1,
+      minWidth: 200,
+      headerAlign: "center", align: "center", },
+    { field: "email", headerName: "Email",  flex: 1,
+      minWidth: 200,
+      headerAlign: "center", align: "center", },
+    { field: "phone_number", headerName: "Phone number",  flex: 1,
+      minWidth: 200,
+      headerAlign: "center", align: "center", },
+    { field: "user_role", headerName: "User role",  flex: 1,
+      minWidth: 200,
+      headerAlign: "center", align: "center", },
+    { field: "team_name", headerName: "Team name",  flex: 1,
+      minWidth: 200,
+      headerAlign: "center", align: "center", },
     {
       field: "user_status",
       headerName: "User status",
-      width: 250,
+      flex: 1,
+      minWidth: 200,
+      headerAlign: "center", align: "center",
       renderCell: (params: any) => {
         const { row } = params;
         return [
@@ -185,7 +199,9 @@ export const Users = () => {
     {
       field: "actions",
       type: "actions",
-      width: 150,
+      flex: 1,
+      minWidth: 200,
+      headerAlign: "center", align: "center",
       editable: false,
       renderHeader: (params: any) => <strong>{"Actions "}</strong>,
       filterable: false,
@@ -244,7 +260,7 @@ export const Users = () => {
               }}
             />
 
-            <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Box dir="ltr" sx={{ display: "flex", alignItems: "center" }}>
               <Button
                 variant="outlined"
                 onClick={() => setIsFilterOpen(true)}
@@ -252,7 +268,7 @@ export const Users = () => {
                 size="small"
                 sx={filterBtnStyle}
               >
-                Filters
+                מסננים
               </Button>
 
               <Button
@@ -262,7 +278,7 @@ export const Users = () => {
                 size="small"
                 sx={addBtnStyle}
               >
-                Add user
+                הוסף משתמש
               </Button>
             </Box>
           </Box>

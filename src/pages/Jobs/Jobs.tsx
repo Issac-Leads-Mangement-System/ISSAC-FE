@@ -57,7 +57,7 @@ const Jobs = ({ className }: any) => {
 
   useEffect(() => {
     setSecontToolbarMessage("עבודות");
-    setSecontToolbarPath("רשימה");
+    setSecontToolbarPath("רשימת עבודות");
     getTypes(0, 50);
     getAllJobs();
     getAllTeams();
@@ -131,12 +131,19 @@ const Jobs = ({ className }: any) => {
   // };
 
   const columns: GridColDef<(typeof jobs)[number]>[] = [
-    { field: "job_name", headerName: "שם העבודה", width: 250 },
-    { field: "created_time", headerName: "זמן יצירה", width: 150 },
+    { field: "job_name", headerName: "שם העבודה",      
+      flex: 1,
+      minWidth: 200,
+      headerAlign: "center", align: "center",},
+    { field: "created_time", headerName: "תאריך יצירה", flex: 1,
+      minWidth: 150,
+      headerAlign: "center", align: "center",},
     {
       field: "job_status",
-      headerName: "סטטוס העבודה",
-      width: 150,
+      headerName: "סטטוס",
+      flex: 1,
+      minWidth: 100,
+      headerAlign: "center", align: "center",
       cellClassName: (params) => {
         if (params.value === "close") return "row-closed";
         if (params.value === "open") return "row-open";
@@ -147,7 +154,9 @@ const Jobs = ({ className }: any) => {
     {
       field: "lead_type",
       headerName: "סוג ליד",
-      width: 150,
+      flex: 1,
+      minWidth: 150,
+      headerAlign: "center", align: "center",
       valueGetter: (_, row: any) => {
         return `${row.lead_type.type_name}`;
       },
@@ -155,20 +164,35 @@ const Jobs = ({ className }: any) => {
     {
       field: "total_leads",
       headerName: 'סה"כ לידים',
-      width: 150,
+      flex: 1,
+      minWidth: 120,
+      headerAlign: "center", align: "center",
     },
-    { field: "open_leads", headerName: "לידים פתוחים", width: 150 },
-    { field: "success_leads", headerName: "לידים מוצלחים", width: 150 },
-    { field: "closed_leads", headerName: "לידים סגורים", width: 150 },
+    { field: "open_leads", headerName: "לידים פתוחים",       
+      flex: 1,
+      minWidth: 120,
+      headerAlign: "center", align: "center",},
+    { field: "success_leads", headerName: "לידים מוצלחים",     
+      flex: 1,
+      minWidth: 120,
+      headerAlign: "center", align: "center",},
+    { field: "closed_leads", headerName: "לידים סגורים",     
+      flex: 1,
+      minWidth: 120,
+      headerAlign: "center", align: "center", },
     {
       field: "mobile_deals_success",
-      headerName: "הצלחה בעסקאות ניידות",
-      width: 150,
+      headerName: "עסקאות מובייל",
+      flex: 1,
+      minWidth: 120,
+      headerAlign: "center", align: "center",
     },
     {
       field: "total_leads_user",
-      headerName: ' סה"כ לידים למשתמש',
-      width: 150,
+      headerName: 'סה"כ לידים למשתמש',
+      flex: 1,
+      minWidth: 170,
+      headerAlign: "center", align: "center",
       valueGetter: (_, row: any) => {
         return `${row.leads_user_info.total_leads_user}`;
       },
@@ -176,7 +200,9 @@ const Jobs = ({ className }: any) => {
     {
       field: "open_leads_user",
       headerName: "לידים פתוחים למשתמש",
-      width: 150,
+      flex: 1,
+      minWidth: 170,
+      headerAlign: "center", align: "center",
       valueGetter: (_, row: any) => {
         return `${row.leads_user_info.open_leads_user}`;
       },
@@ -184,7 +210,9 @@ const Jobs = ({ className }: any) => {
     {
       field: "success_leads_user",
       headerName: "לידים מוצלחים למשתמש",
-      width: 150,
+      flex: 1,
+      minWidth: 180,
+      headerAlign: "center", align: "center",
       valueGetter: (_, row: any) => {
         return `${row.leads_user_info.success_leads_user}`;
       },
@@ -192,15 +220,19 @@ const Jobs = ({ className }: any) => {
     {
       field: "closed_leads_user",
       headerName: "לידים סגורים למשתמש",
-      width: 150,
+      flex: 1,
+      minWidth: 170,
+      headerAlign: "center", align: "center",
       valueGetter: (_, row: any) => {
         return `${row.leads_user_info.closed_leads_user}`;
       },
     },
     {
       field: "mobile_deals_success_user",
-      headerName: "הצלחה בעסקאות ניידות למשתמש",
-      width: 150,
+      headerName: "עסקאות מובייל למשתמש",
+      flex: 1,
+      minWidth: 180,
+      headerAlign: "center", align: "center",
       valueGetter: (_, row: any) => {
         return `${row.leads_user_info.mobile_deals_success_user}`;
       },
@@ -221,7 +253,8 @@ const Jobs = ({ className }: any) => {
           return [
             <GridActionsCellItem
               icon={<VisibilityIcon />}
-              label="תצוגה מקדימה"
+              title="תצוגה מקדימה"
+              label="סגור עבודה"
               key={id}
               // sx={{
               //   color: "black",
@@ -232,8 +265,8 @@ const Jobs = ({ className }: any) => {
 
             <GridActionsCellItem
               icon={<TaskAltIcon />}
-              label="סגור עבודה"
-              title="Close job"
+              title="סגור עבודה"
+              label="Close job"
               key={id}
               disabled={row.job_status === "close"}
               // sx={{
@@ -267,7 +300,7 @@ const Jobs = ({ className }: any) => {
             //   className="textPrimary"
             //   onClick={() => handleDeleteClick(id)}
             // />,
-          ];
+          ].reverse();
         }
         return [];
       },
@@ -297,7 +330,7 @@ const Jobs = ({ className }: any) => {
                   }
                 }}
               />
-              <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Box sx={{ display: "flex", alignItems: "center" }} dir="ltr">
                 <Button
                   variant="outlined"
                   onClick={() => setIsFilterOpen(true)}
@@ -320,9 +353,10 @@ const Jobs = ({ className }: any) => {
               </Box>
             </Box>
             {jobs?.length > 0 && (
+              <div dir="ltr">
               <CustomDataGrid
                 rows={jobs}
-                columns={columns}
+                columns={[...columns].reverse()}
                 initialState={{
                   pagination: {
                     paginationModel: {
@@ -344,6 +378,7 @@ const Jobs = ({ className }: any) => {
                 disableVirtualization
                 paginationMode="server"
               />
+              </div>
             )}
           </CardContent>
         </Card>
@@ -354,7 +389,7 @@ const Jobs = ({ className }: any) => {
           open={isConfirmationOpen}
           onClose={handleCloseModal}
           onConfirm={handleConfirmDelete}
-          message="Are you sure you want to close this job? Make sure you don't have open leads before"
+          message="האם אתה בטוח שברצונך לסגור את העבודה הזו? ודא שאין לך לידים פתוחים לפני כן"
           btnName="Save"
         />
       )}

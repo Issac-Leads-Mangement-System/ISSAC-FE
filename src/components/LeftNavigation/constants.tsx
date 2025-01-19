@@ -29,18 +29,18 @@ const menus = [
     icon: <InterpreterModeIcon />,
     children: [
       {
-        name: "רשימה ",
-        icon: <ListAltIcon />,
+        name: "רשימת לידים",
+        icon: "-",
         route: "/leads",
       },
       {
-        name: "סוגים ",
-        icon: <BorderColorIcon />,
+        name: "סוגי לידים",
+        icon: "-",
         route: "/leads-types",
       },
       {
-        name: "סטטוס ",
-        icon: <SignalWifiStatusbar4BarIcon />,
+        name: "סטטוסים ",
+        icon: "-",
         route: "/leads-status",
       },
     ],
@@ -51,13 +51,13 @@ const menus = [
     icon: <GradingIcon />,
     children: [
       {
-        name: "רשימה ",
-        icon: <ListAltIcon />,
+        name: "רשימת הזמנות ",
+        icon: "-",
         route: "/orders/list",
       },
       {
-        name: "סוגים ",
-        icon: <InventoryIcon />,
+        name: "סוגי הזמנות ",
+        icon: "-",
         route: "/orders/package-type",
       },
     ],
@@ -68,13 +68,13 @@ const menus = [
     icon: <Groups3Icon />,
     children: [
       {
-        name: "רשימה ",
-        icon: <ManageAccountsIcon />,
+        name: "רשימת משתמשים ",
+        icon: "-",
         route: "/users",
       },
       {
-        name: "צוותים ",
-        icon: <GroupWorkIcon />,
+        name: "רשימת צוותים ",
+        icon: "-",
         route: "/team",
       },
     ],

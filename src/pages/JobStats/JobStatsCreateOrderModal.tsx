@@ -32,7 +32,7 @@ export const JobStatsCreateOrderModal = ({
 
   return (
     <>
-      <Box sx={{ height: "60vh", overflowY: "auto", width: "100%" }}>
+      <Box dir="rtl" sx={{ height: "60vh", overflowY: "auto", width: "100%" }}>
         {/* Basic Info */}
         <BasicInfoSection formProps={formProps} />
 
