@@ -14,7 +14,9 @@ import { useState } from "react";
 import AdbIcon from "@mui/icons-material/Adb";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import MenuOpenIcon from "@mui/icons-material/MenuOpen";
+import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
 
 const ToolbarComponent = ({
   className,
@@ -52,7 +54,7 @@ const ToolbarComponent = ({
             marginLeft: "5px",
           }}
         >
-          {open ? <MenuOpenIcon /> : <ArrowRightAltIcon />}
+          {open ? <DoubleArrowIcon /> : <ArrowBackIosIcon />}
         </IconButton>
       </Box>
 

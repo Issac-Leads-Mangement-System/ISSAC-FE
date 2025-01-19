@@ -36,6 +36,7 @@ const ScreenNavigationWithGrid = ({
     resetPagination,
     resetJobLeadsById,
     resetFilters,
+    getJobById,
   }: any = jobStatsStore();
   const { statuses }: any = leadsStatusesStore();
   const [tooltipText, setTooltipText] = useState("Copy to clipboard");
@@ -165,6 +166,7 @@ const ScreenNavigationWithGrid = ({
   const handleSaveConfirmationModal = async () => {
     if (isConfirmModal.type === "status_change") {
       await updateJobLead(activeJob, jobDetailsById.id, changeJobIdStatus);
+      await getJobById(activeJob)
     }
     if(isConfirmModal.type === 'next_button') {
       handleNext();

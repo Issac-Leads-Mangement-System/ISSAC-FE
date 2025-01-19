@@ -8,6 +8,7 @@ import jobStatsStore from "../../store/Jobs/job-stats-store";
 
 export const JobStatsCard = () => {
   const { jobById } = jobStatsStore();
+
   return (
     <>
       {/* Card 1 */}
