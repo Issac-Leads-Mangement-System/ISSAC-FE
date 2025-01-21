@@ -165,7 +165,8 @@ const ScreenNavigationWithGrid = ({
 
   const handleSaveConfirmationModal = async () => {
     if (isConfirmModal.type === "status_change") {
-      await updateJobLead(activeJob, jobDetailsById.id, changeJobIdStatus);
+      const response = await updateJobLead(activeJob, jobDetailsById.id, changeJobIdStatus);
+      setJobDetailsById(response);
       await getJobById(activeJob);
     }
     if (isConfirmModal.type === "next_button") {
