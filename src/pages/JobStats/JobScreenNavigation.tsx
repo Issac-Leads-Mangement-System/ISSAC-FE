@@ -93,7 +93,7 @@ const ScreenNavigationWithGrid = ({
       title: `לפני שאתה ממשיך, האם הצעת גם עסקת מובייל?`,
       type: "next_button",
     });
-  }
+  };
 
   const isPreviousButtonDisabled = (() => {
     if (jobDetailsById) {
@@ -166,9 +166,9 @@ const ScreenNavigationWithGrid = ({
   const handleSaveConfirmationModal = async () => {
     if (isConfirmModal.type === "status_change") {
       await updateJobLead(activeJob, jobDetailsById.id, changeJobIdStatus);
-      await getJobById(activeJob)
+      await getJobById(activeJob);
     }
-    if(isConfirmModal.type === 'next_button') {
+    if (isConfirmModal.type === "next_button") {
       handleNext();
     }
     setIsConfirmModal({ open: false });
@@ -176,7 +176,7 @@ const ScreenNavigationWithGrid = ({
 
   return (
     <Box
-      dir = "ltr"
+      dir="ltr"
       sx={{
         display: "flex",
         flexDirection: "column",
@@ -224,7 +224,7 @@ const ScreenNavigationWithGrid = ({
             >
               <ArrowBackIcon />
             </Button>
-            
+
             <Box
               sx={{
                 display: "flex",
@@ -265,7 +265,11 @@ const ScreenNavigationWithGrid = ({
             <Button
               variant="outlined"
               color="primary"
-              onClick={jobDetailsById.mobile_deal_success ? handleNext : handleNextAlert}
+              onClick={
+                jobDetailsById.mobile_deal_success
+                  ? handleNext
+                  : handleNextAlert
+              }
               disabled={isNextButtonDisabled}
               sx={{ minWidth: "120px" }}
             >
@@ -319,7 +323,7 @@ const ScreenNavigationWithGrid = ({
                     },
                   }}
                 >
-                  צור הזמנה 
+                  צור הזמנה
                 </Button>
 
                 <Button
@@ -360,7 +364,9 @@ const ScreenNavigationWithGrid = ({
                   <Button
                     key={index}
                     variant="outlined"
-                    disabled={jobDetailsById.mobile_deal_success}
+                    disabled={[4, 5].includes(
+                      jobDetailsById.lead_status.lead_status_id
+                    )}
                     onClick={() => onButtonSectionClick(status)}
                     sx={{
                       fontWeight: "bold",
@@ -385,7 +391,9 @@ const ScreenNavigationWithGrid = ({
                 dir="rtl"
                 isOpen={isButtonClick}
                 onClose={onCloseCreateOrder}
-                title={`${orderType === 'TV' ? 'צור הזמנה טלוויזיה' : 'צור הזמנה מובייל'}`}
+                title={`${
+                  orderType === "TV" ? "צור הזמנה טלוויזיה" : "צור הזמנה מובייל"
+                }`}
                 minWidth="1200px"
               >
                 <GenericAddEditForm
