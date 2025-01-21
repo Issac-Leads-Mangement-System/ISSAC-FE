@@ -232,6 +232,11 @@ const Team = () => {
             paginationMode="server"
             pagination
             loading={isLoading}
+            style={{
+              minHeight: "50vh",
+              overflow: "auto",
+              height: 700,
+            }}
           />
         </CardContent>
       </Card>

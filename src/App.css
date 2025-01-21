@@ -6,3 +6,12 @@
   /* font-weight: 400; */
   font-style: normal;
 }
+
+.MuiDataGrid-footerContainer {
+  min-height: 55px !important;
+}
+
+.MuiTabPanel-root {
+  padding-top: 10px !important;
+  padding-bottom: 0 !important;
+}

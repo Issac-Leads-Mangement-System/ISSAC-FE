@@ -40,7 +40,6 @@ export default function NestedList({ open }: { open: boolean }) {
   };
 
   const renderListItems = (list: MenuItem[]) => {
-    console.log(user);
     return list.map((item) => {
       return (
         <React.Fragment key={item.name}>

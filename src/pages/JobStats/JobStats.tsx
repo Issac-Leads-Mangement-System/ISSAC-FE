@@ -50,8 +50,10 @@ import {
 } from "../../forms/createOrderSchema";
 import ordersStore from "../../store/Orders/orders-store";
 import { customValidation } from "../../common/utils";
+import { JobsStatsStyle } from "./JobStatsStyle";
+import styled from "styled-components";
 
-export const JobStats = () => {
+const JobStats = ({className}: any) => {
   const [initialFormValues, setInitialFormValues] =
     useState<ICreateOrderModalSchema>({
       ...initialValues,
@@ -263,17 +265,25 @@ export const JobStats = () => {
     setIsFilterOpen(false);
   };
 
+
   const columns: GridColDef<(typeof jobById)[number]>[] = [
-    { field: "lead_id", headerName: "ליד ", width: 200, headerAlign: "center", align: "center", },
+    {
+      field: "lead_id",
+      headerName: "ליד ",
+      width: 200,
+      headerAlign: "center",
+      align: "center",
+    },
     {
       field: "user",
       headerName: "משתמש ",
       flex: 1,
       minWidth: 250,
-      headerAlign: "center", align: "center",
+      headerAlign: "center",
+      align: "center",
       renderCell: (params: any) => {
         const { row } = params;
-        return (`${row.user.first_name} - ${row.user.last_name}`);
+        return `${row.user.first_name} - ${row.user.last_name}`;
       },
     },
     {
@@ -281,7 +291,8 @@ export const JobStats = () => {
       headerName: "סטטוס ליד",
       flex: 1,
       minWidth: 200,
-      headerAlign: "center", align: "center",
+      headerAlign: "center",
+      align: "center",
       renderCell: (params: any) => {
         const { row } = params;
         return row.lead_status.status_name;
@@ -292,7 +303,8 @@ export const JobStats = () => {
       headerName: "עסקת מובייל",
       flex: 1,
       minWidth: 200,
-      headerAlign: "center", align: "center",
+      headerAlign: "center",
+      align: "center",
       renderCell: (params: any) => {
         const { row } = params;
         return row.mobile_deal_success ? (
@@ -302,8 +314,22 @@ export const JobStats = () => {
         );
       },
     },
-    { field: "created_time", headerName: "נוצר ", minWidth: 250,  headerAlign: "center", align: "center", flex: 1,},
-    { field: "updated_time", headerName: "עודכן ", minWidth: 250,  headerAlign: "center", align: "center", flex: 1, },
+    {
+      field: "created_time",
+      headerName: "נוצר ",
+      minWidth: 250,
+      headerAlign: "center",
+      align: "center",
+      flex: 1,
+    },
+    {
+      field: "updated_time",
+      headerName: "עודכן ",
+      minWidth: 250,
+      headerAlign: "center",
+      align: "center",
+      flex: 1,
+    },
 
     {
       field: "actions",
@@ -311,7 +337,7 @@ export const JobStats = () => {
       minWidth: 200,
       flex: 1,
       editable: false,
-      headerName:"פעולות",
+      headerName: "פעולות",
       // renderHeader: (params: any) => <strong>{"פעולות"}</strong>,
       filterable: false,
       cellClassName: "pinned-column",
@@ -384,7 +410,7 @@ export const JobStats = () => {
               }}
               className="textPrimary"
               onClick={() => handleDeleteClick(id)}
-              disabled={jobById.job_status === "close"}
+              disabled={jobById.job_status === "close" || user.user_role === 'employee'}
             />,
           ].reverse();
         }
@@ -448,203 +474,213 @@ export const JobStats = () => {
   };
 
   return (
-    <div dir="rtl">
-    <PageContainer>
-      {jobById && jobById.leads_user_info && (
-        <Grid2
-          container
-          spacing={2}
-          justifyContent="center"
-          sx={{ background: "#f2f2f7", width: "100%" }}
-        >
-          <JobStatsCard />
+    <div dir="rtl" className={className}>
+      <PageContainer>
+        {jobById && jobById.leads_user_info && (
+          <Grid2
+            container
+            spacing={2}
+            justifyContent="center"
+            sx={{ background: "#f2f2f7", width: "100%" }}
+          >
+            <JobStatsCard />
 
-          <Grid2 size={12}>
-            <Card sx={{ marginTop: "15px" }}>
-              <CardContent>
-                <TabContext value={tab}>
-                  <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-                    <TabList
-                      onChange={handleChange}
-                      aria-label="lab API tabs example"
-                    >
-                      <Tab
-                        label="רשימה"
-                        value="1"
-                        icon={<ListAltIcon fontSize="small" />}
-                        iconPosition="start"
+            <Grid2 size={12}>
+              <Card sx={{ marginTop: "15px" }}>
+                <CardContent>
+                  <TabContext value={tab}>
+                    <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                      <TabList
+                        onChange={handleChange}
+                        aria-label="lab API tabs example"
+                      >
+                        <Tab
+                          label="רשימה"
+                          value="1"
+                          icon={<ListAltIcon fontSize="small" />}
+                          iconPosition="start"
+                          sx={{
+                            minHeight: 40,
+                            padding: "0 8px",
+                            gap: "4px",
+                          }}
+                        />
+                        <Tab
+                          label="PLAY"
+                          value="2"
+                          icon={<PlayCircleOutlineIcon fontSize="small" />}
+                          iconPosition="start"
+                          sx={{
+                            minHeight: 40,
+                            padding: "0px 8px",
+                            gap: "4px",
+                          }}
+                        />
+                      </TabList>
+                    </Box>
+                    <TabPanel value="1">
+                      <Box
                         sx={{
-                          minHeight: 40,
-                          padding: "0 8px",
-                          gap: "4px",
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          paddingBottom: 2,
                         }}
-                      />
-                      <Tab
-                        label="PLAY"
-                        value="2"
-                        icon={<PlayCircleOutlineIcon fontSize="small"/>}
-                        iconPosition="start"
-                        sx={{
-                          minHeight: 40,
-                          padding: "0px 8px",
-                          gap: "4px",
-                        }}
-                      />
-                    </TabList>
-                  </Box>
-                  <TabPanel value="1">
-                    <Box
-                      sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        paddingBottom: 2,
-                      }}
-                    >
-                      <SearchInput
-                        onChange={(event: any) => {
-                          handleSearchInputChange(event);
-                        }}
-                        onKeyDown={(
-                          event: React.KeyboardEvent<HTMLInputElement>
-                        ) => {
-                          if (event.key === "Enter") {
-                            event.preventDefault();
-                            getJobLeadsById();
-                          }
-                        }}
-                      />
-                    
-                    <Box sx={{ display: "flex", alignItems: "center" }}>
-                      <div dir="ltr">
-                        <Button
-                          dir="ltr"
-                          variant="outlined"
-                          onClick={() => setIsFilterOpenFct()}
-                          startIcon={<FilterListIcon />}
-                          size="small"
-                          sx={filterBtnStyle}
-                        >
-                        מסננים 
-                        </Button>
+                      >
+                        <SearchInput
+                          onChange={(event: any) => {
+                            handleSearchInputChange(event);
+                          }}
+                          onKeyDown={(
+                            event: React.KeyboardEvent<HTMLInputElement>
+                          ) => {
+                            if (event.key === "Enter") {
+                              event.preventDefault();
+                              getJobLeadsById();
+                            }
+                          }}
+                        />
+
+                        <Box sx={{ display: "flex", alignItems: "center" }}>
+                          <div dir="ltr">
+                            <Button
+                              dir="ltr"
+                              variant="outlined"
+                              onClick={() => setIsFilterOpenFct()}
+                              startIcon={<FilterListIcon />}
+                              size="small"
+                              sx={filterBtnStyle}
+                            >
+                              מסננים
+                            </Button>
+                          </div>
+                        </Box>
+                      </Box>
+
+                      <Box sx={{ overflow: "auto" }}>
+                        <div dir="ltr">
+                          <CustomDataGrid
+                            dir="ltr"
+                            rows={jobLeadsById}
+                            rowCount={counter_job_leads}
+                            columns={[...columns].reverse()}
+                            initialState={{
+                              pagination: {
+                                paginationModel: {
+                                  pageSize: 10,
+                                },
+                              },
+                            }}
+                            pageSizeOptions={[5, 10, 25, 50]}
+                            onPaginationModelChange={(model: any) => {
+                              //   handleChangeRowsPerPage(model);
+                              //   handleChangePage(model);
+                              if (model.pageSize !== pagination.pageSize) {
+                                handleChangeRowsPerPage(model);
+                              }
+                              if (model.page !== pagination.page) {
+                                handleChangePage(model);
+                              }
+                            }}
+                            // rowCount={count}
+
+                            paginationMode="server"
+                            pagination
+                            loading={isLoading}
+                            getCellClassName={getCellClassName}
+                            getRowClassName={getRowClassName}
+                            style={{
+                              minHeight: "50vh",
+                              overflow: "auto",
+                              height: 500,
+                            }}
+                          />
                         </div>
-                    </Box>
-                    </Box>
-                      
-                    <Box sx={{ overflow: "auto"}}>
-                      <div dir="ltr">
-                      <CustomDataGrid
-                        dir="ltr"
-                        rows={jobLeadsById}
-                        rowCount={counter_job_leads}
-                        columns={[...columns].reverse()}
-             
-                        initialState={{
-                          pagination: {
-                            paginationModel: {
-                              pageSize: 10,
-                            },
-                          },
-                        }}
-                        pageSizeOptions={[5, 10, 25, 50]}
-                        onPaginationModelChange={(model: any) => {
-                          //   handleChangeRowsPerPage(model);
-                          //   handleChangePage(model);
-                          if (model.pageSize !== pagination.pageSize) {
-                            handleChangeRowsPerPage(model);
-                          }
-                          if (model.page !== pagination.page) {
-                            handleChangePage(model);
-                          }
-                        }}
-                        // rowCount={count}
-             
-                        paginationMode="server"
-                        pagination
-                        loading={isLoading}
-                        getCellClassName={getCellClassName}
-                        getRowClassName={getRowClassName}
+                      </Box>
+                    </TabPanel>
+
+                    {/* play screen */}
+                    <TabPanel value="2">
+                      <ScreenNavigationWithGrid
+                        jobLeadsById={jobLeadsById}
+                        leadJobId={leadJobId}
+                        handleSubmitModal={handleSubmitModal}
+                        activeJob={activeJob}
                       />
-                    </div>
-                    </Box>
-                  </TabPanel>
-
-                  {/* play screen */}
-                  <TabPanel value="2">
-                    <ScreenNavigationWithGrid
-                      jobLeadsById={jobLeadsById}
-                      leadJobId={leadJobId}
-                      handleSubmitModal={handleSubmitModal}
-                      activeJob={activeJob}
-                    />
-                  </TabPanel>
-                </TabContext>
-              </CardContent>
-            </Card>
+                    </TabPanel>
+                  </TabContext>
+                </CardContent>
+              </Card>
+            </Grid2>
           </Grid2>
-        </Grid2>
-      )}
-      {isOpen && (
-        <CustomModal
-          isOpen={isOpen}
-          onClose={onCloseFct}
-          title="Change status lead job"
-          width="30%"
-        >
-          <JobStatsModal updateStatus={updateStatus} />
-        </CustomModal>
-      )}
+        )}
+        {isOpen && (
+          <CustomModal
+            isOpen={isOpen}
+            onClose={onCloseFct}
+            title="Change status lead job"
+            width="30%"
+          >
+            <JobStatsModal updateStatus={updateStatus} />
+          </CustomModal>
+        )}
 
-      {isCreateOrderOpen && (
-        <div dir="rtl"> 
-        <CustomModal
-          dir="rtl" 
-          isOpen={isCreateOrderOpen}
-          onClose={onCloseCreateOrder}
-          title={`${
-            createOrderType === "TV" ? "צור הזמנה טלוויזיה" : "צור הזמנה מובייל"
-          }`}
-          minWidth="1200px"
-        >
-          <GenericAddEditForm  
-            initialValues={initialFormValues}
-            validationSchema={customValidation}
-            apiRequest={handleSubmitModal}
-            hasSubmitButton={true}
-            submitBtnName={"save"}
-            form={(formProps: any) => (
-              <JobStatsCreateOrderModal
-                formProps={formProps}
-                createOrderType={createOrderType}
+        {isCreateOrderOpen && (
+          <div dir="rtl">
+            <CustomModal
+              dir="rtl"
+              isOpen={isCreateOrderOpen}
+              onClose={onCloseCreateOrder}
+              title={`${
+                createOrderType === "TV"
+                  ? "צור הזמנה טלוויזיה"
+                  : "צור הזמנה מובייל"
+              }`}
+              minWidth="1200px"
+            >
+              <GenericAddEditForm
+                initialValues={initialFormValues}
+                validationSchema={customValidation}
+                apiRequest={handleSubmitModal}
+                hasSubmitButton={true}
+                submitBtnName={"save"}
+                form={(formProps: any) => (
+                  <JobStatsCreateOrderModal
+                    formProps={formProps}
+                    createOrderType={createOrderType}
+                  />
+                )}
+                btnStyle={submitBtnStyle}
               />
-            )}
-            btnStyle={submitBtnStyle}
+            </CustomModal>
+          </div>
+        )}
+
+        {isConfirmationOpen && (
+          <ConfirmationModal
+            open={isConfirmationOpen}
+            onClose={handleCloseConfirmationModal}
+            onConfirm={handleSaveConfirmationModal}
+            message="האם אתה בטוח ברצונך למחוק את הליד?"
+            btnName="Save"
           />
-        </CustomModal>       
-        </div>
-      )}
+        )}
 
-      {isConfirmationOpen && (
-        <ConfirmationModal
-          open={isConfirmationOpen}
-          onClose={handleCloseConfirmationModal}
-          onConfirm={handleSaveConfirmationModal}
-          message="האם אתה בטוח ברצונך למחוק את הליד?"
-          btnName="Save"
-        />
-      )}
-
-      {isFilterOpen && (
-        <Filters
-          open={isFilterOpen}
-          onClose={handleFiltersClose}
-          handleFilter={handleFilter}
-          resetFilter={resetFilter}
-        >
-          <FilterJobStats />
-        </Filters>
-      )}
-    </PageContainer>
+        {isFilterOpen && (
+          <Filters
+            open={isFilterOpen}
+            onClose={handleFiltersClose}
+            handleFilter={handleFilter}
+            resetFilter={resetFilter}
+          >
+            <FilterJobStats />
+          </Filters>
+        )}
+      </PageContainer>
     </div>
   );
 };
+
+export default styled(JobStats)`
+  ${JobsStatsStyle}
+`;
