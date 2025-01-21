@@ -52,6 +52,7 @@ import ordersStore from "../../store/Orders/orders-store";
 import { customValidation } from "../../common/utils";
 import { JobsStatsStyle } from "./JobStatsStyle";
 import styled from "styled-components";
+import jobsStore from "../../store/Jobs/jobs-store";
 
 const JobStats = ({className}: any) => {
   const [initialFormValues, setInitialFormValues] =
@@ -84,11 +85,14 @@ const JobStats = ({className}: any) => {
     submitCreateOrder,
   }: // resetJobLeadsById,
   any = jobStatsStore();
+    
+  const { getUserTeam }: any = jobsStore();
 
   const { getOrders }: any = ordersStore();
 
   const { getStatus }: any = leadsStatusesStore();
   const { user }: any = usersStore();
+
   const [idLead, setIdLead]: any = useState(undefined);
   const [isFilterOpen, setIsFilterOpen]: any = useState(false);
   const [tab, setTab] = useState("1");
@@ -143,6 +147,7 @@ const JobStats = ({className}: any) => {
       getJobById();
       getJobLeadsById();
       getStatus(0, 50, true);
+      getUserTeam(false);
     }
   }, [activeJob]);
 
@@ -673,7 +678,7 @@ const JobStats = ({className}: any) => {
             handleFilter={handleFilter}
             resetFilter={resetFilter}
           >
-            <FilterJobStats />
+            <FilterJobStats user={user} />
           </Filters>
         )}
       </PageContainer>

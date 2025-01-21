@@ -166,6 +166,7 @@ const jobStatsStore = create<IJobsState>((set) => ({
         severity: response.status,
       });
       set({ isLoading: false });
+      return response.data;
     } catch (error: any) {
       showNotification({
         message: "Error to update lead job!",

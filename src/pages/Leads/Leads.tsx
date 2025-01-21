@@ -82,7 +82,7 @@ const Leads = () => {
   const [checkboxSelection, setCheckboxSelection] = useState(true);
   const [disableMultipleRowSelection, setDisableMultipleRowSelection] =
     useState(false);
-  const [idsRowSelection, setIdsRowSelection] = useState([]);
+  const [idsRowSelection, setIdsRowSelection] = useState<string[]>([]);
   const openOption = Boolean(anchorEl);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -92,13 +92,23 @@ const Leads = () => {
     setAnchorEl(null);
   };
 
-  const handleDeleteClick = (id: number) => {
-    setId(id);
+  const handleDeleteClick = (id: any) => {
+    // setId(id);
+    setIdsRowSelection([id]);
     setIsModalOpen(true);
   };
 
+  
+  // Handle delete
+  const handleDelete = async () => {
+    setIdsRowSelection(idsRowSelection)
+    setIsModalOpen(true)
+    // await deleteLeads(idsRowSelection);
+    // await getLeads();
+  };
+
   const handleConfirmDelete = async () => {
-    await deleteLeads([id]);
+    await deleteLeads(idsRowSelection);
     await getLeads();
     setIsModalOpen(false);
   };
@@ -197,11 +207,6 @@ const Leads = () => {
     setIsHistoryOpen(true);
   };
 
-  // Handle delete
-  const handleDelete = async () => {
-    await deleteLeads(idsRowSelection);
-    await getLeads();
-  };
 
   const handleRowSelection = (rows: any) => {
     setIdsRowSelection(rows);
