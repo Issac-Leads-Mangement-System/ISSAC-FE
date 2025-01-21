@@ -360,7 +360,7 @@ const ScreenNavigationWithGrid = ({
                   <Button
                     key={index}
                     variant="outlined"
-                    disabled={[4, 5].includes(jobDetailsById.lead_status.lead_status_id)}
+                    disabled={jobDetailsById.mobile_deal_success}
                     onClick={() => onButtonSectionClick(status)}
                     sx={{
                       fontWeight: "bold",

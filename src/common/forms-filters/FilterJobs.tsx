@@ -13,11 +13,13 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import leadsTypesStore from "../../store/Leads/types-store";
 import jobsStore from "../../store/Jobs/jobs-store";
 import teamsStore from "../../store/Teams/teams-store";
+import usersStore from "../../store/Users/users-store";
 
 export const FilterJobs = () => {
   const { activate_filters, setActiveFilters }: any = jobsStore();
   const { types }: any = leadsTypesStore();
   const { teamsOptions }: any = teamsStore();
+  const { user }: any = usersStore();
   const statuses = [
     { id: "close", name: "close" },
     { id: "in progress", name: "in progress" },
@@ -105,33 +107,37 @@ export const FilterJobs = () => {
         </Select>
       </FormControl>
 
-      <FormControl sx={{ m: 1, width: 300 }}>
-        <InputLabel id="demo-multiple-checkbox-label">Team</InputLabel>
-        <Select
-          labelId="demo-multiple-checkbox-label"
-          id="demo-multiple-checkbox"
-          multiple
-          value={activate_filters.team_id}
-          onChange={(e) => handleChange(e, "team_id")}
-          input={<OutlinedInput label="Type" />}
-          renderValue={(selected: any) => {
-            const count = selected.length;
-            return count === 0
-              ? "No elements selected"
-              : count === 1
-              ? `${count} element selected`
-              : `${count} elements selected`;
-          }}
-          MenuProps={MenuProps}
-        >
-          {teamsOptions.map((team: any) => (
-            <MenuItem key={team.id} value={team.id}>
-              <Checkbox checked={activate_filters.team_id.includes(team.id)} />
-              <ListItemText primary={team.team_name} />
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+      {user.user_role === "admin" && (
+        <FormControl sx={{ m: 1, width: 300 }}>
+          <InputLabel id="demo-multiple-checkbox-label">Team</InputLabel>
+          <Select
+            labelId="demo-multiple-checkbox-label"
+            id="demo-multiple-checkbox"
+            multiple
+            value={activate_filters.team_id}
+            onChange={(e) => handleChange(e, "team_id")}
+            input={<OutlinedInput label="Type" />}
+            renderValue={(selected: any) => {
+              const count = selected.length;
+              return count === 0
+                ? "No elements selected"
+                : count === 1
+                ? `${count} element selected`
+                : `${count} elements selected`;
+            }}
+            MenuProps={MenuProps}
+          >
+            {teamsOptions.map((team: any) => (
+              <MenuItem key={team.id} value={team.id}>
+                <Checkbox
+                  checked={activate_filters.team_id.includes(team.id)}
+                />
+                <ListItemText primary={team.team_name} />
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      )}
       {/* please display this conditionally based on the user role */}
     </Box>
   );

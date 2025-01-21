@@ -26,4 +26,5 @@ export const JobsStyle = () => css`
   .row-in-progress {
     color: #856404; /* Dark yellow text */
   }
+
 `;

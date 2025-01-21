@@ -11,7 +11,7 @@ import LeadsStatus from "./pages/Leads/LeadsStatus";
 import { Users } from "./pages/Users/Users";
 import Jobs from "./pages/Jobs/Jobs";
 import AddJobs from "./pages/addJob/addJobs";
-import { JobStats } from "./pages/JobStats/JobStats";
+import JobStats from "./pages/JobStats/JobStats";
 import PackageType from "./pages/Orders/PackageType/PackageType";
 import OrdersList from "./pages/Orders/List/List";
 import Home from "./pages/Home/Home";

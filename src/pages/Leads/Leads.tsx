@@ -416,6 +416,11 @@ const Leads = () => {
               onRowSelectionModelChange={(selectionModel: any) => {
                 handleRowSelection(selectionModel);
               }}
+              style={{
+                minHeight: "50vh",
+                overflow: "auto",
+                height: 700,
+              }}
             />
             </div>
           )}

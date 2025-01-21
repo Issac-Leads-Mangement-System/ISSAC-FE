@@ -377,6 +377,11 @@ const Jobs = ({ className }: any) => {
                 disableRowSelectionOnClick
                 disableVirtualization
                 paginationMode="server"
+                style={{
+                  minHeight: "75vh",
+                  overflow: "auto",
+                  height: 400
+                }}
               />
               </div>
             )}
