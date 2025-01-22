@@ -595,9 +595,8 @@ const JobStats = ({className}: any) => {
                             getCellClassName={getCellClassName}
                             getRowClassName={getRowClassName}
                             style={{
-                              minHeight: "50vh",
+                              maxHeight: "53vh",
                               overflow: "auto",
-                              height: 500,
                             }}
                           />
                         </div>

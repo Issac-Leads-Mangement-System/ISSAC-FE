@@ -277,12 +277,14 @@ const OrdersList = ({ className }: any) => {
               onClick={() => handleEditClick(id)}
               disabled={row.order_status === "close"}
             />,
-
             <GridActionsCellItem
               icon={<TaskAltIcon />}
               label="Close job"
               title="Close job"
               key={id}
+              sx={{
+                color: "#6ac250",
+              }}
               className="textPrimary"
               onClick={() => handleUpdateOrderStatusClick(id)}
               disabled={row.order_status === "close"}
@@ -356,9 +358,8 @@ const OrdersList = ({ className }: any) => {
                 }
               }}
               style={{
-                minHeight: "50vh",
+                maxHeight: "75vh",
                 overflow: "auto",
-                height: 700,
               }}
             />
           </CardContent>

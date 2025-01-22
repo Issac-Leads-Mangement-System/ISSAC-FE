@@ -72,7 +72,8 @@ const Login = ({ className, setUser }: any) => {
     }
   };
   return (
-    <ThemeProvider theme={Theme}>
+    <div dir="ltr">
+    <ThemeProvider  theme={Theme}>
       <div className={` ${className} issac-auth`}>
         <div className="left-side">
           <img className="login-image" src={LogoApp} alt="logo" />
@@ -133,6 +134,7 @@ const Login = ({ className, setUser }: any) => {
         </div>
       </div>
     </ThemeProvider>
+    </div>
   );
 };
 

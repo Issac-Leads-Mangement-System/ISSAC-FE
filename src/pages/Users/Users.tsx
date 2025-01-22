@@ -305,9 +305,8 @@ export const Users = () => {
             pagination
             loading={isLoading}
             style={{
-              minHeight: "50vh",
+              maxHeight: "75vh",
               overflow: "auto",
-              height: 700,
             }}
           />
         </CardContent>

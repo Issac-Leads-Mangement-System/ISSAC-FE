@@ -52,7 +52,7 @@ const AddJobs = ({ className }: any) => {
   }: any = jobsStore();
   const apiRef = useGridApiRef();
   const { showNotification }: any = useNotificationStore();
-  const steps = ["Choose Job Type", "Add Job Details", "Confirm and Create"];
+  const steps = ["בחר סוג ליד לעבודה", "בחר ושייך לידים עבור העבודים", "אשר וצור עבודה"];
   const [activeStep, setActiveStep] = useState(0);
   const handleNext = async (step: number) => {
     if (step === 0) {
@@ -120,8 +120,8 @@ const AddJobs = ({ className }: any) => {
   };
 
   useEffect(() => {
-    setSecontToolbarMessage("CREATE JOB");
-    setSecontToolbarPath("Add");
+    setSecontToolbarMessage("עבדות");
+    setSecontToolbarPath("הוסף עבודה");
     getTypes(0, 50);
     getUserTeam(false);
 
@@ -201,11 +201,15 @@ const AddJobs = ({ className }: any) => {
   };
 
   const columns: any = [
-    { field: "first_name", headerName: "First Name", width: 200 },
+    { field: "first_name", headerName: "שם", flex: 1,
+      minWidth: 200,
+      headerAlign: "center", align: "center", },
     {
       field: "value",
-      headerName: "Value",
-      width: 200,
+      headerName: "לידים",
+      flex: 1,
+      minWidth: 200,
+      headerAlign: "center", align: "center",
       renderCell: (params: any) => {
         if (!params.id) return null;
         return (
@@ -223,9 +227,11 @@ const AddJobs = ({ className }: any) => {
     {
       field: "actions",
       type: "actions",
-      width: 150,
+      flex: 1,
+      minWidth: 200,
+      headerAlign: "center", align: "center",
       editable: false,
-      renderHeader: (params: any) => <strong>{"Actions "}</strong>,
+      renderHeader: (params: any) => <strong>{"פעולות "}</strong>,
       filterable: false,
       cellClassName: "pinned-column",
       headerClassName: "MuiDataGrid-columnHeader--pinned",
@@ -314,7 +320,7 @@ const AddJobs = ({ className }: any) => {
                       1
                     </Box>
                     <Typography variant="h6" fontWeight="bold">
-                      Step 1: Choose Job Type
+                      שלב 1: בחר את סוג הליד וכמות עבור העבודה
                     </Typography>
                   </Box>
                   <Grid2 container spacing={2}>
@@ -327,7 +333,7 @@ const AddJobs = ({ className }: any) => {
                           marginBottom: "8px",
                         }}
                       >
-                        Job Type
+                        סוג ליד
                       </InputLabel>
                       <Select
                         labelId="type"
@@ -383,7 +389,7 @@ const AddJobs = ({ className }: any) => {
                               fontSize: "1rem",
                             }}
                           >
-                            {infoLeadsMessage} leads available!
+                           {infoLeadsMessage} לידים פנויים! 
                           </Typography>
                         </Box>
                       )}
@@ -398,19 +404,19 @@ const AddJobs = ({ className }: any) => {
                             paddingBottom: "8px",
                           }}
                         >
-                          Configuration
+                        הגדרות
                         </InputLabel>
                         <Box>
                           <TextField
                             id="outlined-basic"
-                            label="Leads"
+                            label="לידים"
                             variant="outlined"
                             value={job.free_leads}
                             onChange={(e) => handleChangeLeads(e)}
                             sx={{ paddingBottom: "10px" }}
                           />
                           <TextField
-                            label="Job Name"
+                            label="שם העבודה"
                             value={job.job_name}
                             onChange={(e) => changeTypeId(e, "job_name")}
                             size="medium"
@@ -440,7 +446,7 @@ const AddJobs = ({ className }: any) => {
                       onClick={() => handleNext(0)}
                       disabled={!job.type_id}
                     >
-                      Next
+                      הבא
                     </Button>
                   </Box>
                 </CardContent>
@@ -488,7 +494,7 @@ const AddJobs = ({ className }: any) => {
                       fontWeight="bold"
                       textAlign="center"
                     >
-                      Step 2: Add Job Name
+                     שלב 2: בחר עובדים ושייך לידים עבור העבודה
                     </Typography>
                   </Box>
                   <Box marginBottom="24px">
@@ -502,7 +508,7 @@ const AddJobs = ({ className }: any) => {
                         textAlign: "center",
                       }}
                     >
-                      Select a lead
+                      בחר עובדים
                     </InputLabel>
                     <Select
                       labelId="type"
@@ -510,7 +516,7 @@ const AddJobs = ({ className }: any) => {
                       value={userSelected}
                       multiple
                       renderValue={(selected) =>
-                        `You selected ${selected.length} users`
+                        ` ${selected.length}  עובדים נבחרו `
                       }
                       onChange={(e) => changeUser(e)}
                       sx={{
@@ -543,7 +549,7 @@ const AddJobs = ({ className }: any) => {
                         marginTop: "10px",
                       }}
                     >
-                      Total leads selected: {job.free_leads}
+                      מספר לידים שנבחרו: {job.free_leads}
                     </Typography>
                     <Typography
                       sx={{
@@ -558,10 +564,11 @@ const AddJobs = ({ className }: any) => {
                         marginTop: "10px",
                       }}
                     >
-                      Accumulate leads: {accumulateJobLeads}
+                      מספר לידים ששוייכו: {accumulateJobLeads}
                     </Typography>
                   </Box>
                   <Box
+                    dir = "ltr"
                     sx={{
                       backgroundColor: "#fff",
                       borderRadius: "8px",
@@ -591,7 +598,7 @@ const AddJobs = ({ className }: any) => {
                       slots={{
                         noRowsOverlay: () => <div>No data available</div>,
                       }}
-                      columns={columns || []}
+                      columns={[...columns].reverse() || []}
                       rows={job.leads_per_employee || []}
                       disableColumnFilter // Previne focusul pe coloane
                     />
@@ -609,7 +616,7 @@ const AddJobs = ({ className }: any) => {
                     color="primary"
                     onClick={() => handleNext(1)}
                   >
-                    Next
+                    הבא
                   </Button>
                 </Box>
               </Card>
@@ -618,36 +625,36 @@ const AddJobs = ({ className }: any) => {
             {activeStep === 2 && (
               <Card sx={{ padding: 3, boxShadow: 3 }}>
                 <Typography variant="h6" fontWeight="bold">
-                  Step 3: Confirm and Create Job
+                שלב 3: אשר וצור עבודה
                 </Typography>
                 <Divider sx={{ marginY: 2 }} />
                 <Box>
                   <Typography variant="subtitle1" fontWeight="bold">
-                    Summary
+                    סיכום
                   </Typography>
                   <Typography variant="body1" sx={{ marginTop: 1 }}>
-                    <strong>Job Type:</strong>{" "}
+                    <strong>סוג הליד:</strong>{" "}
                     {types.find((t: any) => t.id === job.type_id)?.type_name ||
                       "N/A"}
                   </Typography>
                   <Typography variant="body1">
-                    <strong>Job Name:</strong> {job.job_name || "N/A"}
+                    <strong>שם העבודה:</strong> {job.job_name || "N/A"}
                   </Typography>
                   <Typography variant="body1" sx={{ marginTop: 2 }}>
-                    <strong>Assigned Users:</strong>
+                    <strong>עובדים משוייכים:</strong>
                   </Typography>
                   <ul>
                     {job.leads_per_employee?.map((emp: any) => {
                       return (
                         <li key={emp.id}>
                           {emp?.first_name || "Unknown User"} - {emp.value}{" "}
-                          leads
+                          לידים
                         </li>
                       );
                     })}
                   </ul>
                   <Typography variant="body1">
-                    <strong>Total Leads:</strong> {job.free_leads || 0}
+                    <strong>סה"כ לידים:</strong> {job.free_leads || 0}
                   </Typography>
                 </Box>
                 <Box
@@ -658,14 +665,14 @@ const AddJobs = ({ className }: any) => {
                   }}
                 >
                   {/* <Button onClick={handleBack}>Back</Button> */}
-                  <Button onClick={handleBack}>Back</Button>
+                  <Button onClick={handleBack}>אחורה</Button>
 
                   <Button
                     variant="contained"
                     color="success"
                     onClick={createJob}
                   >
-                    Create Job
+                    צור עבודה
                   </Button>
                 </Box>
               </Card>

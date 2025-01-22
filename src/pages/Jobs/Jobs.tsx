@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Box, Button, Card, CardContent } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -130,6 +130,18 @@ const Jobs = ({ className }: any) => {
   //   console.log("delete", id);
   // };
 
+  const dataGridRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const scrollContainer = dataGridRef.current?.querySelector(
+      ".MuiDataGrid-virtualScroller"
+    );
+
+    if (scrollContainer) {
+      scrollContainer.scrollLeft = scrollContainer.scrollWidth;
+    }
+  }, [jobs]); // Ensure this runs when jobs change
+
   const columns: GridColDef<(typeof jobs)[number]>[] = [
     { field: "job_name", headerName: "שם העבודה",      
       flex: 1,
@@ -256,9 +268,9 @@ const Jobs = ({ className }: any) => {
               title="תצוגה מקדימה"
               label="סגור עבודה"
               key={id}
-              // sx={{
-              //   color: "black",
-              // }}
+              sx={{
+                color: "#434343",
+              }}
               className="textPrimary"
               onClick={() => handleViewClick(id)}
             />,
@@ -269,9 +281,9 @@ const Jobs = ({ className }: any) => {
               label="Close job"
               key={id}
               disabled={row.job_status === "close"}
-              // sx={{
-              //   color: "black",
-              // }}
+              sx={{
+                color: "#6ac250",
+              }}
               className="textPrimary"
               onClick={() => handleUpdateJobStatusClick(id)}
             />,
@@ -306,6 +318,7 @@ const Jobs = ({ className }: any) => {
       },
     },
   ];
+
   return (
     <PageContainer>
       <div className={`${className}`}>
@@ -353,7 +366,7 @@ const Jobs = ({ className }: any) => {
               </Box>
             </Box>
             {jobs?.length > 0 && (
-              <div dir="ltr">
+              <div dir="ltr" ref={dataGridRef} style={{ overflowX: "auto" }}>
               <CustomDataGrid
                 rows={jobs}
                 columns={[...columns].reverse()}
@@ -378,9 +391,8 @@ const Jobs = ({ className }: any) => {
                 disableVirtualization
                 paginationMode="server"
                 style={{
-                  minHeight: "75vh",
+                  maxHeight: "75vh",
                   overflow: "auto",
-                  height: 400
                 }}
               />
               </div>
