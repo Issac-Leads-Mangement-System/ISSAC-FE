@@ -161,7 +161,7 @@ const LeadsTypes = () => {
               className="textPrimary"
               onClick={() => handleDeleteClick(id)}
             />,
-          ].reverse();
+          ];
         }
         return [];
       },
@@ -207,7 +207,7 @@ const LeadsTypes = () => {
           <div dir="ltr">
           <CustomDataGrid
             rows={types}
-            columns={[...columns].reverse()}
+            columns={[...columns]}
             loading={isLoading}
             initialState={{
               pagination: {
@@ -226,6 +226,7 @@ const LeadsTypes = () => {
 
       {open && (
         <CustomModal
+          dir="rtl"
           isOpen={open}
           onClose={() => {
             setOpen(false);

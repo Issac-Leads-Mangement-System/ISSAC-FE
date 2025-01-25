@@ -417,7 +417,7 @@ const JobStats = ({className}: any) => {
               onClick={() => handleDeleteClick(id)}
               disabled={jobById.job_status === "close" || user.user_role === 'employee'}
             />,
-          ].reverse();
+          ];
         }
         return [];
       },
@@ -563,12 +563,10 @@ const JobStats = ({className}: any) => {
                       </Box>
 
                       <Box sx={{ overflow: "auto" }}>
-                        <div dir="ltr">
                           <CustomDataGrid
-                            dir="ltr"
                             rows={jobLeadsById}
                             rowCount={counter_job_leads}
-                            columns={[...columns].reverse()}
+                            columns={columns}
                             initialState={{
                               pagination: {
                                 paginationModel: {
@@ -599,7 +597,6 @@ const JobStats = ({className}: any) => {
                               overflow: "auto",
                             }}
                           />
-                        </div>
                       </Box>
                     </TabPanel>
 

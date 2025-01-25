@@ -175,7 +175,7 @@ const LeadsStatus = () => {
               onClick={() => handleDeleteClick(id)}
               disabled={!row.status_is_editable}
             />,
-          ].reverse();
+          ];
         }
         return [];
       },
@@ -228,7 +228,7 @@ const LeadsStatus = () => {
           <div dir="ltr">
           <CustomDataGrid
             rows={statuses}
-            columns={[...columns].reverse()}
+            columns={[...columns]}
             initialState={{
               pagination: {
                 paginationModel: {
@@ -247,6 +247,7 @@ const LeadsStatus = () => {
 
       {open && (
         <CustomModal
+          dir="rtl"
           isOpen={open}
           onClose={() => {
             setOpen(false);

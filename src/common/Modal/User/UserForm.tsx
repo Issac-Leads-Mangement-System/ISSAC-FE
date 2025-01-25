@@ -17,7 +17,7 @@ export const UserForm = ({ formProps, userTeamList }: any) => {
       <Grid2 size={6}>
         <Input
           {...generateFormikInputFieldProps(formProps, INPUTS.FIRST_NAME.NAME)}
-          label="First name"
+          label="שם פרטי"
           style={{ display: "flex" }}
           size="small"
         />
@@ -25,7 +25,7 @@ export const UserForm = ({ formProps, userTeamList }: any) => {
       <Grid2 size={6}>
         <Input
           {...generateFormikInputFieldProps(formProps, INPUTS.LAST_NAME.NAME)}
-          label="Last name"
+          label="שם משפחה"
           style={{ display: "flex" }}
           size="small"
         />
@@ -33,7 +33,7 @@ export const UserForm = ({ formProps, userTeamList }: any) => {
       <Grid2 size={6}>
         <Input
           {...generateFormikInputFieldProps(formProps, INPUTS.EMAIL.NAME)}
-          label="Email"
+          label="אימייל"
           style={{ display: "flex" }}
           size="small"
         />
@@ -44,7 +44,7 @@ export const UserForm = ({ formProps, userTeamList }: any) => {
             formProps,
             INPUTS.PASSWORD_UER.NAME
           )}
-          label="Password"
+          label="סיסמא"
           style={{ display: "flex" }}
           size="small"
         />
@@ -52,14 +52,14 @@ export const UserForm = ({ formProps, userTeamList }: any) => {
       <Grid2 size={6}>
         <Input
           {...generateFormikInputFieldProps(formProps, INPUTS.PHONE.NAME)}
-          label="Phone number"
+          label="טלפון"
           style={{ display: "flex" }}
           size="small"
         />
       </Grid2>
       <Grid2 size={3}>
         <FormControl size="small" sx={{ width: "100%" }}>
-          <InputLabel id="role">Team</InputLabel>
+          <InputLabel id="role">צוות</InputLabel>
           <Select
             labelId="role"
             id="role-select"
@@ -89,7 +89,7 @@ export const UserForm = ({ formProps, userTeamList }: any) => {
       </Grid2>
       <Grid2 size={3}>
         <FormControl size="small" sx={{ width: "100%" }}>
-          <InputLabel id="role">Role</InputLabel>
+          <InputLabel id="role">הרשאות</InputLabel>
           <Select
             labelId="role"
             id="role-select"

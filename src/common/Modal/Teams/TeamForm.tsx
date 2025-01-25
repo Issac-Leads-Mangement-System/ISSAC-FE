@@ -10,7 +10,7 @@ export const TeamForm = ({ formProps }: any) => {
       <Grid2>
         <Input
           {...generateFormikInputFieldProps(formProps, INPUTS.TEAM.NAME)}
-          label="Team name"
+          label="שם צוות"
           style={{ display: "flex" }}
           size="small"
         />

@@ -71,8 +71,8 @@ const OrdersList = ({ className }: any) => {
     });
 
   useEffect(() => {
-    setSecontToolbarMessage("ORDERS");
-    setSecontToolbarPath("LIST");
+    setSecontToolbarMessage("הזמנות");
+    setSecontToolbarPath("רשימת הזמנות");
     getOrders();
     getUsers(0, 50);
 
@@ -191,17 +191,17 @@ const OrdersList = ({ className }: any) => {
   const columns: GridColDef<(typeof orders)[number]>[] = [
     {
       field: "lead_id",
-      headerName: "Lead id",
+      headerName: "ליד",
       flex: 1,
       minWidth: 200,
       headerAlign: "center", align: "center",
     },
-    { field: "created_time", headerName: "Created time",  flex: 1,
+    { field: "created_time", headerName: "תאריך יצירה",  flex: 1,
       minWidth: 200,
       headerAlign: "center", align: "center", },
     {
       field: "order_status",
-      headerName: "Order Status",
+      headerName: "סטטוס הזמנה",
       flex: 1,
       minWidth: 200,
       headerAlign: "center", align: "center",
@@ -212,18 +212,18 @@ const OrdersList = ({ className }: any) => {
         return "";
       },
     },
-    { field: "order_type", headerName: " Order Type",  flex: 1,
+    { field: "order_type", headerName: "סוג הזמנה",  flex: 1,
       minWidth: 200,
       headerAlign: "center", align: "center", },
-    { field: "user_name", headerName: "User",  flex: 1,
+    { field: "user_name", headerName: "משתמש",  flex: 1,
       minWidth: 200,
       headerAlign: "center", align: "center", },
-    { field: "former_company", headerName: "Former",  flex: 1,
+    { field: "former_company", headerName: "חברה קודמת",  flex: 1,
       minWidth: 200,
       headerAlign: "center", align: "center", },
     {
       field: "mobility",
-      headerName: "Mobility",
+      headerName: "ניוד",
       flex: 1,
       minWidth: 200,
       headerAlign: "center", align: "center",
@@ -245,7 +245,7 @@ const OrdersList = ({ className }: any) => {
       minWidth: 200,
       headerAlign: "center", align: "center",
       editable: false,
-      renderHeader: () => <strong>{"Actions "}</strong>,
+      renderHeader: () => <strong>{"פעולות "}</strong>,
       filterable: false,
       cellClassName: "pinned-column",
       headerClassName: "MuiDataGrid-columnHeader--pinned",
@@ -390,7 +390,7 @@ const OrdersList = ({ className }: any) => {
           open={isConfirmationOpen}
           onClose={handleCloseConfirmationModal}
           onConfirm={handleSubmitConfirmationModal}
-          message="Are you sure you want to close this order?"
+          message="האם אתה בטוח שברצונך לסגור הזמנה זו?"
           btnName="Yes"
         />
       )}
@@ -399,9 +399,10 @@ const OrdersList = ({ className }: any) => {
 
       {isViewDetails && (
         <CustomModal
+          dir="rtl"
           isOpen={isViewDetails}
           onClose={onCloseFct}
-          title="View details"
+          title="פרטי הזמנה"
           minWidth="300px"
         >
           <OrderListModal />

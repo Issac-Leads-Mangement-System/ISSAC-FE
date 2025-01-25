@@ -43,8 +43,8 @@ const PackageType = () => {
   const [isAddOpenModal, setIsAddOpenModal] = useState(false);
 
   useEffect(() => {
-    setSecontToolbarMessage("ORDERS");
-    setSecontToolbarPath("PACKAGE TYPES");
+    setSecontToolbarMessage("הזמנות");
+    setSecontToolbarPath("רשימת חבילות");
     getOrders();
 
     return () => {
@@ -116,12 +116,12 @@ const PackageType = () => {
   const columns: GridColDef<(typeof orders)[number]>[] = [
     {
       field: "package_name",
-      headerName: "Package name",
+      headerName: "שם חבילה",
       flex: 1,
       minWidth: 200,
       headerAlign: "center", align: "center",
     },
-    { field: "order_type", headerName: "Type", flex: 1,
+    { field: "order_type", headerName: "סוג חבילה", flex: 1,
       minWidth: 200,
       headerAlign: "center", align: "center", },
 
@@ -132,7 +132,7 @@ const PackageType = () => {
       minWidth: 200,
       headerAlign: "center", align: "center",
       editable: false,
-      renderHeader: () => <strong>{"Actions "}</strong>,
+      renderHeader: () => <strong>{"פעולות"}</strong>,
       filterable: false,
       cellClassName: "pinned-column",
       headerClassName: "MuiDataGrid-columnHeader--pinned",

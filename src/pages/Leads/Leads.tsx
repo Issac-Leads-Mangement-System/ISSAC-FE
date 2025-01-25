@@ -300,7 +300,7 @@ const Leads = () => {
               className="textPrimary"
               onClick={() => handleDeleteClick(id)}
             />,
-          ].reverse();
+          ];
         }
         return [];
       },
@@ -392,10 +392,9 @@ const Leads = () => {
           </Box>
 
           {leads?.length > 0 && (
-            <div dir="ltr">
             <CustomDataGrid
               rows={leads}
-              columns={[...columns].reverse()}
+              columns={[...columns]}
               initialState={{
                 pagination: {
                   paginationModel: {
@@ -426,13 +425,13 @@ const Leads = () => {
                 overflow: "auto",
               }}
             />
-            </div>
           )}
         </CardContent>
       </Card>
 
       {open && (
         <CustomModal
+          dir="rtl"
           isOpen={open}
           onClose={() => {
             setOpen(false);

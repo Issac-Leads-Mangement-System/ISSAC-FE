@@ -87,8 +87,8 @@ const Team = () => {
   );
 
   useEffect(() => {
-    setSecontToolbarMessage("TEAMS");
-    setSecontToolbarPath("List");
+    setSecontToolbarMessage("משתמשים");
+    setSecontToolbarPath("רשימת צוותים");
     getTeams();
   }, []);
 
@@ -128,10 +128,10 @@ const Team = () => {
   };
 
   const columns: GridColDef<(typeof teams)[number]>[] = [
-    { field: "team_name", headerName: "Team name",  flex: 1,
+    { field: "team_name", headerName: "שם צוות",  flex: 1,
       minWidth: 200,
       headerAlign: "center", align: "center", },
-    { field: "created_date", headerName: "Created date",  flex: 1,
+    { field: "created_date", headerName: "תאריך יצירה",  flex: 1,
       minWidth: 200,
       headerAlign: "center", align: "center", },
     {
@@ -141,7 +141,7 @@ const Team = () => {
       minWidth: 200,
       headerAlign: "center", align: "center",
       editable: false,
-      renderHeader: (params: any) => <strong>{"Actions"}</strong>,
+      renderHeader: (params: any) => <strong>{"פעולות"}</strong>,
       filterable: false,
       getActions: (params: any) => {
         const { id, row } = params;
@@ -210,10 +210,10 @@ const Team = () => {
               הוסף צוות
             </Button>
           </Box>
-
+          <div dir="ltr">
           <DataGrid
             rows={teams}
-            columns={columns}
+            columns={columns.reverse()}
             initialState={{
               pagination: {
                 paginationModel: {
@@ -235,14 +235,15 @@ const Team = () => {
             style={{
               minHeight: "50vh",
               overflow: "auto",
-              height: 700,
             }}
           />
+          </div>
         </CardContent>
       </Card>
 
       {open && (
         <CustomModal
+          dir="rtl"
           isOpen={open}
           onClose={() => {
             setOpen(false);

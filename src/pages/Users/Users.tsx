@@ -56,8 +56,8 @@ export const Users = () => {
     ...initialValues,
   });
 
-  const modalTitle = id ? "Edit User" : "Add New User";
-  const submitBtnName = id ? "Update" : "Add User";
+  const modalTitle = id ? "ערוך משתמש" : "הוסף משתמש חדש";
+  const submitBtnName = id ? "עדכן" : "הוסף";
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -99,8 +99,8 @@ export const Users = () => {
   );
 
   useEffect(() => {
-    setSecontToolbarMessage("USERS");
-    setSecontToolbarPath("List");
+    setSecontToolbarMessage("משתמשים");
+    setSecontToolbarPath("רשימת משתמשים");
     getAllTeams();
     getUsers();
 
@@ -158,27 +158,27 @@ export const Users = () => {
   };
 
   const columns: GridColDef<(typeof users)[number]>[] = [
-    { field: "first_name", headerName: "First name", flex: 1,
+    { field: "first_name", headerName: "שם פרטי", flex: 1,
       minWidth: 200,
       headerAlign: "center", align: "center",},
-    { field: "last_name", headerName: "Last name",  flex: 1,
+    { field: "last_name", headerName: "שם משפחה",  flex: 1,
       minWidth: 200,
       headerAlign: "center", align: "center", },
-    { field: "email", headerName: "Email",  flex: 1,
+    { field: "email", headerName: "אימייל",  flex: 1,
       minWidth: 200,
       headerAlign: "center", align: "center", },
-    { field: "phone_number", headerName: "Phone number",  flex: 1,
+    { field: "phone_number", headerName: "טלפון",  flex: 1,
       minWidth: 200,
       headerAlign: "center", align: "center", },
-    { field: "user_role", headerName: "User role",  flex: 1,
+    { field: "user_role", headerName: "הרשאות",  flex: 1,
       minWidth: 200,
       headerAlign: "center", align: "center", },
-    { field: "team_name", headerName: "Team name",  flex: 1,
+    { field: "team_name", headerName: "שם צוות",  flex: 1,
       minWidth: 200,
       headerAlign: "center", align: "center", },
     {
       field: "user_status",
-      headerName: "User status",
+      headerName: "סטטוס",
       flex: 1,
       minWidth: 200,
       headerAlign: "center", align: "center",
@@ -203,7 +203,7 @@ export const Users = () => {
       minWidth: 200,
       headerAlign: "center", align: "center",
       editable: false,
-      renderHeader: (params: any) => <strong>{"Actions "}</strong>,
+      renderHeader: (params: any) => <strong>{"פעולות"}</strong>,
       filterable: false,
       cellClassName: "pinned-column",
       headerClassName: "MuiDataGrid-columnHeader--pinned",
@@ -314,6 +314,7 @@ export const Users = () => {
 
       {open && (
         <CustomModal
+          dir="rtl"
           isOpen={open}
           onClose={() => {
             setOpen(false);

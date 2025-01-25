@@ -130,17 +130,7 @@ const Jobs = ({ className }: any) => {
   //   console.log("delete", id);
   // };
 
-  const dataGridRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const scrollContainer = dataGridRef.current?.querySelector(
-      ".MuiDataGrid-virtualScroller"
-    );
-
-    if (scrollContainer) {
-      scrollContainer.scrollLeft = scrollContainer.scrollWidth;
-    }
-  }, [jobs]); // Ensure this runs when jobs change
 
   const columns: GridColDef<(typeof jobs)[number]>[] = [
     { field: "job_name", headerName: "שם העבודה",      
@@ -312,7 +302,7 @@ const Jobs = ({ className }: any) => {
             //   className="textPrimary"
             //   onClick={() => handleDeleteClick(id)}
             // />,
-          ].reverse();
+          ];
         }
         return [];
       },
@@ -366,10 +356,9 @@ const Jobs = ({ className }: any) => {
               </Box>
             </Box>
             {jobs?.length > 0 && (
-              <div dir="ltr" ref={dataGridRef} style={{ overflowX: "auto" }}>
               <CustomDataGrid
                 rows={jobs}
-                columns={[...columns].reverse()}
+                columns={columns}
                 initialState={{
                   pagination: {
                     paginationModel: {
@@ -395,7 +384,6 @@ const Jobs = ({ className }: any) => {
                   overflow: "auto",
                 }}
               />
-              </div>
             )}
           </CardContent>
         </Card>

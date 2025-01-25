@@ -65,7 +65,7 @@ const menus = [
       },
       {
         permissions: ['admin'],
-        name: "סוגי הזמנות ",
+        name: "רשימת חבילות",
         icon: "-",
         route: "/orders/package-type",
       },

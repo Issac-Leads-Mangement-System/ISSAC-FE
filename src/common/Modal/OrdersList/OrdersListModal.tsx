@@ -14,9 +14,24 @@ export const OrderListModal = () => {
   const { order }: any = ordersListStore();
   const columnsBasicInfo: GridColDef<(typeof order)[number]>[] = [
     {
+      field: "customer_id",
+      headerName: "תעודת זהות",
+      flex: 1,
+      minWidth: 170,
+      headerAlign: "center", align: "center",
+      renderCell: (params: any) => {
+        const { row } = params;
+        return (
+          <Typography>{row.order_customer_info.customer_id}</Typography>
+        );
+      },
+    },
+    {
       field: "customer_full_name",
-      headerName: "Customer name",
-      width: 350,
+      headerName: "שם מלא",
+      flex: 1,
+      minWidth: 170,
+      headerAlign: "center", align: "center",
       renderCell: (params: any) => {
         const { row } = params;
         return (
@@ -25,9 +40,77 @@ export const OrderListModal = () => {
       },
     },
     {
+      field: "customer_phone",
+      headerName: "נייד",
+      flex: 1,
+      minWidth: 170,
+      headerAlign: "center", align: "center",
+      renderCell: (params: any) => {
+        const { row } = params;
+        return (
+          <Typography>{row.order_customer_info.customer_phone}</Typography>
+        );
+      },
+    },
+    {
+      field: "customer_phone_2",
+      headerName: "נייד נוסף",
+      flex: 1,
+      minWidth: 170,
+      headerAlign: "center", align: "center",
+      renderCell: (params: any) => {
+        const { row } = params;
+        return (
+          <Typography>{row.order_customer_info.customer_phone_2}</Typography>
+        );
+      },
+    },
+    {
+      field: "customer_phone_home",
+      headerName: "טלפון נייח",
+      flex: 1,
+      minWidth: 170,
+      headerAlign: "center", align: "center",
+      renderCell: (params: any) => {
+        const { row } = params;
+        return (
+          <Typography>{row.order_customer_info.customer_phone_home}</Typography>
+        );
+      },
+    },
+    {
+      field: "customer_city",
+      headerName: "עיר",
+      flex: 1,
+      minWidth: 170,
+      headerAlign: "center", align: "center",
+      renderCell: (params: any) => {
+        const { row } = params;
+        return (
+          <Typography>{row.order_customer_info.customer_city}</Typography>
+        );
+      },
+    },
+    
+    {
+      field: "customer_street",
+      headerName: "רחוב",
+      flex: 1,
+      minWidth: 170,
+      headerAlign: "center", align: "center",
+      renderCell: (params: any) => {
+        const { row } = params;
+        return (
+          <Typography>{row.order_customer_info.customer_street}</Typography>
+        );
+      },
+    },
+    {
       field: "customer_home_number",
-      headerName: "Customer home number",
-      width: 350,
+      headerName: "בית",
+      flex: 1,
+      minWidth: 170,
+      headerAlign: "center", align: "center",
       renderCell: (params: any) => {
         const { row } = params;
         return (
@@ -38,57 +121,30 @@ export const OrderListModal = () => {
       },
     },
     {
-      field: "customer_phone",
-      headerName: "Customer phone",
-      width: 350,
+      field: "customer_apartment_number",
+      headerName: "דירה",
+      flex: 1,
+      minWidth: 170,
+      headerAlign: "center", align: "center",
       renderCell: (params: any) => {
         const { row } = params;
         return (
-          <Typography>{row.order_customer_info.customer_phone}</Typography>
-        );
-      },
-    },
-    {
-      field: "customer_phone_2",
-      headerName: "Customer phone 2",
-      width: 350,
-      renderCell: (params: any) => {
-        const { row } = params;
-        return (
-          <Typography>{row.order_customer_info.customer_phone_2}</Typography>
-        );
-      },
-    },
-    {
-      field: "customer_phone_home",
-      headerName: "Customer phone home",
-      width: 350,
-      renderCell: (params: any) => {
-        const { row } = params;
-        return (
-          <Typography>{row.order_customer_info.customer_phone_home}</Typography>
+          <Typography>
+            {row.order_customer_info.customer_apartment_number}
+          </Typography>
         );
       },
     },
 
-    {
-      field: "customer_street",
-      headerName: "Customer street",
-      width: 350,
-      renderCell: (params: any) => {
-        const { row } = params;
-        return (
-          <Typography>{row.order_customer_info.customer_street}</Typography>
-        );
-      },
-    },
   ];
 
   const columnsPayments: GridColDef<(typeof order)[number]>[] = [
     {
       field: "order_card_cvv",
       headerName: "CVV",
-      width: 350,
+            flex: 1,
+      minWidth: 170,
+      headerAlign: "center", align: "center",
       renderCell: (params: any) => {
         const { row } = params;
         return (
@@ -98,8 +154,10 @@ export const OrderListModal = () => {
     },
     {
       field: "order_card_expired_date",
-      headerName: "Customer home number",
-      width: 350,
+      headerName: "תוקף",
+            flex: 1,
+      minWidth: 170,
+      headerAlign: "center", align: "center",
       renderCell: (params: any) => {
         const { row } = params;
         return (
@@ -113,8 +171,10 @@ export const OrderListModal = () => {
     },
     {
       field: "order_card_number",
-      headerName: "Card number",
-      width: 350,
+      headerName: "מספר כרטיס",
+            flex: 1,
+      minWidth: 170,
+      headerAlign: "center", align: "center",
       renderCell: (params: any) => {
         const { row } = params;
         return (
@@ -129,8 +189,10 @@ export const OrderListModal = () => {
   const columnsPropertiesTV: GridColDef<(typeof order)[number]>[] = [
     {
       field: "order_package_name",
-      headerName: "Package name",
-      width: 350,
+      headerName: "חבילה",
+      flex: 1,
+      minWidth: 170,
+      headerAlign: "center", align: "center",
       renderCell: (params: any) => {
         const { row } = params;
         return (
@@ -140,8 +202,10 @@ export const OrderListModal = () => {
     },
     {
       field: "order_installation_payments",
-      headerName: "Installation payments",
-      width: 200,
+      headerName: "תשלומים להתקנה",
+      flex: 1,
+      minWidth: 170,
+      headerAlign: "center", align: "center",
       renderCell: (params: any) => {
         const { row } = params;
         return (
@@ -153,8 +217,10 @@ export const OrderListModal = () => {
     },
     {
       field: "order_installation_price",
-      headerName: "Installation price",
-      width: 200,
+      headerName: "מחיר התקנה",
+      flex: 1,
+      minWidth: 170,
+      headerAlign: "center", align: "center",
       renderCell: (params: any) => {
         const { row } = params;
         return (
@@ -166,8 +232,10 @@ export const OrderListModal = () => {
     },
     {
       field: "order_monthly_price",
-      headerName: "Monthly price",
-      width: 200,
+      headerName: "מחיר חודשי",
+      flex: 1,
+      minWidth: 170,
+      headerAlign: "center", align: "center",
       renderCell: (params: any) => {
         const { row } = params;
         return (
@@ -177,8 +245,10 @@ export const OrderListModal = () => {
     },
     {
       field: "orders_tv_properties_comment",
-      headerName: "Orders TV comment",
-      width: 350,
+      headerName: "הערות",
+      flex: 1,
+      minWidth: 300,
+      headerAlign: "center", align: "center",
       renderCell: (params: any) => {
         const { row } = params;
         return (
@@ -190,8 +260,10 @@ export const OrderListModal = () => {
     },
     {
       field: "tv_streamers",
-      headerName: "TV streamers",
-      width: 200,
+      headerName: "סטרימרים",
+      flex: 1,
+      minWidth: 170,
+      headerAlign: "center", align: "center",
       renderCell: (params: any) => {
         const { row } = params;
         return <Typography>{row.order_properties.tv_streamers}</Typography>;
@@ -199,8 +271,10 @@ export const OrderListModal = () => {
     },
     {
       field: "tv_users",
-      headerName: "TV users",
-      width: 200,
+      headerName: "משתמשים",
+      flex: 1,
+      minWidth: 170,
+      headerAlign: "center", align: "center",
       renderCell: (params: any) => {
         const { row } = params;
         return <Typography>{row.order_properties.tv_users}</Typography>;
@@ -208,8 +282,10 @@ export const OrderListModal = () => {
     },
     {
       field: "wifi_extenders",
-      headerName: "WIFI extenders",
-      width: 200,
+      headerName: "מגדילי טווח",
+      flex: 1,
+      minWidth: 170,
+      headerAlign: "center", align: "center",
       renderCell: (params: any) => {
         const { row } = params;
         return <Typography>{row.order_properties.wifi_extenders}</Typography>;
@@ -220,8 +296,10 @@ export const OrderListModal = () => {
   const columnsPropertiesMobile: GridColDef<(typeof order)[number]>[] = [
     {
       field: "order_package_name",
-      headerName: "Package name",
-      width: 350,
+      headerName: "חבילה",
+      flex: 1,
+      minWidth: 170,
+      headerAlign: "center", align: "center",
       renderCell: (params: any) => {
         const { row } = params;
         return (
@@ -231,20 +309,22 @@ export const OrderListModal = () => {
     },
     {
       field: "order_phone_numbers",
-      headerName: "Phone numbers",
-      width: 800,
+      headerName: "מספרי טלפון",
+      flex: 1,
+      minWidth: 800,
+      headerAlign: "center", align: "center",
       renderCell: (params: any) => {
         const { row } = params;
         return (
           <Typography>
-            {Array.isArray(row.order_properties.order_phone_numbers) ? row.order_properties.order_phone_numbers.join(", ") : ""}
+            {Array.isArray(row.order_properties.order_phone_numbers) ? row.order_properties.order_phone_numbers.join(" | ") : ""}
           </Typography>
         );
       },
     },
     {
       field: "orders_mobile_properties_comment",
-      headerName: "Mobile properties comment",
+      headerName: "הערות",
       width: 500,
       renderCell: (params: any) => {
         const { row } = params;
@@ -260,8 +340,10 @@ export const OrderListModal = () => {
   const columnsSchedule: GridColDef<(typeof order)[number]>[] = [
     {
       field: "order_supply_comment",
-      headerName: "Supply comment",
-      width: 350,
+      headerName: "הערות מיוחדות",
+            flex: 1,
+      minWidth: 170,
+      headerAlign: "center", align: "center",
       renderCell: (params: any) => {
         const { row } = params;
         return (
@@ -271,8 +353,10 @@ export const OrderListModal = () => {
     },
     {
       field: "order_supply_date",
-      headerName: "Supply date",
-      width: 350,
+      headerName: "תאריך התקנה",
+            flex: 1,
+      minWidth: 170,
+      headerAlign: "center", align: "center",
       renderCell: (params: any) => {
         const { row } = params;
         return (
@@ -284,8 +368,10 @@ export const OrderListModal = () => {
     },
     {
       field: "order_supply_time_range",
-      headerName: "Time range",
-      width: 350,
+      headerName: "שעת התקנה",
+            flex: 1,
+      minWidth: 170,
+      headerAlign: "center", align: "center",
       renderCell: (params: any) => {
         const { row } = params;
         return (
@@ -304,7 +390,7 @@ export const OrderListModal = () => {
             component="div"
             sx={{ fontWeight: "bold", mb: 2 }}
           >
-            Basic Info
+            מידע על הלקוח
           </Typography>
           <CustomDataGrid
             rows={[order]}
@@ -323,7 +409,7 @@ export const OrderListModal = () => {
             component="div"
             sx={{ fontWeight: "bold", mb: 2 }}
           >
-            Payments
+            פרטי תשלום
           </Typography>
           <CustomDataGrid
             rows={[order]}
@@ -342,7 +428,7 @@ export const OrderListModal = () => {
             component="div"
             sx={{ fontWeight: "bold", mb: 2 }}
           >
-            Properties
+            פרטי חבילה
           </Typography>
           <CustomDataGrid
             rows={[order]}
@@ -360,7 +446,7 @@ export const OrderListModal = () => {
             component="div"
             sx={{ fontWeight: "bold", mb: 2 }}
           >
-            Schedule
+            מועד התקנה
           </Typography>
           <CustomDataGrid
             rows={[order]}
