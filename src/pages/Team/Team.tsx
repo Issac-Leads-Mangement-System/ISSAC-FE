@@ -24,7 +24,7 @@ import teamsStore from "../../store/Teams/teams-store";
 import { ConfirmationModal } from "../../common/Modal/ConfirmationDialog/ConfirmationDialog";
 import { SearchInput } from "../../common/Input/SearchInput";
 import secondToolbarStore from "../../store/SecondToolbar/second-tollbar-store";
-import { addBtnStyle } from "../../common/utils";
+import { addBtnStyle, customTeam } from "../../common/utils";
 import { PageContainer } from "../../common/PageContainer/page-container";
 
 const Team = () => {
@@ -250,10 +250,11 @@ const Team = () => {
             setInitialFormValues(initialValues);
           }}
           title={modalTitle}
+          width="400px"
         >
           <GenericAddEditForm
             initialValues={initialFormValues}
-            validationSchema={validationTeamSchema}
+            validationSchema={customTeam}
             apiRequest={handleSubmitModal}
             hasSubmitButton={true}
             submitBtnName={submitBtnName}

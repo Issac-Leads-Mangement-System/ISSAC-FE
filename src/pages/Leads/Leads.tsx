@@ -28,7 +28,7 @@ import leadsTypesStore from "../../store/Leads/types-store";
 import leadsStatusesStore from "../../store/Leads/statuses-store";
 import Filters from "../../components/Filters/filters";
 import { FilterLeads } from "../../common/forms-filters/FilterLeads";
-import { addBtnStyle } from "../../common/utils";
+import { addBtnStyle, customLeads } from "../../common/utils";
 import { CustomDataGrid } from "../../common/CustomDataGrid/custom-data-grid";
 import { StyledMenu } from "../../common/CustomMenu/custom-menu";
 import { PageContainer } from "../../common/PageContainer/page-container";
@@ -438,10 +438,11 @@ const Leads = () => {
             setInitialFormValues(initialValues);
           }}
           title={modalTitle}
+          width="900px"
         >
           <GenericAddEditForm
             initialValues={initialFormValues}
-            validationSchema={validationLeadsSchema}
+            validationSchema={customLeads}
             apiRequest={handleSubmitModal}
             hasSubmitButton={true}
             submitBtnName={submitBtnName}

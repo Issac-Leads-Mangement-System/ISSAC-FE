@@ -23,7 +23,7 @@ import Filters from "../../components/Filters/filters";
 import leadsStatusesStore from "../../store/Leads/statuses-store";
 import { FilterLeadsStatuses } from "../../common/forms-filters/FilterLeadsStatuses";
 import { SearchInput } from "../../common/Input/SearchInput";
-import { addBtnStyle } from "../../common/utils";
+import { addBtnStyle, customLeadsStatus } from "../../common/utils";
 import { CustomDataGrid } from "../../common/CustomDataGrid/custom-data-grid";
 import { PageContainer } from "../../common/PageContainer/page-container";
 
@@ -253,10 +253,11 @@ const LeadsStatus = () => {
             setOpen(false);
           }}
           title={modalTitle}
+          width="400px"
         >
           <GenericAddEditForm
             initialValues={initialFormValues}
-            validationSchema={validationLeadsStatusSchema}
+            validationSchema={customLeadsStatus}
             apiRequest={handleSubmitModal}
             hasSubmitButton={true}
             submitBtnName={submitBtnName}
