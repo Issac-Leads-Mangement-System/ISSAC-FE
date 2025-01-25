@@ -350,3 +350,34 @@ export const customUsersValidation = (values: any) => {
 
   return errors;
 };
+
+export const customLeadsType = (values: any) => {
+  const errors: any = {};
+  if(!values.type_name) {
+    errors.type_name = "Please add type";
+  }
+  return errors;
+}
+
+export const customLeads = (values: any) => {
+  const errors: any = {};
+  // if(!)
+  return errors;
+}
+
+export const customLeadsStatus = (values: any) => {
+  const errors: any = {};
+  if(!values.status_name) {
+    errors.status_name = "Please add a status name"
+  }
+  return errors;
+}
+
+export const customTeam = (values: any) => {
+  const errors: any = {};
+  if(!values.team_name) {
+    errors.team_name = "Please add a team"
+  }
+
+  return errors;
+}

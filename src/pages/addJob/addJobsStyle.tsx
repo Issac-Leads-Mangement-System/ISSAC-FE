@@ -21,4 +21,9 @@ export const AddJobsStyle = () => css`
     left: calc(50% + 20px);
     right: calc(-50% + 20px);
   }
+
+  .MuiCardContent-root {
+    overflow: auto;
+    height: 500px
+  }
 `;

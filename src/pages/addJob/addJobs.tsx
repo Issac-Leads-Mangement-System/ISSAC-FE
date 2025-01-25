@@ -52,7 +52,11 @@ const AddJobs = ({ className }: any) => {
   }: any = jobsStore();
   const apiRef = useGridApiRef();
   const { showNotification }: any = useNotificationStore();
-  const steps = ["בחר סוג ליד לעבודה", "בחר ושייך לידים עבור העבודים", "אשר וצור עבודה"];
+  const steps = [
+    "בחר סוג ליד לעבודה",
+    "בחר ושייך לידים עבור העבודים",
+    "אשר וצור עבודה",
+  ];
   const [activeStep, setActiveStep] = useState(0);
   const handleNext = async (step: number) => {
     if (step === 0) {
@@ -201,15 +205,21 @@ const AddJobs = ({ className }: any) => {
   };
 
   const columns: any = [
-    { field: "first_name", headerName: "שם", flex: 1,
+    {
+      field: "first_name",
+      headerName: "שם",
+      flex: 1,
       minWidth: 200,
-      headerAlign: "center", align: "center", },
+      headerAlign: "center",
+      align: "center",
+    },
     {
       field: "value",
       headerName: "לידים",
       flex: 1,
       minWidth: 200,
-      headerAlign: "center", align: "center",
+      headerAlign: "center",
+      align: "center",
       renderCell: (params: any) => {
         if (!params.id) return null;
         return (
@@ -229,7 +239,8 @@ const AddJobs = ({ className }: any) => {
       type: "actions",
       flex: 1,
       minWidth: 200,
-      headerAlign: "center", align: "center",
+      headerAlign: "center",
+      align: "center",
       editable: false,
       renderHeader: (params: any) => <strong>{"פעולות "}</strong>,
       filterable: false,
@@ -267,7 +278,8 @@ const AddJobs = ({ className }: any) => {
           sx={{
             padding: "20px",
             backgroundColor: "#f9f9f9",
-            minHeight: "100vh",
+            // minHeight: "100vh",
+            height: "auto",
             display: "flex",
             flexDirection: "column",
             gap: "20px",
@@ -389,7 +401,7 @@ const AddJobs = ({ className }: any) => {
                               fontSize: "1rem",
                             }}
                           >
-                           {infoLeadsMessage} לידים פנויים! 
+                            {infoLeadsMessage} לידים פנויים!
                           </Typography>
                         </Box>
                       )}
@@ -404,7 +416,7 @@ const AddJobs = ({ className }: any) => {
                             paddingBottom: "8px",
                           }}
                         >
-                        הגדרות
+                          הגדרות
                         </InputLabel>
                         <Box>
                           <TextField
@@ -494,7 +506,7 @@ const AddJobs = ({ className }: any) => {
                       fontWeight="bold"
                       textAlign="center"
                     >
-                     שלב 2: בחר עובדים ושייך לידים עבור העבודה
+                      שלב 2: בחר עובדים ושייך לידים עבור העבודה
                     </Typography>
                   </Box>
                   <Box marginBottom="24px">
@@ -516,7 +528,7 @@ const AddJobs = ({ className }: any) => {
                       value={userSelected}
                       multiple
                       renderValue={(selected) =>
-                        ` ${selected.length}  עובדים נבחרו `
+                        ` ${selected.length} עובדים נבחרו `
                       }
                       onChange={(e) => changeUser(e)}
                       sx={{
@@ -568,13 +580,15 @@ const AddJobs = ({ className }: any) => {
                     </Typography>
                   </Box>
                   <Box
-                    dir = "ltr"
+                    dir="ltr"
                     sx={{
                       backgroundColor: "#fff",
                       borderRadius: "8px",
                       boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
                       padding: "10px",
-                      overflow: "hidden",
+                      overflow: "auto", // Adaug scroll
+                      maxHeight: "400px", // Scroll vertical
+                      maxWidth: "100%", // Scroll orizontal dacă e cazul
                     }}
                   >
                     <DataGrid
@@ -584,7 +598,7 @@ const AddJobs = ({ className }: any) => {
                           border: "none",
                         },
                         "& .MuiDataGrid-cell": {
-                          borderBottom: "1px solidrgb(90, 67, 67)",
+                          borderBottom: "1px solid rgb(90, 67, 67)",
                         },
                         "& .MuiDataGrid-columnHeaders": {
                           backgroundColor: "#f5f5f5",
@@ -600,7 +614,7 @@ const AddJobs = ({ className }: any) => {
                       }}
                       columns={[...columns].reverse() || []}
                       rows={job.leads_per_employee || []}
-                      disableColumnFilter // Previne focusul pe coloane
+                      disableColumnFilter
                     />
                   </Box>
                 </CardContent>
@@ -625,7 +639,7 @@ const AddJobs = ({ className }: any) => {
             {activeStep === 2 && (
               <Card sx={{ padding: 3, boxShadow: 3 }}>
                 <Typography variant="h6" fontWeight="bold">
-                שלב 3: אשר וצור עבודה
+                  שלב 3: אשר וצור עבודה
                 </Typography>
                 <Divider sx={{ marginY: 2 }} />
                 <Box>

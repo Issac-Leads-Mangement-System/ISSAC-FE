@@ -21,7 +21,7 @@ import {
   initialValues,
   validationLeadsTypesSchema,
 } from "../../forms/leadsTypeModalSchema";
-import { addBtnStyle } from "../../common/utils";
+import { addBtnStyle, customLeadsType } from "../../common/utils";
 import { CustomDataGrid } from "../../common/CustomDataGrid/custom-data-grid";
 import { PageContainer } from "../../common/PageContainer/page-container";
 
@@ -103,6 +103,7 @@ const LeadsTypes = () => {
   }, []);
 
   const handleSubmitModal = async (values: any) => {
+    console.log('zzz value', values)
     if (id) {
       updateType(values);
     } else {
@@ -231,11 +232,12 @@ const LeadsTypes = () => {
           onClose={() => {
             setOpen(false);
           }}
+          width="400px"
           title={modalTitle}
         >
           <GenericAddEditForm
             initialValues={initialFormValues}
-            validationSchema={validationLeadsTypesSchema}
+            validationSchema={customLeadsType}
             apiRequest={handleSubmitModal}
             hasSubmitButton={true}
             submitBtnName={submitBtnName}

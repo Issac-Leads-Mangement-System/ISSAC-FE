@@ -239,6 +239,7 @@ const PackageType = () => {
           isOpen={isAddOpenModal}
           onClose={onCloseFct}
           title="Package type"
+          width="400px"
         >
           <PackageTypeModal savePackage={savePackage} />
           {/* <JobStatsModal updateStatus={updateStatus}/> */}
