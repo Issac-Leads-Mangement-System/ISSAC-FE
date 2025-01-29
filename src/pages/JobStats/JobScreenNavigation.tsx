@@ -404,7 +404,7 @@ const ScreenNavigationWithGrid = ({
                     handleSubmitModal(values, orderType)
                   }
                   hasSubmitButton={true}
-                  submitBtnName={"Save"}
+                  submitBtnName={"שמור"}
                   form={(formProps: any) => (
                     <JobStatsCreateOrderModal
                       formProps={formProps}
@@ -428,8 +428,8 @@ const ScreenNavigationWithGrid = ({
           onClose={handleCloseConfirmationModal}
           onConfirm={handleSaveConfirmationModal}
           message={isConfirmModal.title || ""}
-          btnName="Yes"
-          btnCancel="No"
+          btnName="כן"
+          btnCancel="לא"
         />
       )}
     </Box>

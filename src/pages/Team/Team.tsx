@@ -51,8 +51,8 @@ const Team = () => {
   }: any = teamsStore();
   const { setSecontToolbarMessage, setSecontToolbarPath }: any =
     secondToolbarStore();
-  const modalTitle = id ? "Edit team" : "Add New Team";
-  const submitBtnName = id ? "Update" : "Add Team";
+  const modalTitle = id ? "עדכן צוות" : "הוסף צוות חדש";
+  const submitBtnName = id ? "עדכן" : "הוסף צוות";
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleDeleteClick = (id: number) => {

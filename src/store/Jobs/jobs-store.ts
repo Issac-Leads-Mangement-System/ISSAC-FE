@@ -201,14 +201,14 @@ const jobsStore = create<IJobsState>((set) => ({
         }
       );
       showNotification({
-        message: "Job in progress successfully created!",
+        message: "עבודה חדשה נוצרה בהצלחה",
         status: response.statusText,
         severity: response.status,
       });
       set({ isLoading: false });
     } catch (error: any) {
       showNotification({
-        message: "Error to create a job",
+        message: "שגיאה ביצרת העבודה",
         status: error.status,
         severity: error.severity,
       });
@@ -239,7 +239,7 @@ const jobsStore = create<IJobsState>((set) => ({
           }));
         }
         showNotification({
-          message: "Job successfully created!",
+          message: "עבודה חדשה נוצרה בהצלחה",
           status: response.statusText,
           severity: response.status,
         });
@@ -249,13 +249,13 @@ const jobsStore = create<IJobsState>((set) => ({
     } catch (error: any) {
       if(error.response.data.detail.includes('duplicate key value')) {
         showNotification({
-          message: "Error for create in progress job! The job name already exists!",
+          message: "שגיאה בעת יצירת העבודה: שם העבודה כבר בשימוש אנא בחר שם אחר",
           status: error.status,
           severity: error.severity,
         });
       } else {
         showNotification({
-          message: "Error for create in progress job",
+          message: "שגיאה ביצירת העבודה",
           status: error.status,
           severity: error.severity,
         });
@@ -272,13 +272,13 @@ const jobsStore = create<IJobsState>((set) => ({
         `${process.env.REACT_APP_BASE_URL}/jobs/${id}?job_status=close`
       );
       showNotification({
-        message: "Job closed successfully!",
+        message: "העבודה נסגרה בהצלחה",
         status: response.statusText,
         severity: response.status,
       });
     } catch (error: any) {
       showNotification({
-        message: "Error to update the status job!",
+        message: "שגיאה בסגירת העבודה",
         status: error.status,
         severity: error.severity,
       });

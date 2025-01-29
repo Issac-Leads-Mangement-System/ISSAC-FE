@@ -57,5 +57,4 @@ export const CustomDataGrid: any = styledMaterial(DataGrid)(() => ({
   "& .MuiToolbar-root": {
     direction: "ltr",
   }
-
 }));

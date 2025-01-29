@@ -367,7 +367,7 @@ const OrdersList = ({ className }: any) => {
       </div>
 
       {isEdit && (
-        <CustomModal isOpen={isEdit} onClose={onCloseFct} title="Edit order">
+        <CustomModal dir="rtl" isOpen={isEdit} onClose={onCloseFct} title="ערוך פרטי הזמנה">
           <GenericAddEditForm
             initialValues={initialFormValues}
             validationSchema={customValidation}
@@ -391,7 +391,7 @@ const OrdersList = ({ className }: any) => {
           onClose={handleCloseConfirmationModal}
           onConfirm={handleSubmitConfirmationModal}
           message="האם אתה בטוח שברצונך לסגור הזמנה זו?"
-          btnName="Yes"
+          btnName="כן"
         />
       )}
 

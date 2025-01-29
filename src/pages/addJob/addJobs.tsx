@@ -66,19 +66,19 @@ const AddJobs = ({ className }: any) => {
       );
       if (job.free_leads === 0) {
         showNotification({
-          message: "An error occurred: No leads available!",
+          message: "שגיאה: אין לידים זמינים",
         });
         return;
       }
       if (!job.job_name) {
         showNotification({
-          message: "An error occurred: Please add job name!",
+          message: "שגיאה: אנא הוסף שם לעבודה",
         });
         return;
       }
       if (total !== job.free_leads) {
         showNotification({
-          message: `An error occurred: The total number of leads exceeds the configured limit. Please review the configuration settings.`,
+          message: `שגיאה: מספר הלידים שדרשת גבוה ממספר הלידים הזמינים`,
         });
         return;
       } else {
@@ -97,7 +97,7 @@ const AddJobs = ({ className }: any) => {
       );
       if (total !== job.free_leads) {
         showNotification({
-          message: `An error occurred: The total number of leads exceeds the configured limit. Please review the configuration settings.`,
+          message: `שגיאה: מספר הלידים שדרשת גבוה ממספר הלידים הזמינים`,
         });
         return;
       } else {
@@ -177,7 +177,7 @@ const AddJobs = ({ className }: any) => {
         setJob(parseInt(numericValue), "free_leads");
       } else {
         showNotification({
-          message: `Value can't be bigger than ${infoLeadsMessage}!`,
+          message: `מספר הלידים לא יכול להיות יותר מ${infoLeadsMessage}`,
         });
       }
     }

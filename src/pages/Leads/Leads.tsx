@@ -69,8 +69,8 @@ const Leads = () => {
     }
   );
 
-  const modalTitle = id ? "Edit Leads" : "Add New Lead";
-  const submitBtnName = id ? "Update" : "Add Lead";
+  const modalTitle = id ? "ערוך ליד" : "הוסף ליד חדש";
+  const submitBtnName = id ? "עדכן" : "הוסף ליד";
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -392,6 +392,7 @@ const Leads = () => {
           </Box>
 
           {leads?.length > 0 && (
+            <div dir="rtl">
             <CustomDataGrid
               rows={leads}
               columns={[...columns]}
@@ -425,6 +426,7 @@ const Leads = () => {
                 overflow: "auto",
               }}
             />
+            </div>
           )}
         </CardContent>
       </Card>
@@ -477,12 +479,13 @@ const Leads = () => {
 
       {isHistoryOpen && (
         <CustomModal
+          dir="rtl"
           isOpen={isHistoryOpen}
           onClose={() => {
             setIsHistoryOpen(false);
             setInitialFormValues(initialValues);
           }}
-          title={"History"}
+          title={"היסטוריה"}
         >
           <LeadsHistory id={idHistory} />
         </CustomModal>

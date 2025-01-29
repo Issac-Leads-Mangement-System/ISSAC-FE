@@ -79,7 +79,7 @@ export const LeadsForm = ({ formProps, typeOfAdd, id }: any) => {
     }
 
     if (uploadedFile && file.name === uploadedFile.name) {
-      alert("This file has already been added!");
+      alert("הקובץ כבר נוסף!");
       return;
     }
 
@@ -89,7 +89,7 @@ export const LeadsForm = ({ formProps, typeOfAdd, id }: any) => {
       // Update Formik's values using the helper
       formProps.setFieldValue("file", file);
     } else {
-      alert("Please upload a valid CSV file!");
+      alert("אנה העלה קובץ CSV בלבד!");
     }
   };
 
@@ -98,7 +98,7 @@ export const LeadsForm = ({ formProps, typeOfAdd, id }: any) => {
     if (!file) return;
 
     if (uploadedFile && file.name === uploadedFile.name) {
-      alert("This file has already been added!");
+      alert("קובץ זה כבר נוסף!");
       return;
     }
 
@@ -147,6 +147,7 @@ export const LeadsForm = ({ formProps, typeOfAdd, id }: any) => {
               sx={dragOver ? dropZoneActiveStyle : dropZoneStyle}
             >
               <Typography>Drag a file here or</Typography>
+              <div dir="ltr">
               <Button
                 component="label"
                 role={undefined}
@@ -165,6 +166,7 @@ export const LeadsForm = ({ formProps, typeOfAdd, id }: any) => {
                   onChange={handleFileInputChange}
                 />
               </Button>
+              </div>
             </Box>
           )}
           {uploadedFile && (

@@ -104,7 +104,7 @@ const teamsStore = create<TeamsState>((set) => ({
 
       if (response.status === 200) {
         showNotification({
-          message: "Team successfully added!",
+          message: "צוות חדש נוצר בהצלחה",
           status: response.statusText,
           severity: response.status,
         });
@@ -132,7 +132,7 @@ const teamsStore = create<TeamsState>((set) => ({
 
       if (response.status === 200) {
         showNotification({
-          message: "Team successfully edited!",
+          message: "צוות עודכן בהצלחה",
           status: response.statusText,
           severity: response.status,
         });
@@ -159,7 +159,7 @@ const teamsStore = create<TeamsState>((set) => ({
 
       if (response.status === 200) {
         showNotification({
-          message: "Team successfully deleted!",
+          message: "צוות נמחק בהצלחה",
           status: response.statusText,
           severity: response.status,
         });

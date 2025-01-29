@@ -395,7 +395,7 @@ const Jobs = ({ className }: any) => {
           onClose={handleCloseModal}
           onConfirm={handleConfirmDelete}
           message="האם אתה בטוח שברצונך לסגור את העבודה הזו? ודא שאין לך לידים פתוחים לפני כן"
-          btnName="Save"
+          btnName="שמור"
         />
       )}
 

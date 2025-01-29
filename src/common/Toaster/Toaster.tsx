@@ -13,6 +13,7 @@ export const Toaster = () => {
       onClose={handleClose}
       anchorOrigin={{ vertical: "top", horizontal: "right" }}
     >
+      <div dir="ltr">
       <Alert
         onClose={handleClose}
         severity={getSeverityLevel(severity)}
@@ -20,6 +21,7 @@ export const Toaster = () => {
       >
         {message}
       </Alert>
+      </div>
     </Snackbar>
   );
 };

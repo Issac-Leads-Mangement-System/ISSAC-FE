@@ -42,27 +42,38 @@ export const LeadsHistory = ({ id }: any) => {
 
   // Definirea coloanelor
   const columns: GridColDef[] = [
-    { field: "lead_message", headerName: "Lead Message", width: 250 },
+    { field: "lead_message", headerName: "הערה", flex: 1,
+      minWidth: 400,
+      headerAlign: "center", align: "center", },
     {
       field: "status_name",
-      headerName: "Status Name",
-      width: 250,
+      headerName: "סטטוס",
+      flex: 1,
+      minWidth: 200,
+      headerAlign: "center", align: "center",
       valueGetter: (_, row: any) => `${row.lead_status?.status_name || ""}`,
     },
     {
       field: "type_name",
-      headerName: "Type Name",
-      width: 250,
+      headerName: "סוג",
+      flex: 1,
+      minWidth: 200,
+      headerAlign: "center", align: "center",
       valueGetter: (_, row: any) => `${row.lead_type?.type_name || ""}`,
     },
-    { field: "created_date", headerName: "Created Date", width: 350 },
-    { field: "updated_date", headerName: "Updated Date", width: 350 },
+    { field: "created_date", headerName: "תאריך יצירה",flex: 1,
+      minWidth: 200,
+      headerAlign: "center", align: "center",},
+    { field: "updated_date", headerName: "עודכן לאחרונה", flex: 1,
+      minWidth: 200,
+      headerAlign: "center", align: "center",},
   ];
 
 
   return (
     <>
       {rowsWithUniqueIds.length > 0 && (
+        <div dir="rtl">
         <CustomDataGrid
           rows={paginatedRows} // Rândurile care se vor afișa pe pagina curentă
           columns={columns}
@@ -81,6 +92,7 @@ export const LeadsHistory = ({ id }: any) => {
           disableVirtualization
           paginationMode="server"
         />
+        </div>
       )}
     </>
   );

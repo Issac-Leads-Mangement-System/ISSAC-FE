@@ -83,7 +83,7 @@ const leadsTypesStore = create<LeadsTypesState>((set) => ({
       );
       if (response.status === 200) {
         showNotification({
-          message: "Type successfully added!",
+          message: "סוג ליד חדש נוסף בהצלחה",
           status: response.statusText,
           severity: response.status,
         });
@@ -109,7 +109,7 @@ const leadsTypesStore = create<LeadsTypesState>((set) => ({
       );
       if (response.status === 200) {
         showNotification({
-          message: "Type successfully edited!",
+          message: "סוג ליד עודכן בהצלחה",
           status: response.statusText,
           severity: response.status,
         });
@@ -135,7 +135,7 @@ const leadsTypesStore = create<LeadsTypesState>((set) => ({
       );
       if (response.status === 200) {
         showNotification({
-          message: "Type successfully deleted!",
+          message: "סוג ליד נמחק בהצלחה",
           status: response.statusText,
           severity: response.status,
         });

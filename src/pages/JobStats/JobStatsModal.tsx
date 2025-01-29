@@ -53,7 +53,7 @@ export const JobStatsModal = ({updateStatus}: any) => {
           fontWeight: 700,
         }}
       >
-        Save
+        שמור
       </Button>
     </>
   );

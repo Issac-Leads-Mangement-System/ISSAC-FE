@@ -106,7 +106,7 @@ const usersStore: any = create<AuthState>((set) => ({
 
       if (response.status === 200) {
         showNotification({
-          message: "User successfully added!",
+          message: "משתשמש חדש נוסף בהצלחה",
           status: response.statusText,
           severity: response.status,
         });
@@ -132,7 +132,7 @@ const usersStore: any = create<AuthState>((set) => ({
       );
       if (response.status === 200) {
         showNotification({
-          message: "User successfully edited!",
+          message: "פרטי משתמש עודכנו בהצלחה",
           status: response.statusText,
           severity: response.status,
         });
@@ -177,7 +177,7 @@ const usersStore: any = create<AuthState>((set) => ({
       );
       if (response.status === 200) {
         showNotification({
-          message: "User successfully deleted!",
+          message: "משתשמש נמחק בהצלחה",
           status: response.statusText,
           severity: response.status,
         });

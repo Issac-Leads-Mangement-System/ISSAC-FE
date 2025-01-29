@@ -275,7 +275,7 @@ const JobStats = ({className}: any) => {
     {
       field: "lead_id",
       headerName: "ליד ",
-      width: 200,
+      minWidth: 180,
       headerAlign: "center",
       align: "center",
     },
@@ -307,7 +307,7 @@ const JobStats = ({className}: any) => {
       field: "mobile_deal_success",
       headerName: "עסקת מובייל",
       flex: 1,
-      minWidth: 200,
+      minWidth: 150,
       headerAlign: "center",
       align: "center",
       renderCell: (params: any) => {
@@ -322,7 +322,7 @@ const JobStats = ({className}: any) => {
     {
       field: "created_time",
       headerName: "נוצר ",
-      minWidth: 250,
+      minWidth: 200,
       headerAlign: "center",
       align: "center",
       flex: 1,
@@ -330,7 +330,7 @@ const JobStats = ({className}: any) => {
     {
       field: "updated_time",
       headerName: "עודכן ",
-      minWidth: 250,
+      minWidth: 200,
       headerAlign: "center",
       align: "center",
       flex: 1,
@@ -339,11 +339,11 @@ const JobStats = ({className}: any) => {
     {
       field: "actions",
       type: "actions",
-      minWidth: 200,
+      minWidth: 250,
       flex: 1,
+      headerAlign: "center", align: "center",
       editable: false,
-      headerName: "פעולות",
-      // renderHeader: (params: any) => <strong>{"פעולות"}</strong>,
+      renderHeader: (params: any) => <strong>{"פעולות"}</strong>,
       filterable: false,
       cellClassName: "pinned-column",
       headerClassName: "MuiDataGrid-columnHeader--pinned",
@@ -562,7 +562,7 @@ const JobStats = ({className}: any) => {
                         </Box>
                       </Box>
 
-                      <Box sx={{ overflow: "auto" }}>
+                      <Box >
                           <CustomDataGrid
                             rows={jobLeadsById}
                             rowCount={counter_job_leads}
@@ -575,6 +575,8 @@ const JobStats = ({className}: any) => {
                               },
                             }}
                             pageSizeOptions={[5, 10, 25, 50]}
+                            disableRowSelectionOnClick
+                            disableVirtualization
                             onPaginationModelChange={(model: any) => {
                               //   handleChangeRowsPerPage(model);
                               //   handleChangePage(model);
@@ -585,8 +587,6 @@ const JobStats = ({className}: any) => {
                                 handleChangePage(model);
                               }
                             }}
-                            // rowCount={count}
-
                             paginationMode="server"
                             pagination
                             loading={isLoading}
@@ -617,9 +617,10 @@ const JobStats = ({className}: any) => {
         )}
         {isOpen && (
           <CustomModal
+            dir="rtl"
             isOpen={isOpen}
             onClose={onCloseFct}
-            title="Change status lead job"
+            title="עדכן סטטוס עבור הליד"
             width="30%"
           >
             <JobStatsModal updateStatus={updateStatus} />
@@ -663,7 +664,7 @@ const JobStats = ({className}: any) => {
             onClose={handleCloseConfirmationModal}
             onConfirm={handleSaveConfirmationModal}
             message="האם אתה בטוח ברצונך למחוק את הליד?"
-            btnName="Save"
+            btnName="שמור"
           />
         )}
 

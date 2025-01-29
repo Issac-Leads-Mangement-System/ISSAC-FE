@@ -137,14 +137,14 @@ const jobStatsStore = create<IJobsState>((set) => ({
         `${process.env.REACT_APP_BASE_URL}/jobs/${idJob}/leads/${idLeadJob}/delete`
       );
       showNotification({
-        message: "Job lead removed successfully!",
+        message: "ליד הוסר מהעבודה בהצלחה",
         status: response.statusText,
         severity: response.status,
       });
       set({ isLoading: false });
     } catch (error: any) {
       showNotification({
-        message: "Error to delete lead job!",
+        message: "שגיאה בהסרת הליד",
         status: error.status,
         severity: error.severity,
       });
@@ -161,7 +161,7 @@ const jobStatsStore = create<IJobsState>((set) => ({
         `${process.env.REACT_APP_BASE_URL}/jobs/${idJob}/leads/${idLeadJob}?lead_status_id=${new_status}`
       );
       showNotification({
-        message: "Job lead updated successfully!",
+        message: "ליד עודכן בעבודה בהצלחה",
         status: response.statusText,
         severity: response.status,
       });
@@ -169,7 +169,7 @@ const jobStatsStore = create<IJobsState>((set) => ({
       return response.data;
     } catch (error: any) {
       showNotification({
-        message: "Error to update lead job!",
+        message: "שגיאה בעדכון הליד",
         status: error.status,
         severity: error.severity,
       });

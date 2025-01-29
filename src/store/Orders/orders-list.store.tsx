@@ -143,7 +143,7 @@ const ordersListStore = create<IOrdersListState>((set) => ({
       );
       if (response.status === 200) {
         showNotification({
-          message: "Update order successfully!",
+          message: "הזמנה עודכנה בהצלחה",
           status: response.statusText,
           severity: response.status,
         });
@@ -169,7 +169,7 @@ const ordersListStore = create<IOrdersListState>((set) => ({
 
       if (response.status === 200) {
         showNotification({
-          message: "Close order successfully!",
+          message: "הזמנה נסגרה בהצלחה",
           status: response.statusText,
           severity: response.status,
         });

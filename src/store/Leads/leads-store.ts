@@ -99,7 +99,7 @@ const leadsStore = create<ILeadsState>((set) => ({
 
         if (response.status === 200) {
           showNotification({
-            message: "Leads successfully uploaded!",
+            message: "לידים הועלו בהצלחה למערכת",
             status: response.statusText,
             severity: response.status,
           });
@@ -117,7 +117,7 @@ const leadsStore = create<ILeadsState>((set) => ({
 
         if (response.status === 200) {
           showNotification({
-            message: "Lead successfully added!",
+            message: "ליד נוסף בהצלחה",
             status: response.statusText,
             severity: response.status,
           });
@@ -175,7 +175,7 @@ const leadsStore = create<ILeadsState>((set) => ({
       );
       if (response.status === 200) {
         showNotification({
-          message: "Lead successfully edited!",
+          message: "ליד עודכן בהצלחה",
           status: response.statusText,
           severity: response.status,
         });
@@ -203,7 +203,7 @@ const leadsStore = create<ILeadsState>((set) => ({
       );
       if (response.status === 200) {
         showNotification({
-          message: "Lead successfully deleted!",
+          message: "ליד נמחק בהצלחה",
           status: response.statusText,
           severity: response.status,
         });

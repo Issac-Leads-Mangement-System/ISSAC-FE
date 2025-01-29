@@ -75,7 +75,7 @@ const leadsStatusesStore = create<LeadsTypesState>((set) => ({
       }
       if (response.status === 200) {
         showNotification({
-          message: "Leads status successfully added!",
+          message: "סטטוס נוסף בהצלחה",
           status: response.statusText,
           severity: response.status,
         });
@@ -102,7 +102,7 @@ const leadsStatusesStore = create<LeadsTypesState>((set) => ({
       );
       if (response.status === 200) {
         showNotification({
-          message: "Leads status successfully deleted!",
+          message: "סטטוס נמחק בהצלחה",
           status: response.statusText,
           severity: response.status,
         });
@@ -151,7 +151,7 @@ const leadsStatusesStore = create<LeadsTypesState>((set) => ({
       );
       if (response.status === 200) {
         showNotification({
-          message: "Leads status successfully edited!",
+          message: "סטטוס עודכן בהצלחה",
           status: response.statusText,
           severity: response.status,
         });

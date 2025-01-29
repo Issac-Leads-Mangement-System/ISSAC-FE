@@ -99,7 +99,7 @@ const ordersStore = create<IOrdarsState>((set) => ({
       );
       if (response.status === 200) {
         showNotification({
-          message: "Create order successfully!",
+          message: "הזמנה הוקמה בהצלחה",
           status: response.statusText,
           severity: response.status,
         });
@@ -155,7 +155,7 @@ const ordersStore = create<IOrdarsState>((set) => ({
       );
       if (response.status === 200) {
         showNotification({
-          message: "Update order successfully!",
+          message: "סוג הזמנה עודכן בהצלחה",
           status: response.statusText,
           severity: response.status,
         });
@@ -181,7 +181,7 @@ const ordersStore = create<IOrdarsState>((set) => ({
 
       if (response.status === 200) {
         showNotification({
-          message: "Delete order successfully!",
+          message: "סוג הזמנה נמחק בהצלחה",
           status: response.statusText,
           severity: response.status,
         });

@@ -236,9 +236,10 @@ const PackageType = () => {
 
       {isAddOpenModal && (
         <CustomModal
+          dir="rtl"
           isOpen={isAddOpenModal}
           onClose={onCloseFct}
-          title="Package type"
+          title="הוסף סוג חבילה"
           width="400px"
         >
           <PackageTypeModal savePackage={savePackage} />
@@ -251,8 +252,8 @@ const PackageType = () => {
           open={isConfirmationOpen}
           onClose={handleCloseConfirmationModal}
           onConfirm={handleSubmitConfirmationModal}
-          message="Are you sure you want to delete this package?"
-          btnName="Yes"
+          message="האם אתה בטוח שברצונך למחוק סוג חבילה זה?"
+          btnName="כן"
         />
       )}
 

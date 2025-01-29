@@ -22,7 +22,7 @@ export const PackageTypeModal = ({savePackage}: any) => {
           marginBottom: "5px",
         }}
       >
-        Order type
+        סוג חבילה
       </InputLabel>
       <Select
         labelId="type"
@@ -52,7 +52,7 @@ export const PackageTypeModal = ({savePackage}: any) => {
           marginBottom: "8px",
         }}
       >
-        Packange name
+        שם חבילה
       </InputLabel>
       <TextField
         value={order.package_name}
@@ -77,9 +77,12 @@ export const PackageTypeModal = ({savePackage}: any) => {
           minWidth: "130px",
           fontSize: "12px",
           fontWeight: 700,
+          display: "block",
+          mr: "auto",
+          ml: "auto",
         }}
       >
-        Save
+        שמור
       </Button>
     </>
   );

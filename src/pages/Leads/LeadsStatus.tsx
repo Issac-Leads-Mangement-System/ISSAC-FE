@@ -55,8 +55,8 @@ const LeadsStatus = () => {
     }
   );
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const modalTitle = id ? "Edit Status" : "Add New Status";
-  const submitBtnName = id ? "Update" : "Add Status";
+  const modalTitle = id ? "ערוך סטטוס" : "הוסף סטטוס חדש";
+  const submitBtnName = id ? "עדכן" : "הוסף סטטוס";
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleDeleteClick = async (id: number) => {
@@ -225,7 +225,6 @@ const LeadsStatus = () => {
             </Button>
             </Box>
           </Box>
-          <div dir="ltr">
           <CustomDataGrid
             rows={statuses}
             columns={[...columns]}
@@ -241,7 +240,6 @@ const LeadsStatus = () => {
             disableVirtualization
             loading={isLoading}
           />
-          </div>   
         </CardContent>
       </Card>
 

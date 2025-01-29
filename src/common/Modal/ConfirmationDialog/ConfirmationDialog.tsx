@@ -51,7 +51,7 @@ export const ConfirmationModal = ({
             minWidth: "130px",
           }}
         >
-          {btnCancel || 'Cancel'}
+          {btnCancel || 'בטל'}
         </Button>
         <Button
           onClick={onConfirm}

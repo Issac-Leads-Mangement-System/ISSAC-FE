@@ -50,8 +50,8 @@ const LeadsTypes = () => {
       ...initialValues,
     });
 
-  const modalTitle = id ? "Edit Type" : "Add New Type";
-  const submitBtnName = id ? "Update" : "Add Type";
+  const modalTitle = id ? "ערוך סוג" : "הוסף סוג חדש";
+  const submitBtnName = id ? "עדכן" : "הוסף סוג";
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -205,7 +205,6 @@ const LeadsTypes = () => {
               </Button>
             </Box>
           </Box>
-          <div dir="ltr">
           <CustomDataGrid
             rows={types}
             columns={[...columns]}
@@ -221,7 +220,6 @@ const LeadsTypes = () => {
             disableRowSelectionOnClick
             disableVirtualization
           />
-        </div>
         </CardContent>
       </Card>
 
