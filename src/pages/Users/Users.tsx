@@ -83,7 +83,7 @@ export const Users = () => {
       await getUserById(id);
 
       // Safely extract user details from the store
-      const user = usersStore.getState().user;
+      const user = usersStore.getState().selectedUser;
       if (!user) {
         return;
       }
@@ -158,30 +158,61 @@ export const Users = () => {
   };
 
   const columns: GridColDef<(typeof users)[number]>[] = [
-    { field: "first_name", headerName: "שם פרטי", flex: 1,
+    {
+      field: "first_name",
+      headerName: "שם פרטי",
+      flex: 1,
       minWidth: 200,
-      headerAlign: "center", align: "center",},
-    { field: "last_name", headerName: "שם משפחה",  flex: 1,
+      headerAlign: "center",
+      align: "center",
+    },
+    {
+      field: "last_name",
+      headerName: "שם משפחה",
+      flex: 1,
       minWidth: 200,
-      headerAlign: "center", align: "center", },
-    { field: "email", headerName: "אימייל",  flex: 1,
+      headerAlign: "center",
+      align: "center",
+    },
+    {
+      field: "email",
+      headerName: "אימייל",
+      flex: 1,
       minWidth: 200,
-      headerAlign: "center", align: "center", },
-    { field: "phone_number", headerName: "טלפון",  flex: 1,
+      headerAlign: "center",
+      align: "center",
+    },
+    {
+      field: "phone_number",
+      headerName: "טלפון",
+      flex: 1,
       minWidth: 200,
-      headerAlign: "center", align: "center", },
-    { field: "user_role", headerName: "הרשאות",  flex: 1,
+      headerAlign: "center",
+      align: "center",
+    },
+    {
+      field: "user_role",
+      headerName: "הרשאות",
+      flex: 1,
       minWidth: 200,
-      headerAlign: "center", align: "center", },
-    { field: "team_name", headerName: "שם צוות",  flex: 1,
+      headerAlign: "center",
+      align: "center",
+    },
+    {
+      field: "team_name",
+      headerName: "שם צוות",
+      flex: 1,
       minWidth: 200,
-      headerAlign: "center", align: "center", },
+      headerAlign: "center",
+      align: "center",
+    },
     {
       field: "user_status",
       headerName: "סטטוס",
       flex: 1,
       minWidth: 200,
-      headerAlign: "center", align: "center",
+      headerAlign: "center",
+      align: "center",
       renderCell: (params: any) => {
         const { row } = params;
         return [
@@ -201,7 +232,8 @@ export const Users = () => {
       type: "actions",
       flex: 1,
       minWidth: 200,
-      headerAlign: "center", align: "center",
+      headerAlign: "center",
+      align: "center",
       editable: false,
       renderHeader: (params: any) => <strong>{"פעולות"}</strong>,
       filterable: false,
