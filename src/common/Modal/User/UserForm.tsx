@@ -8,10 +8,14 @@ import {
 
 import { generateFormikInputFieldProps } from "../../../forms/formikHelper";
 import Input from "../../Input/Input";
-import { INPUTS, ROLE } from "../../constants";
+import { INPUTS, ROLE, ROLE_MANAGER } from "../../constants";
 import { ErrorMessage } from "formik";
+import { useEffect } from "react";
+import usersStore from "../../../store/Users/users-store";
 
 export const UserForm = ({ formProps, userTeamList }: any) => {
+  const { user }: any = usersStore();
+ 
   return (
     <Grid2 container spacing={2}>
       <Grid2 size={6}>
@@ -96,7 +100,7 @@ export const UserForm = ({ formProps, userTeamList }: any) => {
             label="Role"
             {...generateFormikInputFieldProps(formProps, INPUTS.ROLE.NAME)}
           >
-            {ROLE?.map((role: any) => (
+            {user.user_role === 'manager' ? ROLE_MANAGER : ROLE?.map((role: any) => (
               <MenuItem key={crypto.randomUUID()} value={role}>
                 {role}
               </MenuItem>
