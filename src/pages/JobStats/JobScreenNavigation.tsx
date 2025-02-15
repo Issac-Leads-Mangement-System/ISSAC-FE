@@ -50,6 +50,7 @@ const ScreenNavigationWithGrid = ({
   const [jobDetailsById, setJobDetailsById]: any = useState();
   const [changeJobIdStatus, setChangeJobIdStatus]: any = useState();
   const [step, setStep]: any = useState(1);
+  const { getJobLeadsById }: any = jobStatsStore();
 
   useEffect(() => {
     if (!leadJobId) {
@@ -77,7 +78,7 @@ const ScreenNavigationWithGrid = ({
     };
   }, []);
 
-  const handleNext = () => {
+  const handleNext = async () => {
     const findIndexCurrentJob = jobLeadsById.findIndex(
       (job: any) => job.lead_id === jobDetailsById.lead_id
     );
@@ -85,6 +86,7 @@ const ScreenNavigationWithGrid = ({
     if (jobLeadsById[findIndexCurrentJob + 1]) {
       setJobDetailsById(jobLeadsById[findIndexCurrentJob + 1]);
     }
+    
   };
 
   const handleNextAlert = () => {
@@ -150,13 +152,14 @@ const ScreenNavigationWithGrid = ({
     setIsButtonClick(false);
   };
 
-  const onButtonSectionClick = (jobLead: any) => {
+  const onButtonSectionClick = async (jobLead: any) => {
     setIsConfirmModal({
       open: true,
       title: `האם אתה בטוח שברצונך לשנות את הסטטוס ל${jobLead.status_name}?`,
       type: "status_change",
     });
     setChangeJobIdStatus(jobLead.id);
+
   };
 
   const handleCloseConfirmationModal = () => {
@@ -168,6 +171,7 @@ const ScreenNavigationWithGrid = ({
       const response = await updateJobLead(activeJob, jobDetailsById.id, changeJobIdStatus);
       setJobDetailsById(response);
       await getJobById(activeJob);
+      await getJobLeadsById();
     }
     if (isConfirmModal.type === "next_button") {
       handleNext();
