@@ -7,6 +7,7 @@ interface AuthState {
   id: string | null;
   role: string | null;
   setUser: (id: string, role: string) => void;
+  setSelectedUser: (selectedUser: any) => void;
   getUserById: (id: string) => void;
   logout: () => void;
   counter_users: number;
@@ -15,6 +16,7 @@ interface AuthState {
   searchValue: string;
   setPage: (page: number) => void;
   setSizePerPage: (sizePerPage: number) => void;
+  selectedUser: any;
   modelPage: {
     page: number;
     sizePerPage: number;
@@ -35,6 +37,7 @@ const usersStore: any = create<AuthState>((set) => ({
   user: {},
   isLoading: false,
   searchValue: "",
+  selectedUser: {},
   modelPage: {
     page: 1,
     sizePerPage: 10,
@@ -45,7 +48,8 @@ const usersStore: any = create<AuthState>((set) => ({
     team_id: [],
   },
   setUser: (id, role) => set({ id, role }),
-  setUserData: (user: any) => set({user: user}) ,
+  setSelectedUser: (selectedUser) => set({ selectedUser }),
+  setUserData: (user: any) => set({ user: user }),
   logout: () => set({ id: null, role: null }),
   getUsers: async () => {
     const { searchValue, modelPage, activate_filters } = usersStore.getState();
@@ -83,8 +87,9 @@ const usersStore: any = create<AuthState>((set) => ({
       const response = await api.get(
         `${process.env.REACT_APP_BASE_URL}/users/${id}`
       );
-      set({ user: response.data });
+      set({ selectedUser: response.data });
     } catch (error: any) {
+      set({ selectedUser: null });
       showNotification({
         message: error.response?.data?.detail || "An error occurred.",
         status: error.status,
