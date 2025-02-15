@@ -184,6 +184,7 @@ const JobStats = ({className}: any) => {
     setIdLead(id);
     setKey("new_status", row.lead_status.lead_status_id);
     setIsOpen(true);
+    // await getJobLeadsById(true);
   };
 
   const handleDeleteClick = async (id: number) => {
