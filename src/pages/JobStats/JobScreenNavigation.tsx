@@ -54,13 +54,13 @@ const ScreenNavigationWithGrid = ({
 
   useEffect(() => {
     if (!leadJobId) {
-      setJobDetailsById(jobLeadsById[0]);
+      setJobDetailsById(jobLeadsById[step - 1]);
       setInitialFormValues({
         ...initialFormValues,
         order_basic_info: {
           ...initialFormValues.order_basic_info,
-          lead_id: jobLeadsById?.[0]?.lead_id || null,
-          lead_job_id: jobLeadsById?.[0]?.id || null,
+          lead_id: jobLeadsById?.[step - 1]?.lead_id || null,
+          lead_job_id: jobLeadsById?.[step - 1]?.id || null,
         },
       });
       setStep(1);
@@ -169,9 +169,9 @@ const ScreenNavigationWithGrid = ({
   const handleSaveConfirmationModal = async () => {
     if (isConfirmModal.type === "status_change") {
       const response = await updateJobLead(activeJob, jobDetailsById.id, changeJobIdStatus);
-      setJobDetailsById(response);
       await getJobById(activeJob);
-      await getJobLeadsById();
+      await getJobLeadsById(true);
+      setStep(step)
     }
     if (isConfirmModal.type === "next_button") {
       handleNext();
