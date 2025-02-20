@@ -471,6 +471,8 @@ const JobStats = ({className}: any) => {
     }
 
     if (createOrderType === "mobile") {
+      values.order_properties.order_installation_price = parseFloat(values.order_properties.order_installation_price);
+      values.order_properties.order_monthly_price = parseFloat(values.order_properties.order_monthly_price);
       delete values.order_schedule;
     }
 

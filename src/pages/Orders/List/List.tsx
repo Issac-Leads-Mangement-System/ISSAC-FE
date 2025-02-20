@@ -58,7 +58,7 @@ const OrdersList = ({ className }: any) => {
     resetSecondToolbar,
   }: any = secondToolbarStore();
   const { getUserTeam }: any = jobsStore();
-  const { getUsers } :any = usersStore();
+  const { getUsers }: any = usersStore();
 
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [idOrder, setIdOrder] = useState<number | null>(null);
@@ -153,6 +153,15 @@ const OrdersList = ({ className }: any) => {
 
   const handleSubmitModal = async (values: any) => {
     // delete unecessarly values
+    if (values.order_type === "mobile") {
+      delete values.order_schedule;
+      values.order_properties.order_installation_price = parseFloat(
+        values.order_properties.order_installation_price
+      );
+      values.order_properties.order_monthly_price = parseFloat(
+        values.order_properties.order_monthly_price
+      );
+    }
     delete values.created_time;
     delete values.former_company;
     delete values.lead_id;
@@ -164,12 +173,17 @@ const OrdersList = ({ className }: any) => {
     delete values.user_name;
     const idOrder = values.id;
     delete values.id;
-    values.order_customer_payment.order_card_expired_date = dayjs(
-      values.order_customer_payment.order_card_expired_date
-    ).format("MM/YY");
-    values.order_schedule.order_supply_date = dayjs(
-      values.order_schedule.order_supply_date
-    ).format("YYYY-MM-DD");
+    if (values.order_customer_payment?.order_card_expired_date) {
+      values.order_customer_payment.order_card_expired_date = dayjs(
+        values.order_customer_payment.order_card_expired_date
+      ).format("MM/YY");
+    }
+    if (values.order_schedule?.order_supply_date) {
+      values.order_schedule.order_supply_date = dayjs(
+        values.order_schedule.order_supply_date
+      ).format("YYYY-MM-DD");
+    }
+    console.log("zzz val", values);
     await updateOrder(idOrder, values);
     await getOrders();
     setIsEdit(false);
@@ -194,17 +208,24 @@ const OrdersList = ({ className }: any) => {
       headerName: "ליד",
       flex: 1,
       minWidth: 200,
-      headerAlign: "center", align: "center",
+      headerAlign: "center",
+      align: "center",
     },
-    { field: "created_time", headerName: "תאריך יצירה",  flex: 1,
+    {
+      field: "created_time",
+      headerName: "תאריך יצירה",
+      flex: 1,
       minWidth: 200,
-      headerAlign: "center", align: "center", },
+      headerAlign: "center",
+      align: "center",
+    },
     {
       field: "order_status",
       headerName: "סטטוס הזמנה",
       flex: 1,
       minWidth: 200,
-      headerAlign: "center", align: "center",
+      headerAlign: "center",
+      align: "center",
       cellClassName: (params) => {
         if (params.value === "close") return "row-closed";
         if (params.value === "open") return "row-open";
@@ -212,21 +233,37 @@ const OrdersList = ({ className }: any) => {
         return "";
       },
     },
-    { field: "order_type", headerName: "סוג הזמנה",  flex: 1,
+    {
+      field: "order_type",
+      headerName: "סוג הזמנה",
+      flex: 1,
       minWidth: 200,
-      headerAlign: "center", align: "center", },
-    { field: "user_name", headerName: "משתמש",  flex: 1,
+      headerAlign: "center",
+      align: "center",
+    },
+    {
+      field: "user_name",
+      headerName: "משתמש",
+      flex: 1,
       minWidth: 200,
-      headerAlign: "center", align: "center", },
-    { field: "former_company", headerName: "חברה קודמת",  flex: 1,
+      headerAlign: "center",
+      align: "center",
+    },
+    {
+      field: "former_company",
+      headerName: "חברה קודמת",
+      flex: 1,
       minWidth: 200,
-      headerAlign: "center", align: "center", },
+      headerAlign: "center",
+      align: "center",
+    },
     {
       field: "mobility",
       headerName: "ניוד",
       flex: 1,
       minWidth: 200,
-      headerAlign: "center", align: "center",
+      headerAlign: "center",
+      align: "center",
       renderCell: (params: any) => {
         const { row } = params;
         return [
@@ -243,7 +280,8 @@ const OrdersList = ({ className }: any) => {
       type: "actions",
       flex: 1,
       minWidth: 200,
-      headerAlign: "center", align: "center",
+      headerAlign: "center",
+      align: "center",
       editable: false,
       renderHeader: () => <strong>{"פעולות "}</strong>,
       filterable: false,
@@ -329,7 +367,7 @@ const OrdersList = ({ className }: any) => {
                   size="small"
                   sx={filterBtnStyle}
                 >
-                מסננים
+                  מסננים
                 </Button>
               </Box>
             </Box>
@@ -367,19 +405,26 @@ const OrdersList = ({ className }: any) => {
       </div>
 
       {isEdit && (
-        <CustomModal dir="rtl" isOpen={isEdit} onClose={onCloseFct} title="ערוך פרטי הזמנה">
+        <CustomModal
+          dir="rtl"
+          isOpen={isEdit}
+          onClose={onCloseFct}
+          title="ערוך פרטי הזמנה"
+        >
           <GenericAddEditForm
             initialValues={initialFormValues}
             validationSchema={customValidation}
             apiRequest={handleSubmitModal}
             hasSubmitButton={true}
             submitBtnName={"save"}
-            form={(formProps: any) => (
-              <JobStatsCreateOrderModal
-                formProps={formProps}
-                createOrderType={"TV"}
-              />
-            )}
+            form={(formProps: any) => {
+              return (
+                <JobStatsCreateOrderModal
+                  formProps={formProps}
+                  createOrderType={formProps.values.order_type}
+                />
+              );
+            }}
             btnStyle={submitBtnStyle}
           />
         </CustomModal>
