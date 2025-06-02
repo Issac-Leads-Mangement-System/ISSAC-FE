@@ -49,7 +49,7 @@ const Jobs = ({ className }: any) => {
     updateJobStatus,
     resetFilters,
     resetPagination,
-    isLoading
+    isLoading,
   }: any = jobsStore();
   const navigate = useNavigate();
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
@@ -130,22 +130,30 @@ const Jobs = ({ className }: any) => {
   //   console.log("delete", id);
   // };
 
-
-
   const columns: GridColDef<(typeof jobs)[number]>[] = [
-    { field: "job_name", headerName: "שם העבודה",      
+    {
+      field: "job_name",
+      headerName: "שם העבודה",
       flex: 1,
       minWidth: 200,
-      headerAlign: "center", align: "center",},
-    { field: "created_time", headerName: "תאריך יצירה", flex: 1,
+      headerAlign: "center",
+      align: "center",
+    },
+    {
+      field: "created_time",
+      headerName: "תאריך יצירה",
+      flex: 1,
       minWidth: 150,
-      headerAlign: "center", align: "center",},
+      headerAlign: "center",
+      align: "center",
+    },
     {
       field: "job_status",
       headerName: "סטטוס",
       flex: 1,
       minWidth: 100,
-      headerAlign: "center", align: "center",
+      headerAlign: "center",
+      align: "center",
       cellClassName: (params) => {
         if (params.value === "close") return "row-closed";
         if (params.value === "open") return "row-open";
@@ -158,7 +166,8 @@ const Jobs = ({ className }: any) => {
       headerName: "סוג ליד",
       flex: 1,
       minWidth: 150,
-      headerAlign: "center", align: "center",
+      headerAlign: "center",
+      align: "center",
       valueGetter: (_, row: any) => {
         return `${row.lead_type.type_name}`;
       },
@@ -168,33 +177,48 @@ const Jobs = ({ className }: any) => {
       headerName: 'סה"כ לידים',
       flex: 1,
       minWidth: 120,
-      headerAlign: "center", align: "center",
+      headerAlign: "center",
+      align: "center",
     },
-    { field: "open_leads", headerName: "לידים פתוחים",       
+    {
+      field: "open_leads",
+      headerName: "לידים פתוחים",
       flex: 1,
       minWidth: 120,
-      headerAlign: "center", align: "center",},
-    { field: "success_leads", headerName: "לידים מוצלחים",     
+      headerAlign: "center",
+      align: "center",
+    },
+    {
+      field: "success_leads",
+      headerName: "לידים מוצלחים",
       flex: 1,
       minWidth: 120,
-      headerAlign: "center", align: "center",},
-    { field: "closed_leads", headerName: "לידים סגורים",     
+      headerAlign: "center",
+      align: "center",
+    },
+    {
+      field: "closed_leads",
+      headerName: "לידים סגורים",
       flex: 1,
       minWidth: 120,
-      headerAlign: "center", align: "center", },
+      headerAlign: "center",
+      align: "center",
+    },
     {
       field: "mobile_deals_success",
       headerName: "עסקאות מובייל",
       flex: 1,
       minWidth: 120,
-      headerAlign: "center", align: "center",
+      headerAlign: "center",
+      align: "center",
     },
     {
       field: "total_leads_user",
       headerName: 'סה"כ לידים למשתמש',
       flex: 1,
       minWidth: 170,
-      headerAlign: "center", align: "center",
+      headerAlign: "center",
+      align: "center",
       valueGetter: (_, row: any) => {
         return `${row.leads_user_info.total_leads_user}`;
       },
@@ -204,7 +228,8 @@ const Jobs = ({ className }: any) => {
       headerName: "לידים פתוחים למשתמש",
       flex: 1,
       minWidth: 170,
-      headerAlign: "center", align: "center",
+      headerAlign: "center",
+      align: "center",
       valueGetter: (_, row: any) => {
         return `${row.leads_user_info.open_leads_user}`;
       },
@@ -214,7 +239,8 @@ const Jobs = ({ className }: any) => {
       headerName: "לידים מוצלחים למשתמש",
       flex: 1,
       minWidth: 180,
-      headerAlign: "center", align: "center",
+      headerAlign: "center",
+      align: "center",
       valueGetter: (_, row: any) => {
         return `${row.leads_user_info.success_leads_user}`;
       },
@@ -224,7 +250,8 @@ const Jobs = ({ className }: any) => {
       headerName: "לידים סגורים למשתמש",
       flex: 1,
       minWidth: 170,
-      headerAlign: "center", align: "center",
+      headerAlign: "center",
+      align: "center",
       valueGetter: (_, row: any) => {
         return `${row.leads_user_info.closed_leads_user}`;
       },
@@ -234,7 +261,8 @@ const Jobs = ({ className }: any) => {
       headerName: "עסקאות מובייל למשתמש",
       flex: 1,
       minWidth: 180,
-      headerAlign: "center", align: "center",
+      headerAlign: "center",
+      align: "center",
       valueGetter: (_, row: any) => {
         return `${row.leads_user_info.mobile_deals_success_user}`;
       },
@@ -355,36 +383,34 @@ const Jobs = ({ className }: any) => {
                 </Button>
               </Box>
             </Box>
-            {jobs?.length > 0 && (
-              <CustomDataGrid
-                rows={jobs}
-                columns={columns}
-                initialState={{
-                  pagination: {
-                    paginationModel: {
-                      pageSize: 10,
-                    },
+            <CustomDataGrid
+              rows={jobs || []}
+              columns={columns}
+              initialState={{
+                pagination: {
+                  paginationModel: {
+                    pageSize: 10,
                   },
-                }}
-                onPaginationModelChange={(model: any) => {
-                  if (model.pageSize !== pagination.pageSize) {
-                    handleChangeRowsPerPage(model);
-                  }
-                  if (model.page !== pagination.page) {
-                    handleChangePage(model);
-                  }
-                }}
-                rowCount={counter_jobs}
-                pageSizeOptions={[5, 10, 25, 50]}
-                disableRowSelectionOnClick
-                disableVirtualization
-                paginationMode="server"
-                style={{
-                  maxHeight: "75vh",
-                  overflow: "auto",
-                }}
-              />
-            )}
+                },
+              }}
+              onPaginationModelChange={(model: any) => {
+                if (model.pageSize !== pagination.pageSize) {
+                  handleChangeRowsPerPage(model);
+                }
+                if (model.page !== pagination.page) {
+                  handleChangePage(model);
+                }
+              }}
+              rowCount={counter_jobs}
+              pageSizeOptions={[5, 10, 25, 50]}
+              disableRowSelectionOnClick
+              disableVirtualization
+              paginationMode="server"
+              style={{
+                maxHeight: "75vh",
+                overflow: "auto",
+              }}
+            />
           </CardContent>
         </Card>
       </div>

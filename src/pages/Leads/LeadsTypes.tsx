@@ -206,7 +206,7 @@ const LeadsTypes = () => {
             </Box>
           </Box>
           <CustomDataGrid
-            rows={types}
+            rows={types || []}
             columns={[...columns]}
             loading={isLoading}
             initialState={{
