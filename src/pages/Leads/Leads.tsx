@@ -391,10 +391,10 @@ const Leads = () => {
             </Box>
           </Box>
 
-          {leads?.length > 0 && (
+          {/* {leads?.length > 0 && ( */}
             <div dir="rtl">
             <CustomDataGrid
-              rows={leads}
+              rows={leads || []}
               columns={[...columns]}
               initialState={{
                 pagination: {
@@ -427,7 +427,7 @@ const Leads = () => {
               }}
             />
             </div>
-          )}
+          {/* )} */}
         </CardContent>
       </Card>
 

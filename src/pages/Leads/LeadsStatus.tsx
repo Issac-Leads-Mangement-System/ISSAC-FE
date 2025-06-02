@@ -226,7 +226,7 @@ const LeadsStatus = () => {
             </Box>
           </Box>
           <CustomDataGrid
-            rows={statuses}
+            rows={statuses || []}
             columns={[...columns]}
             initialState={{
               pagination: {
