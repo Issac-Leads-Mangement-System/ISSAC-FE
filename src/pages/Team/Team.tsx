@@ -141,7 +141,7 @@ const Team = () => {
       minWidth: 200,
       headerAlign: "center", align: "center",
       editable: false,
-      renderHeader: (params: any) => <strong>{"פעולות"}</strong>,
+      headerName: "פעולות",
       filterable: false,
       getActions: (params: any) => {
         const { id, row } = params;

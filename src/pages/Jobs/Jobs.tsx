@@ -273,7 +273,7 @@ const Jobs = ({ className }: any) => {
       type: "actions",
       width: 150,
       editable: false,
-      renderHeader: (params: any) => <strong>{"פעולות "}</strong>,
+      headerName: "פעולות",
       filterable: false,
       cellClassName: "pinned-column",
       headerClassName: "MuiDataGrid-columnHeader--pinned",

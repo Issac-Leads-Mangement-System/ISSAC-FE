@@ -93,7 +93,7 @@ export const PropertiesSection = ({ formProps, createOrderType }: any) => {
                         formProps,
                         "order_properties.order_installation_price"
                       )}
-                      label="מחיר בתקנה"
+                      label="מחיר התקנה"
                       style={{ display: "flex" }}
                       regex={/^\d*\.?\d*$/}
                       inputTypeRegex={"decimal"}

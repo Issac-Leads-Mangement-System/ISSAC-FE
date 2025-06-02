@@ -11,9 +11,9 @@ import CloseIcon from "@mui/icons-material/Close";
 
 export default function Filters({ open, onClose, handleFilter, children, resetFilter }: any) {
   return (
-    <React.Fragment key={"right"}>
-      <Drawer anchor={"right"} open={open} onClose={onClose}>
-      <Box sx={{ width: 360, display: 'flex', flexDirection: 'column', height: '100%', position: 'relative' }}>
+    <React.Fragment key={"left"}>
+      <Drawer anchor={"left"} open={open} onClose={onClose}>
+      <Box sx={{ width: 360, display: 'flex', flexDirection: 'column', height: '100%', position: 'relative' }} dir="rtl">
          {/* Header */}
         <Box
           sx={{
@@ -26,7 +26,7 @@ export default function Filters({ open, onClose, handleFilter, children, resetFi
           }}
         >
           <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#333' }}>
-            Filters
+            מסננים
           </Typography>
           <IconButton onClick={onClose}>
             <CloseIcon />
@@ -64,7 +64,7 @@ export default function Filters({ open, onClose, handleFilter, children, resetFi
               textTransform: 'none',
             }}
           >
-            Clear Filter
+            נקה מסננים
           </Button>
           <Button
             variant="contained"
@@ -80,7 +80,7 @@ export default function Filters({ open, onClose, handleFilter, children, resetFi
               },
             }}
           >
-            Filters
+            מסננים
           </Button>
         </Box>
         </Box>

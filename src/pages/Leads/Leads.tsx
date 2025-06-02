@@ -257,7 +257,7 @@ const Leads = () => {
       minWidth: 200,
       headerAlign: "center", align: "center",
       editable: false,
-      renderHeader: () => <strong>{"פעולות "}</strong>,
+      headerName: "פעולות",
       filterable: false,
       cellClassName: "pinned-column",
       headerClassName: "MuiDataGrid-columnHeader--pinned",

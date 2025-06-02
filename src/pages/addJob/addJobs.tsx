@@ -242,7 +242,7 @@ const AddJobs = ({ className }: any) => {
       headerAlign: "center",
       align: "center",
       editable: false,
-      renderHeader: (params: any) => <strong>{"פעולות "}</strong>,
+      headerName: "פעולות",
       filterable: false,
       cellClassName: "pinned-column",
       headerClassName: "MuiDataGrid-columnHeader--pinned",
