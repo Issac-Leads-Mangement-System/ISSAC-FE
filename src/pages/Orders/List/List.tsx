@@ -293,8 +293,8 @@ const OrdersList = ({ className }: any) => {
           return [
             <GridActionsCellItem
               icon={<VisibilityIcon />}
-              label="View more columns"
-              title="View more columns"
+              label="צפייה בפרטים"
+              title="צפייה בפרטים"
               key={id}
               sx={{
                 color: "black",
@@ -305,8 +305,8 @@ const OrdersList = ({ className }: any) => {
 
             <GridActionsCellItem
               icon={<ManageAccountsIcon />}
-              label="Edit"
-              title="Edit"
+              label="עריכה"
+              title="עריכה"
               key={id}
               sx={{
                 color: "black",
@@ -317,8 +317,8 @@ const OrdersList = ({ className }: any) => {
             />,
             <GridActionsCellItem
               icon={<TaskAltIcon />}
-              label="Close job"
-              title="Close job"
+              label="סגור עבודה"
+              title="סגור עבודה"
               key={id}
               sx={{
                 color: "#6ac250",
