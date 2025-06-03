@@ -183,7 +183,7 @@ const OrdersList = ({ className }: any) => {
         values.order_schedule.order_supply_date
       ).format("YYYY-MM-DD");
     }
-    console.log("zzz val", values);
+    
     await updateOrder(idOrder, values);
     await getOrders();
     setIsEdit(false);

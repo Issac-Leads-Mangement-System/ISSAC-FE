@@ -404,8 +404,10 @@ const ScreenNavigationWithGrid = ({
                 <GenericAddEditForm
                   initialValues={initialFormValues}
                   validationSchema={customValidation}
-                  apiRequest={(values: any) =>
-                    handleSubmitModal(values, orderType)
+                  apiRequest={(values: any) => {
+                      handleSubmitModal(values, orderType)
+                      setIsButtonClick(false)
+                    }
                   }
                   hasSubmitButton={true}
                   submitBtnName={"שמור"}
