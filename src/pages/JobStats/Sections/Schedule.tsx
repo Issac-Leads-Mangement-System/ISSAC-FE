@@ -29,7 +29,6 @@ export const ScheduleSection = ({ formProps }: any) => {
     "17:00-19:00",
   ];
 
-  console.log("zzzz formProps", formProps);
   return (
     <Box dir="rtl">
       <Paper elevation={4} sx={{ p: 3, m: 2, borderRadius: 2 }}>

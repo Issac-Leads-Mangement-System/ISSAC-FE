@@ -436,7 +436,7 @@ const JobStats = ({className}: any) => {
   //   // setCurrentId(id);
   // };
 
-  const handleSubmitModal = async (values: any, orderType: any) => {
+  const handleSubmitModal = async (values: any, orderType: any = undefined) => {
     // disabled the functionality for now
     values.job_id = parseInt(activeJob);
     if (leadJobId) {
@@ -445,7 +445,6 @@ const JobStats = ({className}: any) => {
     if (idLead) {
       values.order_basic_info.lead_id = idLead;
     }
-
     values.order_basic_info.order_type = createOrderType;
     values.order_properties.order_installation_price = parseFloat(
       values.order_properties.order_installation_price
@@ -453,7 +452,7 @@ const JobStats = ({className}: any) => {
     values.order_properties.order_monthly_price = parseFloat(
       values.order_properties.order_monthly_price
     ).toFixed(2);
-    if (createOrderType === "TV") {
+    if (createOrderType === "TV" || orderType === "TV") {
       values.order_properties.order_installation_payments = parseInt(
         values.order_properties.order_installation_payments
       );
@@ -470,12 +469,11 @@ const JobStats = ({className}: any) => {
       delete values.order_properties.order_phone_numbers;
     }
 
-    if (createOrderType === "mobile") {
+    if (createOrderType === "mobile" || orderType === "mobile") {
       values.order_properties.order_installation_price = parseFloat(values.order_properties.order_installation_price);
       values.order_properties.order_monthly_price = parseFloat(values.order_properties.order_monthly_price);
       delete values.order_schedule;
     }
-
     await submitCreateOrder(values);
     await getJobLeadsById();
     setIsCreateOrderOpen(false);
@@ -610,6 +608,8 @@ const JobStats = ({className}: any) => {
                         leadJobId={leadJobId}
                         handleSubmitModal={handleSubmitModal}
                         activeJob={activeJob}
+                        setCreateOrderType={setCreateOrderType}
+                        createOrderType={createOrderType}
                       />
                     </TabPanel>
                   </TabContext>
