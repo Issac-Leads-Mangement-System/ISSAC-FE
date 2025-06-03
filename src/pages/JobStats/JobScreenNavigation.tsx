@@ -30,6 +30,8 @@ const ScreenNavigationWithGrid = ({
   leadJobId,
   handleSubmitModal,
   activeJob,
+  setCreateOrderType,
+  createOrderType,
 }: any) => {
   const {
     updateJobLead,
@@ -41,7 +43,7 @@ const ScreenNavigationWithGrid = ({
   const { statuses }: any = leadsStatusesStore();
   const [tooltipText, setTooltipText] = useState("Copy to clipboard");
   const [isButtonClick, setIsButtonClick]: any = useState(false);
-  const [orderType, setOrderType]: any = useState("");
+  // const [orderType, setOrderType]: any = useState('');
   const [isConfirmModal, setIsConfirmModal]: any = useState(false);
   const [initialFormValues, setInitialFormValues] =
     useState<ICreateOrderModalSchema>({
@@ -144,8 +146,10 @@ const ScreenNavigationWithGrid = ({
   };
 
   const handleButtonClick = (order: string) => {
+    console.log('zzzz order', order)
     setIsButtonClick(true);
-    setOrderType(order);
+    // setOrderType(order);
+    setCreateOrderType(order);
   };
 
   const onCloseCreateOrder = () => {
@@ -397,15 +401,15 @@ const ScreenNavigationWithGrid = ({
                 isOpen={isButtonClick}
                 onClose={onCloseCreateOrder}
                 title={`${
-                  orderType === "TV" ? "צור הזמנה טלוויזיה" : "צור הזמנה מובייל"
+                  createOrderType === "TV" ? "צור הזמנה טלוויזיה" : "צור הזמנה מובייל"
                 }`}
                 minWidth="1200px"
               >
                 <GenericAddEditForm
                   initialValues={initialFormValues}
                   validationSchema={customValidation}
-                  apiRequest={(values: any) => {
-                      handleSubmitModal(values, orderType)
+                  apiRequest={async (values: any) => {
+                     await handleSubmitModal(values)
                       setIsButtonClick(false)
                     }
                   }
@@ -414,7 +418,7 @@ const ScreenNavigationWithGrid = ({
                   form={(formProps: any) => (
                     <JobStatsCreateOrderModal
                       formProps={formProps}
-                      createOrderType={orderType}
+                      createOrderType={createOrderType}
                     />
                   )}
                   btnStyle={{
