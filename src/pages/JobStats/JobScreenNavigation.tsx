@@ -55,23 +55,35 @@ const ScreenNavigationWithGrid = ({
   const { getJobLeadsById }: any = jobStatsStore();
 
   useEffect(() => {
-    if (!leadJobId) {
-      setJobDetailsById(jobLeadsById[step - 1]);
+    let initialStep = 1;
+    if (leadJobId) {
+      const index = jobLeadsById.findIndex((job: any) => job.id === leadJobId);
+      if (index !== -1) {
+        initialStep = index + 1;
+      }
+    }
+    setStep(initialStep);
+  }, [leadJobId]);
+
+  useEffect(() => {
+    if (!jobLeadsById || jobLeadsById.length === 0 || !step) {
+      return;
+    }
+    const currentStep = Math.min(step, jobLeadsById.length);
+    const details = jobLeadsById[currentStep - 1];
+    setJobDetailsById(details);
+
+    if (details) {
       setInitialFormValues({
         ...initialFormValues,
         order_basic_info: {
           ...initialFormValues.order_basic_info,
-          lead_id: jobLeadsById?.[step - 1]?.lead_id || null,
-          lead_job_id: jobLeadsById?.[step - 1]?.id || null,
+          lead_id: details.lead_id || null,
+          lead_job_id: details.id || null,
         },
       });
-      setStep(1);
-    } else {
-      const jobDetails = jobLeadsById.find((job: any) => job.id === leadJobId);
-      setJobDetailsById(jobDetails);
-      setStep(jobLeadsById.findIndex((job: any) => job.id === leadJobId) + 1);
     }
-  }, [jobLeadsById]);
+  }, [step, jobLeadsById]);
 
   useEffect(() => {
     return () => {
@@ -175,7 +187,6 @@ const ScreenNavigationWithGrid = ({
       const response = await updateJobLead(activeJob, jobDetailsById.id, changeJobIdStatus);
       await getJobById(activeJob);
       await getJobLeadsById(true);
-      setStep(step)
     }
     if (isConfirmModal.type === "next_button") {
       handleNext();
@@ -411,6 +422,8 @@ const ScreenNavigationWithGrid = ({
                   apiRequest={async (values: any) => {
                      await handleSubmitModal(values)
                       setIsButtonClick(false)
+                      await getJobById(activeJob);
+                      await getJobLeadsById(true);
                     }
                   }
                   hasSubmitButton={true}

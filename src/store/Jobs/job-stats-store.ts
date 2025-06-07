@@ -178,10 +178,28 @@ const jobStatsStore = create<IJobsState>((set) => ({
   },
 
   submitCreateOrder: async (values: any) => {
-    const response = await api.post(
-      `${process.env.REACT_APP_BASE_URL}/orders/create_order`,
-      values
-    );
+    set({ isLoading: true });
+    const { showNotification } = useNotificationStore.getState();
+    try {
+      const response = await api.post(
+        `${process.env.REACT_APP_BASE_URL}/orders/create_order`,
+        values
+      );
+      showNotification({
+        message: "הזמנה נוצרה בהצלחה",
+        status: response.statusText,
+        severity: response.status,
+      });
+      set({ isLoading: false });
+      return response.data;
+    } catch (error: any) {
+      showNotification({
+        message: "שגיאה ביצירת ההזמנה",
+        status: error.status,
+        severity: error.severity,
+      });
+      set({ isLoading: false });
+    }
   },
 
   setActiveFilters: (ids: any, key: string) =>

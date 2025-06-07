@@ -108,6 +108,7 @@ const JobStats = ({className}: any) => {
     newValue: string
   ) => {
     if (newValue === "2") {
+      setLeadJobId(null);
       await getJobLeadsById(true);
       setInitialFormValues((prevValues) => ({
         ...prevValues,
@@ -202,6 +203,8 @@ const JobStats = ({className}: any) => {
       order_basic_info: {
         ...(prevValues.order_basic_info || {}),
         order_type: order_type,
+        lead_id: lead_id,
+        lead_job_id: id,
       },
     }));
   };
@@ -426,10 +429,11 @@ const JobStats = ({className}: any) => {
   ];
 
   const playScreen = async (lead_id: string, id: number) => {
+    console.log('playScreen clicked with lead_id:', lead_id, 'and id:', id);
+    await getJobLeadsById(true);
     setLeadJobId(id);
     setIdLead(lead_id);
     setTab("2");
-    await getJobLeadsById(true);
   };
 
   // const handleButtonClick = (id: any) => {
@@ -439,12 +443,6 @@ const JobStats = ({className}: any) => {
   const handleSubmitModal = async (values: any, orderType: any = undefined) => {
     // disabled the functionality for now
     values.job_id = parseInt(activeJob);
-    if (leadJobId) {
-      values.order_basic_info.lead_job_id = parseInt(leadJobId);
-    }
-    if (idLead) {
-      values.order_basic_info.lead_id = idLead;
-    }
     values.order_basic_info.order_type = createOrderType;
     values.order_properties.order_installation_price = parseFloat(
       values.order_properties.order_installation_price
@@ -475,7 +473,11 @@ const JobStats = ({className}: any) => {
       delete values.order_schedule;
     }
     await submitCreateOrder(values);
-    await getJobLeadsById();
+    // trigger only if PLAY is false;
+    if (tab === "1") {
+      await getJobLeadsById();
+      await getJobById();
+    }
     setIsCreateOrderOpen(false);
   };
 
