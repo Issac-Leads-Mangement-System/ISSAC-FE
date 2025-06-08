@@ -117,7 +117,7 @@ const jobsStore = create<IJobsState>((set) => ({
         };
       }
       const response = await api.post(
-        `${process.env.REACT_APP_BASE_URL}/users/?page=${1}&limit=${50}`,
+        `${process.env.REACT_APP_BASE_URL}/users/?page=${1}&limit=${100}`,
         filterData
       );
 
